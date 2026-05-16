@@ -235,6 +235,8 @@ function Reveal({ as: Tag = "div", className = "", children, stagger, ...rest })
    ============================================================ */
 function Nav() {
   const [scrolled, setScrolled] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
+
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 30);
     window.addEventListener("scroll", onScroll, { passive: true });
@@ -244,7 +246,6 @@ function Nav() {
 
   const page = document.body.getAttribute("data-page") || "home";
   const link = (target, label) => {
-    // target is e.g. "estudio#latam" or "#productos" or ""
     const [pg, hash] = target.split("#");
     const onHome = page === "home";
     let href = "";
@@ -253,31 +254,35 @@ function Nav() {
     } else {
       href = pg === page ? `#${hash || ""}` : `${pg}.html${hash ? "#" + hash : ""}`;
     }
-    return <a className="nav-link" href={href}><T>{label}</T></a>;
+    return <a className="nav-link" href={href} onClick={() => setMenuOpen(false)}><T>{label}</T></a>;
   };
 
   return (
-    <nav className={`nav ${scrolled ? "scrolled" : ""}`}>
+    <nav className={`nav ${scrolled ? "scrolled" : ""} ${menuOpen ? "menu-open" : ""}`}>
       <div className="container nav-inner">
-        <a href="index.html" className="brand" aria-label="kui">
+        <a href="index.html" className="brand" aria-label="kui" onClick={() => setMenuOpen(false)}>
           <img src="assets/logo.png" alt="" />
           kui
         </a>
-        <div className="nav-links">
+        <button className={`nav-toggle ${menuOpen ? "is-active" : ""}`} onClick={() => setMenuOpen(!menuOpen)} aria-label="Toggle menu">
+          <span className="bar"></span>
+          <span className="bar"></span>
+        </button>
+        <div className={`nav-links ${menuOpen ? "is-open" : ""}`}>
           {link("#servicios", "Servicios")}
           {link("#productos", "Productos")}
           {link("estudio", "Estudio")}
           {link("contacto#equipo", "Equipo")}
           {link("contacto#contacto", "Contacto")}
           <LanguageSwitcher />
-          <a className="nav-cta" href={page === "contacto" ? "#contacto" : "contacto.html#contacto"}>
+          <a className="nav-cta" href={page === "contacto" ? "#contacto" : "contacto.html#contacto"} onClick={() => setMenuOpen(false)}>
             <span className="pulse" />
             <T>Hablemos</T>
           </a>
         </div>
       </div>
-    </nav>);
-
+    </nav>
+  );
 }
 
 /* ============================================================

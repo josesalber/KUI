@@ -83,7 +83,7 @@ const CASES = {
       "Comunicación con apoderados se mueve de WhatsApp informal a notificaciones in-app con audit trail.",
       "Implementación en cuatro colegios en un trimestre, sin pausar clases.",
     ],
-    tech: ["React", "Next.js", "React Native", "Expo", "Postgres", "Prisma", "tRPC", "Tailwind"],
+    tech: ["React", "Next.js", "React Native", "Expo", "Postgres", "SpringBoot", "tRPC", "Tailwind"],
     timeline: "14 semanas",
     team: "6 personas (PM, 2 ingenieros web, 2 mobile, 1 diseñadora)",
     quote: {
@@ -149,7 +149,7 @@ function CaseStudy() {
           <Reveal key={i} className={`cs-shot ${i % 2 ? "cs-shot-right" : "cs-shot-left"}`}>
             <div className="cs-shot-frame">
               <div className="cs-shot-bar">
-                <span className="cs-shot-dot r"/><span className="cs-shot-dot y"/><span className="cs-shot-dot g"/>
+                <span className="cs-shot-dot r" /><span className="cs-shot-dot y" /><span className="cs-shot-dot g" />
                 {img.url && <span className="cs-shot-url mono">{img.url}</span>}
               </div>
               <img src={img.src} alt={img.label} />
@@ -203,8 +203,8 @@ function CaseStudy() {
         <div className="container">
           <Reveal>
             <svg className="cs-quote-mark" viewBox="0 0 64 48" fill="currentColor">
-              <path d="M0 48V28C0 14 8 4 22 0L26 6C18 9 14 14 14 22H24V48H0Z" opacity="0.4"/>
-              <path d="M38 48V28C38 14 46 4 60 0L64 6C56 9 52 14 52 22H62V48H38Z" opacity="0.4"/>
+              <path d="M0 48V28C0 14 8 4 22 0L26 6C18 9 14 14 14 22H24V48H0Z" opacity="0.4" />
+              <path d="M38 48V28C38 14 46 4 60 0L64 6C56 9 52 14 52 22H62V48H38Z" opacity="0.4" />
             </svg>
             <p className="cs-quote-text">{c.quote.text}</p>
             <div className="cs-quote-author">

@@ -166,7 +166,7 @@ function Stack() {
     { label: "Frontend", items: ["React", "Next.js", "TypeScript", "Tailwind", "Vite", "Motion"] },
     { label: "Backend", items: ["Node", "NestJS", "Postgres", "Redis", "Prisma", "tRPC"] },
     { label: "Mobile", items: ["React Native", "Expo", "Swift", "Kotlin"] },
-    { label: "Cloud & DX", items: ["AWS", "Vercel", "Docker", "GitHub Actions", "Sentry", "Grafana"] },
+    { label: "Cloud & DX", items: ["AWS", "Vercel", "Docker", "GitHub Actions", "Render", "Grafana"] },
   ];
 
   return (

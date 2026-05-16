@@ -14,19 +14,19 @@ function ROICalculator() {
 
   // Estimate logic — illustrative, not a real quote.
   const base = {
-    POS:        12000,
-    LMS:        18000,
-    "A medida": 25000,
+    POS: 200,
+    LMS: 350,
+    "A medida": 500,
   }[kind];
 
-  const localesFactor = kind === "POS" ? locales * 1200 : 0;
-  const usersFactor = kind === "LMS" ? Math.round(users * 6) : 0;
-  const integFactor = integrations * 2200;
-  const mobileFactor = mobile ? 8000 : 0;
-  const customFactor = custom ? 6500 : 0;
+  const localesFactor = kind === "POS" ? locales * 15 : 0;
+  const usersFactor = kind === "LMS" ? Math.round(users * 0.05) : 0;
+  const integFactor = integrations * 35;
+  const mobileFactor = mobile ? 120 : 0;
+  const customFactor = custom ? 90 : 0;
 
   const min = base + localesFactor + usersFactor + integFactor + mobileFactor + customFactor;
-  const max = Math.round(min * 1.7);
+  const max = Math.round(min * 1.5);
 
   const numRef = useRef(null);
   useEffect(() => {
@@ -48,7 +48,7 @@ function ROICalculator() {
     el.dataset.shown = String(target);
   }, [min]);
 
-  const weeks = Math.max(6, Math.round(min / 4500));
+  const weeks = Math.max(2, Math.round(min / 100));
 
   return (
     <section className="section roi" id="calculadora">
@@ -57,7 +57,7 @@ function ROICalculator() {
           <div><div className="tag">— calculadora</div></div>
           <div className="section-kicker">
             <h2 className="section-title">
-              Estima tu<br/>
+              Estima tu<br />
               <em>inversión</em>.
             </h2>
             <p>
@@ -177,7 +177,7 @@ function ROICalculator() {
             <a className="btn btn-primary roi-cta" href="contacto.html#contacto">
               Conversemos en detalle
               <svg className="arr" viewBox="0 0 16 16" fill="none">
-                <path d="M3 13L13 3M13 3H5M13 3V11" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                <path d="M3 13L13 3M13 3H5M13 3V11" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
               </svg>
             </a>
             <p className="roi-disclaimer mono">
@@ -218,7 +218,7 @@ function FAQ() {
     },
     {
       q: "¿Qué stack usan?",
-      a: "React / Next.js para web, React Native para móvil, Node + Postgres para backend. Cloud generalmente AWS o Vercel. Pero adaptamos al stack de tu equipo si ya tienes uno — no somos religiosos con las herramientas.",
+      a: "React / Next.js para web, React Native para móvil, SpringBoot + Postgres para backend. Cloud generalmente Vercel. Pero adaptamos al stack de tu equipo si ya tienes uno — no somos religiosos con las herramientas.",
     },
     {
       q: "¿Atienden fuera de Perú?",
@@ -237,7 +237,7 @@ function FAQ() {
           <div><div className="tag">— FAQ</div></div>
           <div className="section-kicker">
             <h2 className="section-title">
-              Preguntas que<br/>
+              Preguntas que<br />
               <em>siempre nos hacen</em>.
             </h2>
             <p>
@@ -260,7 +260,7 @@ function FAQ() {
                 <span className="faq-q-text">{f.q}</span>
                 <span className="faq-icon" aria-hidden="true">
                   <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
-                    <path d="M7 1v12M1 7h12" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
+                    <path d="M7 1v12M1 7h12" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
                   </svg>
                 </span>
               </button>
@@ -295,7 +295,7 @@ function Newsletter() {
           <div className="newsletter-side">
             <div className="tag">— newsletter trimestral</div>
             <h3 className="newsletter-title">
-              Recibe nuestros<br/>
+              Recibe nuestros<br />
               <em>reportes trimestrales</em>.
             </h3>
             <p className="newsletter-desc">
@@ -308,8 +308,8 @@ function Newsletter() {
             {sent ? (
               <div className="newsletter-success">
                 <svg width="40" height="40" viewBox="0 0 48 48" fill="none">
-                  <circle cx="24" cy="24" r="22" stroke="currentColor" strokeWidth="2"/>
-                  <path d="M14 24l7 7 14-14" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"/>
+                  <circle cx="24" cy="24" r="22" stroke="currentColor" strokeWidth="2" />
+                  <path d="M14 24l7 7 14-14" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
                 </svg>
                 <div>
                   <h4>¡Suscrito!</h4>
@@ -328,7 +328,7 @@ function Newsletter() {
                 <button type="submit" className="btn btn-primary">
                   Suscribirme
                   <svg className="arr" viewBox="0 0 16 16" fill="none">
-                    <path d="M3 13L13 3M13 3H5M13 3V11" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                    <path d="M3 13L13 3M13 3H5M13 3V11" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
                   </svg>
                 </button>
                 <p className="newsletter-fine mono">▸ 4 emails al año · sin marketing · cancelas con un click</p>

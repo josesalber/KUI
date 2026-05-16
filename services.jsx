@@ -123,7 +123,8 @@ function Services() {
             <Reveal key={s.n} className="svc-row-wrap">
               <div
                 className={`svc-row ${hoveredIdx === i ? "is-hover" : ""}`}
-                onMouseEnter={() => setHoveredIdx(i)}
+                onMouseEnter={() => window.innerWidth > 800 && setHoveredIdx(i)}
+                onClick={() => window.innerWidth <= 800 && setHoveredIdx(hoveredIdx === i ? -1 : i)}
               >
                 <div className="svc-num mono">{s.n}</div>
                 <div className="svc-body">
@@ -139,6 +140,17 @@ function Services() {
                   <svg viewBox="0 0 24 24" fill="none" width="24" height="24">
                     <path d="M5 19L19 5M19 5H9M19 5V15" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
                   </svg>
+                </div>
+                <div className="svc-mobile-img">
+                  <div className="svc-mobile-img-inner">
+                    <image-slot
+                      id={s.slot}
+                      src={s.src || ""}
+                      shape="rounded"
+                      radius="14"
+                      placeholder={`Arrastra una imagen para “${s.title}”`}
+                    ></image-slot>
+                  </div>
                 </div>
               </div>
             </Reveal>
