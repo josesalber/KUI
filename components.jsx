@@ -261,7 +261,7 @@ function Nav() {
     <nav className={`nav ${scrolled ? "scrolled" : ""} ${menuOpen ? "menu-open" : ""}`}>
       <div className="container nav-inner">
         <a href="index.html" className="brand" aria-label="kui" onClick={() => setMenuOpen(false)}>
-          <img src="assets/logo.png" alt="" />
+          <img src="assets/logo.png" alt="" width="32" height="32" decoding="async" />
           kui
         </a>
         <button className={`nav-toggle ${menuOpen ? "is-active" : ""}`} onClick={() => setMenuOpen(!menuOpen)} aria-label="Toggle menu">
@@ -308,7 +308,7 @@ function Hero() {
       <div className="hero-logo-wrap" aria-hidden="true">
         <div className="orbit o3"><div className="pin" /></div>
         <div className="orbit o2"><div className="pin" /></div>
-        <img src="assets/logo.png" alt="" className="hero-logo-img" />
+        <img src="assets/logo.png" alt="" className="hero-logo-img" decoding="async" />
       </div>
 
       <div className="container hero-inner">
@@ -352,30 +352,59 @@ function Hero() {
 }
 
 /* ============================================================
-   Marquee
+   Marquee — tech stack used by the kui team (icons only)
+   KUI logo inserted as a scrolling item at the centre position
    ============================================================ */
 function Marquee() {
-  const items = [
-    "Software a medida",
-    "Learning Management System",
-    "POS para restaurantes",
-    "Integraciones API",
-    "Diseño de producto",
-    "Arquitectura cloud"];
+  const ICON = "https://cdn.simpleicons.org";
+  const techs = [
+    { name: "React",       icon: `${ICON}/react/61DAFB`,       color: "#61DAFB" },
+    { name: "Next.js",     icon: `${ICON}/nextdotjs/1a1a1a`,   color: "#1a1a1a" },
+    { name: "TypeScript",  icon: `${ICON}/typescript/3178C6`,  color: "#3178C6" },
+    { name: "Angular",     icon: `${ICON}/angular/DD0031`,     color: "#DD0031" },
+    { name: "Vite",        icon: `${ICON}/vite/646CFF`,        color: "#646CFF" },
+    { name: "kui",         icon: "assets/logo.png",            color: "#ee5a1f", isKui: true },
+    { name: "Spring Boot", icon: `${ICON}/springboot/6DB33F`,  color: "#6DB33F" },
+    { name: "PostgreSQL",  icon: `${ICON}/postgresql/336791`,  color: "#336791" },
+    { name: "Supabase",    icon: `${ICON}/supabase/3ECF8E`,    color: "#3ECF8E" },
+    { name: "Vercel",      icon: `${ICON}/vercel/1a1a1a`,      color: "#1a1a1a" },
+    { name: "Render",      icon: `${ICON}/render/46E3B7`,      color: "#46E3B7" },
+    { name: "SQL",         icon: `${ICON}/mysql/00758F`,       color: "#00758F" },
+  ];
 
-  const doubled = [...items, ...items];
+  // Double for seamless infinite loop — animate exactly -50%
+  const doubled = [...techs, ...techs];
+
   return (
-    <section className="marquee" aria-hidden="true">
-      <div className="marquee-track">
-        {doubled.map((s, i) =>
-          <span className="marquee-item" key={i}>
-            <span className="dot" />
-            {s}
+    <section className="marquee marquee-stack" aria-label="Stack tecnológico del equipo kui">
+      <div className="marquee-track" data-no-translate="true">
+        {doubled.map((tech, i) => (
+          <span
+            className={`marquee-item${tech.isKui ? " marquee-item-kui" : ""}`}
+            key={i}
+            title={tech.name}
+            aria-label={tech.name}
+          >
+            <img
+              src={tech.icon}
+              alt={tech.name}
+              width={tech.isKui ? "44" : "38"}
+              height={tech.isKui ? "44" : "38"}
+              loading="lazy"
+              decoding="async"
+              className="marquee-icon"
+              style={{
+                filter: tech.isKui
+                  ? `drop-shadow(0 0 10px ${tech.color}88)`
+                  : `drop-shadow(0 0 6px ${tech.color}55)`,
+                borderRadius: tech.isKui ? "50%" : undefined,
+              }}
+            />
           </span>
-        )}
+        ))}
       </div>
-    </section>);
-
+    </section>
+  );
 }
 
 /* ============================================================

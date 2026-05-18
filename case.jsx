@@ -152,7 +152,7 @@ function CaseStudy() {
                 <span className="cs-shot-dot r" /><span className="cs-shot-dot y" /><span className="cs-shot-dot g" />
                 {img.url && <span className="cs-shot-url mono">{img.url}</span>}
               </div>
-              <img src={img.src} alt={img.label} />
+              <img src={img.src} alt={img.label} loading="lazy" decoding="async" />
             </div>
             <div className="cs-shot-cap mono">{img.label}</div>
           </Reveal>

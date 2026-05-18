@@ -122,7 +122,7 @@ function ChatWidget() {
       <div className={`wa-panel ${open ? "is-open" : ""}`} role="dialog" aria-hidden={!open}>
         <div className="wa-head">
           <div className="wa-avatar">
-            <img src="assets/logo.png" alt="kui logo" style={{ width: "100%", height: "100%", objectFit: "cover", borderRadius: "50%", background: "#fff" }} />
+            <img src="assets/logo.png" alt="kui logo" loading="lazy" decoding="async" style={{ width: "100%", height: "100%", objectFit: "cover", borderRadius: "50%", background: "#fff" }} />
             <span className="wa-online" />
           </div>
           <div className="wa-head-meta">

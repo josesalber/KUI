@@ -1,4 +1,4 @@
-/* global React, ReactDOM, Intro, Nav, Hero, Marquee, Services, Products, Stats, Latam, WhyKui, History, Approach, Stack, Testimonials, Team, Showcase, Contact, Footer, ChatWidget, StudioHero, ROICalculator, FAQ, Newsletter, CaseStudy, CustomCursor, PageTransitions, TweaksPanel, useTweaks, TweakSection, TweakColor, TweakRadio, TweakToggle, FacebookFeed */
+/* global React, ReactDOM, Intro, Nav, Hero, Marquee, Services, Products, Stats, Latam, WhyKui, History, Approach, Stack, Testimonials, Team, Showcase, Contact, Footer, ChatWidget, StudioHero, ROICalculator, FAQ, Newsletter, CaseStudy, CustomCursor, PageTransitions, TweaksPanel, useTweaks, TweakSection, TweakColor, TweakRadio, TweakToggle, FacebookFeed, TranslatingIndicator */
 const { useEffect, useState, useCallback } = React;
 
 const TWEAK_DEFAULTS = /*EDITMODE-BEGIN*/{
@@ -119,6 +119,7 @@ function App() {
     <>
       <CustomCursor />
       <PageTransitions />
+      <TranslatingIndicator />
       <Intro onDone={handleIntroDone} />
       <Nav />
       {body}

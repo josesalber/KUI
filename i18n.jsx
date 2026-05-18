@@ -211,6 +211,8 @@ function LanguageSwitcher() {
             type="button"
             className={`lang-item ${l.code === lang ? "is-active" : ""}`}
             onClick={() => { setLangVal(l.code); setOpen(false); }}
+            onMouseEnter={() => { if (l.code !== lang && window.__kuiPrefetchLang) window.__kuiPrefetchLang(l.code); }}
+            onFocus={() => { if (l.code !== lang && window.__kuiPrefetchLang) window.__kuiPrefetchLang(l.code); }}
             role="menuitem"
           >
             <span className="lang-flag" aria-hidden="true">{l.flag}</span>
@@ -233,10 +235,384 @@ function LanguageSwitcher() {
    Use <T>Hola mundo</T> instead of {t("Hola mundo")} when you
    want React to react to language switches.
    ============================================================ */
+function extractText(children) {
+  if (children == null || children === false) return "";
+  if (typeof children === "string") return children;
+  if (typeof children === "number") return String(children);
+  if (Array.isArray(children)) return children.map(extractText).join("");
+  // React element — recurse into its children
+  if (typeof children === "object" && children.props && children.props.children != null) {
+    return extractText(children.props.children);
+  }
+  return "";
+}
+
 function T({ children }) {
   const [lang] = useLang();
   void lang; // force re-render on lang change
-  return t(typeof children === "string" ? children : String(children));
+  const text = extractText(children);
+  return text ? t(text) : (children ?? null);
 }
 
-Object.assign(window, { LANGS, DICT, AUTO_CACHE, t, setLang, useLang, LanguageSwitcher, T });
+/* ============================================================
+   AutoTranslator — walks the live DOM, captures Spanish originals
+   per text node + translatable attribute, looks up in DICT /
+   AUTO_CACHE, and batch-translates the rest via window.claude.complete.
+
+   - Caches every result in localStorage under kui-i18n-<lang>.
+   - Survives React re-renders via MutationObserver.
+   - No-op when language is "es".
+   ============================================================ */
+
+const TEXT_ORIG = new WeakMap();         // text node -> original Spanish string
+const ATTR_ORIG = new WeakMap();         // element  -> { attr: originalSpanish }
+const TRANSLATABLE_ATTRS = ["placeholder", "aria-label", "title", "alt"];
+const SKIP_TAGS = new Set([
+  "SCRIPT","STYLE","NOSCRIPT","IFRAME","CODE","PRE","TEXTAREA",
+  "SVG","PATH","LINE","CIRCLE","RECT","POLYGON","POLYLINE","ELLIPSE","G","DEFS","USE","SYMBOL",
+]);
+
+function shouldSkipParent(el) {
+  if (!el || !el.tagName) return true;
+  if (SKIP_TAGS.has(el.tagName)) return true;
+  if (el.closest && el.closest("[data-no-translate]")) return true;
+  // Skip the language switcher's own UI so it stays self-labeled
+  if (el.closest && el.closest(".lang")) return true;
+  // Skip elements explicitly marked as keep-original (mono code blocks, etc.)
+  if (el.closest && el.closest("[data-keep-original]")) return true;
+  return false;
+}
+
+function isTranslatable(str) {
+  if (!str) return false;
+  const trimmed = str.trim();
+  if (trimmed.length < 2) return false;
+  // Need at least one alphabetic glyph
+  if (!/[A-Za-zÀ-ÿ\u00f1\u00d1]/.test(trimmed)) return false;
+  // Skip pure URL / email / @handle / file paths
+  if (/^(https?:\/\/|www\.|mailto:|@|\/)/.test(trimmed)) return false;
+  if (/^\S+@\S+\.\S+$/.test(trimmed)) return false;
+  // Skip "kui" alone or with punctuation
+  if (/^kui[\s.,·\-—]*$/i.test(trimmed)) return false;
+  return true;
+}
+
+function collectTextNodes(root) {
+  const out = [];
+  const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, {
+    acceptNode(n) {
+      if (shouldSkipParent(n.parentNode)) return NodeFilter.FILTER_REJECT;
+      if (!isTranslatable(n.nodeValue)) return NodeFilter.FILTER_REJECT;
+      return NodeFilter.FILTER_ACCEPT;
+    },
+  });
+  let n;
+  while ((n = walker.nextNode())) out.push(n);
+  return out;
+}
+
+function collectAttrTargets(root) {
+  const out = [];
+  const sel = TRANSLATABLE_ATTRS.map((a) => `[${a}]`).join(",");
+  const els = root.querySelectorAll(sel);
+  els.forEach((el) => {
+    if (shouldSkipParent(el)) return;
+    TRANSLATABLE_ATTRS.forEach((attr) => {
+      const val = el.getAttribute(attr);
+      if (val && isTranslatable(val)) out.push({ el, attr });
+    });
+  });
+  return out;
+}
+
+function lookupTranslation(rawSrc, lang) {
+  // Preserve leading/trailing whitespace exactly
+  const leading = (rawSrc.match(/^\s*/) || [""])[0];
+  const trailing = (rawSrc.match(/\s*$/) || [""])[0];
+  const key = rawSrc.trim();
+  if (!key) return null;
+  let v = null;
+  if (DICT[key] && DICT[key][lang]) v = DICT[key][lang];
+  else if (AUTO_CACHE[lang] && AUTO_CACHE[lang][key]) v = AUTO_CACHE[lang][key];
+  return v == null ? null : leading + v + trailing;
+}
+
+let isApplying = false;
+let translating = false;
+const TRANSLATING_LISTENERS = new Set();
+function setTranslating(v) {
+  translating = v;
+  TRANSLATING_LISTENERS.forEach((fn) => { try { fn(v); } catch (e) {} });
+}
+
+function applyAllNow(lang) {
+  isApplying = true;
+  try {
+    // Text nodes
+    const nodes = collectTextNodes(document.body);
+    for (const n of nodes) {
+      let orig = TEXT_ORIG.get(n);
+      if (orig == null) {
+        orig = n.nodeValue;
+        TEXT_ORIG.set(n, orig);
+      }
+      if (lang === "es") {
+        if (n.nodeValue !== orig) n.nodeValue = orig;
+      } else {
+        const translated = lookupTranslation(orig, lang);
+        const target = translated != null ? translated : orig;
+        if (n.nodeValue !== target) n.nodeValue = target;
+      }
+    }
+    // Attributes
+    const attrs = collectAttrTargets(document.body);
+    for (const { el, attr } of attrs) {
+      let map = ATTR_ORIG.get(el);
+      if (!map) { map = {}; ATTR_ORIG.set(el, map); }
+      const current = el.getAttribute(attr);
+      if (map[attr] == null) map[attr] = current;
+      if (lang === "es") {
+        if (current !== map[attr]) el.setAttribute(attr, map[attr]);
+      } else {
+        const translated = lookupTranslation(map[attr], lang);
+        const target = translated != null ? translated : map[attr];
+        if (current !== target) el.setAttribute(attr, target);
+      }
+    }
+  } finally {
+    isApplying = false;
+  }
+}
+
+async function translateBatch(strings, lang) {
+  const langMap = {
+    en: "English",
+    ru: "Russian",
+    ja: "Japanese",
+    zh: "Simplified Chinese",
+  };
+  const langName = langMap[lang];
+  if (!langName) return strings.slice();
+  if (!window.claude || typeof window.claude.complete !== "function") return strings.slice();
+
+  const SEP = "⫷⫸";
+  const list = strings.map((s, i) => `[${i + 1}] ${s.replace(/\n/g, " ⏎ ")}`).join(`\n${SEP}\n`);
+  const prompt =
+    `You are translating UI copy for "kui" — a software studio in Lima, Peru that builds POS, LMS and custom software for growing companies in Latin America. ` +
+    `Brand voice: concise, professional, modern, lowercase brand name. ` +
+    `\n\nTask: translate the following Spanish strings to ${langName}. ` +
+    `Keep the same punctuation, em dashes (—), bullets, line breaks (encoded as " ⏎ "), capitalization style, and tone. ` +
+    `Do NOT translate the brand "kui". Do NOT translate proper nouns of people, cities, or product names like "kui · POS" / "kui · LMS". ` +
+    `Return ONLY the translations, in the exact same order, each preceded by its bracketed index, separated by lines containing only "${SEP}". ` +
+    `No commentary, no quoting, no explanations.\n\nStrings:\n\n${list}`;
+
+  let out;
+  try {
+    out = await window.claude.complete(prompt);
+  } catch (e) {
+    console.warn("[kui i18n] batch failed:", e);
+    return strings.slice();
+  }
+  if (!out || typeof out !== "string") return strings.slice();
+
+  const result = strings.slice();
+  // Parse [n] prefixed entries
+  const re = /\[(\d+)\]\s*([\s\S]*?)(?=\n[^\S\n]*[⫷⫸]+[^\S\n]*\n|\n\[\d+\]|$)/g;
+  let m;
+  while ((m = re.exec(out)) !== null) {
+    const idx = parseInt(m[1], 10) - 1;
+    let val = m[2].trim();
+    val = val.replace(/\s*⏎\s*/g, "\n");
+    // strip surrounding quotes if claude added them
+    val = val.replace(/^["'`]+|["'`]+$/g, "");
+    if (idx >= 0 && idx < strings.length && val) result[idx] = val;
+  }
+  return result;
+}
+
+async function ensureTranslations(lang, scope) {
+  if (lang === "es") return;
+  if (!AUTO_CACHE[lang]) AUTO_CACHE[lang] = {};
+  const root = scope || document.body;
+
+  const textNodes = collectTextNodes(root);
+  const attrs = collectAttrTargets(root);
+  const needed = new Set();
+
+  for (const n of textNodes) {
+    let orig = TEXT_ORIG.get(n);
+    if (orig == null) { orig = n.nodeValue; TEXT_ORIG.set(n, orig); }
+    const key = orig.trim();
+    if (!key) continue;
+    if (DICT[key] && DICT[key][lang]) continue;
+    if (AUTO_CACHE[lang][key]) continue;
+    needed.add(key);
+  }
+  for (const { el, attr } of attrs) {
+    let map = ATTR_ORIG.get(el);
+    if (!map) { map = {}; ATTR_ORIG.set(el, map); }
+    if (map[attr] == null) map[attr] = el.getAttribute(attr);
+    const key = (map[attr] || "").trim();
+    if (!key) continue;
+    if (DICT[key] && DICT[key][lang]) continue;
+    if (AUTO_CACHE[lang][key]) continue;
+    needed.add(key);
+  }
+
+  if (needed.size === 0) return;
+
+  setTranslating(true);
+  try {
+    // Run batches in parallel (up to 3 at a time) for faster first paint.
+    const arr = [...needed];
+    const BATCH = 18;
+    const CONCURRENCY = 3;
+    const chunks = [];
+    for (let i = 0; i < arr.length; i += BATCH) chunks.push(arr.slice(i, i + BATCH));
+
+    let cursor = 0;
+    const workers = Array.from({ length: Math.min(CONCURRENCY, chunks.length) }, async () => {
+      while (true) {
+        if (window.__kuiLang !== lang) return;
+        const idx = cursor++;
+        if (idx >= chunks.length) return;
+        const batch = chunks[idx];
+        const translated = await translateBatch(batch, lang);
+        batch.forEach((src, j) => {
+          const t = translated[j];
+          AUTO_CACHE[lang][src] = (t && t !== src) ? t : (AUTO_CACHE[lang][src] || src);
+        });
+        persistCache(lang);
+        if (window.__kuiLang === lang) applyAllNow(lang);
+      }
+    });
+    await Promise.all(workers);
+  } finally {
+    setTranslating(false);
+  }
+}
+
+/* Prefetch translations for a language WITHOUT switching to it.
+   Triggered on hover/focus of language menu items so the switch is instant. */
+async function prefetchLang(lang) {
+  if (lang === "es") return;
+  if (!AUTO_CACHE[lang]) AUTO_CACHE[lang] = {};
+  // Collect from current DOM but don't apply.
+  const textNodes = collectTextNodes(document.body);
+  const attrs = collectAttrTargets(document.body);
+  const needed = new Set();
+  for (const n of textNodes) {
+    const orig = TEXT_ORIG.get(n) ?? n.nodeValue;
+    const key = orig.trim();
+    if (!key) continue;
+    if (DICT[key] && DICT[key][lang]) continue;
+    if (AUTO_CACHE[lang][key]) continue;
+    needed.add(key);
+  }
+  for (const { el, attr } of attrs) {
+    const map = ATTR_ORIG.get(el);
+    const src = map ? map[attr] : el.getAttribute(attr);
+    if (!src) continue;
+    const key = src.trim();
+    if (DICT[key] && DICT[key][lang]) continue;
+    if (AUTO_CACHE[lang][key]) continue;
+    needed.add(key);
+  }
+  if (needed.size === 0) return;
+  // Fire-and-forget background fetch.
+  const arr = [...needed];
+  const BATCH = 18;
+  for (let i = 0; i < arr.length; i += BATCH) {
+    const batch = arr.slice(i, i + BATCH);
+    try {
+      const translated = await translateBatch(batch, lang);
+      batch.forEach((src, j) => {
+        const t = translated[j];
+        if (t && t !== src) AUTO_CACHE[lang][src] = t;
+      });
+      persistCache(lang);
+    } catch (e) { /* ignore */ }
+  }
+}
+window.__kuiPrefetchLang = prefetchLang;
+
+let pendingTimer = null;
+function scheduleApply() {
+  if (isApplying) return;
+  if (pendingTimer) return;
+  pendingTimer = setTimeout(() => {
+    pendingTimer = null;
+    const lang = window.__kuiLang;
+    applyAllNow(lang);
+    if (lang !== "es") ensureTranslations(lang);
+  }, 80);
+}
+
+let observer = null;
+function startObserver() {
+  if (observer) return;
+  observer = new MutationObserver((muts) => {
+    if (isApplying) return;
+    for (const m of muts) {
+      if (m.type === "characterData" || m.addedNodes.length || m.removedNodes.length || m.type === "attributes") {
+        scheduleApply();
+        return;
+      }
+    }
+  });
+  observer.observe(document.body, {
+    childList: true,
+    subtree: true,
+    characterData: true,
+    attributes: true,
+    attributeFilter: TRANSLATABLE_ATTRS,
+  });
+}
+
+// Re-apply whenever language changes.
+window.__kuiLangListeners.add(() => scheduleApply());
+
+function bootAutoTranslator() {
+  startObserver();
+  // First pass slightly delayed so React has rendered the page.
+  setTimeout(scheduleApply, 200);
+  setTimeout(scheduleApply, 800);
+  setTimeout(scheduleApply, 2000);
+}
+if (document.readyState === "loading") {
+  document.addEventListener("DOMContentLoaded", bootAutoTranslator);
+} else {
+  bootAutoTranslator();
+}
+
+/* ============================================================
+   TranslatingIndicator — small pill that fades in while
+   batches of translations are in flight.
+   ============================================================ */
+function TranslatingIndicator() {
+  const [on, setOn] = useState(false);
+  useEffect(() => {
+    const fn = (v) => setOn(v);
+    TRANSLATING_LISTENERS.add(fn);
+    return () => TRANSLATING_LISTENERS.delete(fn);
+  }, []);
+  const labelMap = {
+    es: "Traduciendo…",
+    en: "Translating…",
+    ru: "Перевод…",
+    ja: "翻訳中…",
+    zh: "翻译中…",
+  };
+  const lang = window.__kuiLang || "es";
+  return (
+    <div className={`i18n-status ${on ? "is-on" : ""}`} data-no-translate="true" aria-live="polite">
+      <span className="i18n-status-dot" />
+      <span className="i18n-status-text mono">{labelMap[lang] || labelMap.en}</span>
+    </div>
+  );
+}
+
+Object.assign(window, {
+  LANGS, DICT, AUTO_CACHE, t, setLang, useLang, LanguageSwitcher, T,
+  TranslatingIndicator,
+});

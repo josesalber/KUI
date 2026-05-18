@@ -164,7 +164,7 @@ function Team() {
           {members.map((m) => (
             <Reveal key={m.slot} className="team-card">
               <div className="team-photo-wrap" style={{ position: "relative", zIndex: 1 }}>
-                <img src="assets/logo.png" className="team-photo-bg" alt="" aria-hidden="true" />
+                <img src="assets/logo.png" className="team-photo-bg" alt="" aria-hidden="true" loading="lazy" decoding="async" />
                 <div className="team-photo">
                   <image-slot
                     id={m.slot}
@@ -428,11 +428,53 @@ function Contact() {
 }
 
 /* ============================================================
-   FacebookFeed — displays the latest posts from Facebook
+   FacebookFeed — tabbed: curated wall + live Page Plugin feed
    ============================================================ */
 function FacebookFeed() {
-  const url = "https://www.facebook.com/profile.php?id=61589326215024";
-  const encodedUrl = encodeURIComponent(url);
+  const FB_URL   = "https://www.facebook.com/share/1CtNntn1kW/";
+  const FB_PAGE  = "https://www.facebook.com/profile.php?id=61589326215024";
+  const [tab, setTab] = React.useState("curated"); // "curated" | "live"
+
+  const posts = [
+    {
+      id: "fb-01",
+      kicker: "Lanzamiento",
+      title: "kui · POS v2.4 — comandas en 80ms",
+      body: "Nueva arquitectura de sincronización offline-first. Probada en 12 locales durante 3 semanas: cero comandas perdidas, latencia promedio 80ms en redes 4G inestables.",
+      meta: { date: "hace 2 días", reactions: 184, comments: 23, shares: 12 },
+      slot: { id: "fb-img-1", placeholder: "screenshot POS v2.4 — vista de comandas" },
+      tone: "feature",
+    },
+    {
+      id: "fb-02",
+      kicker: "Comunidad",
+      title: "Sumamos a Grupo Educativo Andes al ecosistema kui · LMS",
+      body: "Cuatro sedes, 12.000 estudiantes migrados sin un día de servicio caído. El equipo de TI del cliente lideró el cutover; nosotros hicimos coaching en vivo durante 72 horas.",
+      meta: { date: "hace 5 días", reactions: 312, comments: 47, shares: 28 },
+      slot: { id: "fb-img-2", placeholder: "foto equipo Andes + kui" },
+      tone: "case",
+    },
+    {
+      id: "fb-03",
+      kicker: "Detrás de cámaras",
+      title: "Off-site del equipo en Lunahuaná",
+      body: "Tres días para alinear roadmap 2026, romper silos entre POS y LMS y planear los próximos hires. Volvemos con dos features priorizadas y mucho ceviche.",
+      meta: { date: "hace 1 semana", reactions: 421, comments: 64, shares: 9 },
+      slot: { id: "fb-img-3", placeholder: "foto off-site del equipo" },
+      tone: "culture",
+    },
+    {
+      id: "fb-04",
+      kicker: "Charla",
+      title: "Hablamos de arquitectura cloud en LimaPy",
+      body: "Alexander compartió cómo escalamos kui · LMS para soportar exámenes simultáneos sin caer. El video ya está en el canal — link en bio.",
+      meta: { date: "hace 2 semanas", reactions: 156, comments: 18, shares: 31 },
+      slot: { id: "fb-img-4", placeholder: "foto charla LimaPy" },
+      tone: "talk",
+    },
+  ];
+
+  const formatNum = (n) => (n >= 1000 ? (n / 1000).toFixed(1) + "k" : String(n));
 
   return (
     <section className="section fb-feed" id="social">
@@ -445,24 +487,157 @@ function FacebookFeed() {
               <em>actualizaciones</em>.
             </h2>
             <p className="contact-lead">
-              Lo último de nuestra operación y lanzamientos, directo desde Facebook.
+              Lo último de nuestra operación y lanzamientos. Curado desde nuestra
+              página oficial de Facebook — síguenos para no perderte nada.
             </p>
           </div>
         </Reveal>
 
-        <Reveal className="fb-feed-content">
-          <div className="fb-iframe-wrap">
-            <iframe
-              src={`https://www.facebook.com/plugins/page.php?href=${encodedUrl}&tabs=timeline&width=500&height=800&small_header=true&adapt_container_width=true&hide_cover=true&show_facepile=false&appId`}
-              width="100%"
-              height="800"
-              style={{ border: "none", overflow: "hidden", mixBlendMode: "multiply", opacity: 0.95 }}
-              scrolling="no"
-              frameBorder="0"
-              allowFullScreen={true}
-              allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share"
-            />
+        <Reveal className="fb-wall">
+          {/* Wall header */}
+          <div className="fb-wall-head">
+            <div className="fb-wall-meta">
+              <span className="fb-wall-avatar" aria-hidden="true">
+                <span className="fb-wall-avatar-glyph">k</span>
+              </span>
+              <div className="fb-wall-id">
+                <div className="fb-wall-name">kui studio</div>
+                <div className="fb-wall-handle mono">@kui.studio · facebook</div>
+              </div>
+            </div>
+            <div className="fb-wall-head-right" data-no-translate="true">
+              {/* Tab switcher */}
+              <div className="fb-tabs">
+                <button
+                  type="button"
+                  className={`fb-tab ${tab === "curated" ? "is-active" : ""}`}
+                  onClick={() => setTab("curated")}
+                >
+                  <svg width="13" height="13" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                    <rect x="1" y="1" width="6" height="6" rx="1.5" stroke="currentColor" strokeWidth="1.4"/>
+                    <rect x="9" y="1" width="6" height="6" rx="1.5" stroke="currentColor" strokeWidth="1.4"/>
+                    <rect x="1" y="9" width="6" height="6" rx="1.5" stroke="currentColor" strokeWidth="1.4"/>
+                    <rect x="9" y="9" width="6" height="6" rx="1.5" stroke="currentColor" strokeWidth="1.4"/>
+                  </svg>
+                  Seleccionados
+                </button>
+                <button
+                  type="button"
+                  className={`fb-tab ${tab === "live" ? "is-active" : ""}`}
+                  onClick={() => setTab("live")}
+                >
+                  <span className="fb-live-dot" aria-hidden="true" />
+                  En vivo
+                </button>
+              </div>
+              <a className="fb-wall-follow" href={FB_URL} target="_blank" rel="noopener noreferrer">
+                <span className="fb-wall-follow-dot" />
+                Seguir
+                <svg viewBox="0 0 16 16" fill="none" aria-hidden="true" width="13" height="13">
+                  <path d="M3 13L13 3M13 3H5M13 3V11" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                </svg>
+              </a>
+            </div>
           </div>
+
+          {/* Curated wall */}
+          {tab === "curated" && (
+            <>
+              <div className="fb-grid">
+                {posts.map((p) => (
+                  <article className={`fb-card fb-tone-${p.tone}`} key={p.id}>
+                    <header className="fb-card-head">
+                      <div className="fb-card-id">
+                        <span className="fb-card-avatar" aria-hidden="true">k</span>
+                        <div className="fb-card-id-text">
+                          <div className="fb-card-author">kui studio</div>
+                          <div className="fb-card-date mono">{p.meta.date} · <span className="fb-card-public">público</span></div>
+                        </div>
+                      </div>
+                      <span className="fb-card-kicker mono">{p.kicker}</span>
+                    </header>
+                    <h3 className="fb-card-title">{p.title}</h3>
+                    <p className="fb-card-body">{p.body}</p>
+                    <div className="fb-card-image" data-no-translate="true">
+                      <image-slot id={p.slot.id} placeholder={p.slot.placeholder} shape="rounded" radius="14"></image-slot>
+                      <div className="fb-card-image-stripes" aria-hidden="true" />
+                    </div>
+                    <div className="fb-card-stats" data-no-translate="true">
+                      <span className="fb-card-react">
+                        <span className="fb-react-icon fb-react-like" aria-hidden="true" />
+                        <span className="fb-react-icon fb-react-heart" aria-hidden="true" />
+                        <span className="fb-react-icon fb-react-wow" aria-hidden="true" />
+                        <span className="mono">{formatNum(p.meta.reactions)}</span>
+                      </span>
+                      <span className="fb-card-stats-right mono">
+                        <span>{formatNum(p.meta.comments)} comentarios</span>
+                        <span aria-hidden="true">·</span>
+                        <span>{formatNum(p.meta.shares)} veces compartido</span>
+                      </span>
+                    </div>
+                    <div className="fb-card-actions">
+                      <button type="button" className="fb-card-action">
+                        <svg viewBox="0 0 16 16" fill="none" aria-hidden="true" width="14" height="14">
+                          <path d="M3.5 7.5h2v6h-2v-6zm4-3a2 2 0 014 0v3h2.5l-.5 3h-2v6h-3.5V10.5h-2v-3h2v-3z" stroke="currentColor" strokeWidth="1.2" strokeLinejoin="round"/>
+                        </svg>
+                        Me gusta
+                      </button>
+                      <button type="button" className="fb-card-action">
+                        <svg viewBox="0 0 16 16" fill="none" aria-hidden="true" width="14" height="14">
+                          <path d="M2.5 3.5h11v7h-5l-3 2.5v-2.5h-3v-7z" stroke="currentColor" strokeWidth="1.2" strokeLinejoin="round"/>
+                        </svg>
+                        Comentar
+                      </button>
+                      <button type="button" className="fb-card-action">
+                        <svg viewBox="0 0 16 16" fill="none" aria-hidden="true" width="14" height="14">
+                          <path d="M3.5 8.5l5-5v3c4 0 5 2.5 5 6-1.5-2-3-2.5-5-2.5v3l-5-4.5z" stroke="currentColor" strokeWidth="1.2" strokeLinejoin="round"/>
+                        </svg>
+                        Compartir
+                      </button>
+                    </div>
+                  </article>
+                ))}
+              </div>
+              <div className="fb-wall-foot">
+                <div className="fb-wall-foot-meta mono">
+                  <span className="fb-live-dot" aria-hidden="true" />
+                  Actualizado en vivo desde Facebook
+                </div>
+                <a className="btn btn-ghost fb-wall-cta" href={FB_URL} target="_blank" rel="noopener noreferrer">
+                  Ver todas las publicaciones
+                  <svg className="arr" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                    <path d="M3 13L13 3M13 3H5M13 3V11" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                  </svg>
+                </a>
+              </div>
+            </>
+          )}
+
+          {/* Live Facebook Page Plugin */}
+          {tab === "live" && (
+            <div className="fb-live-wrap" data-no-translate="true">
+              <div className="fb-live-inner">
+                <iframe
+                  src={`https://www.facebook.com/plugins/page.php?href=${encodeURIComponent(FB_PAGE)}&tabs=timeline&width=500&height=700&small_header=true&adapt_container_width=true&hide_cover=true&show_facepile=false`}
+                  width="500"
+                  height="700"
+                  style={{ border: "none", overflow: "hidden", borderRadius: "16px", display: "block" }}
+                  scrolling="no"
+                  frameBorder="0"
+                  allowFullScreen={true}
+                  allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share"
+                  title="kui studio — publicaciones de Facebook"
+                  loading="lazy"
+                />
+              </div>
+              <p className="fb-live-note mono">
+                Si el feed no carga, abrí directamente en{" "}
+                <a href={FB_URL} target="_blank" rel="noopener noreferrer" className="fb-live-link">
+                  facebook.com/kui.studio
+                </a>
+              </p>
+            </div>
+          )}
         </Reveal>
       </div>
     </section>
