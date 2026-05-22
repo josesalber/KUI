@@ -1,4 +1,4 @@
-/* global React, ReactDOM, Intro, Nav, Hero, Marquee, Services, Products, Stats, Latam, WhyKui, History, Approach, Stack, Testimonials, Team, Showcase, Contact, Footer, ChatWidget, StudioHero, ROICalculator, FAQ, Newsletter, CaseStudy, CustomCursor, PageTransitions, TweaksPanel, useTweaks, TweakSection, TweakColor, TweakRadio, TweakToggle, FacebookFeed, TranslatingIndicator */
+/* global React, ReactDOM, Intro, Nav, Hero, Marquee, Services, Products, Stats, Latam, WhyKui, History, Approach, Stack, Testimonials, Team, Showcase, Contact, Footer, ChatWidget, StudioHero, ROICalculator, FAQ, Newsletter, CaseStudy, CustomCursor, PageTransitions, TweaksPanel, useTweaks, TweakSection, TweakColor, TweakRadio, TweakToggle, FacebookFeed, TranslatingIndicator, AboutCarousel, Values, MissionVision */
 const { useEffect, useState, useCallback } = React;
 
 const TWEAK_DEFAULTS = /*EDITMODE-BEGIN*/{
@@ -80,6 +80,9 @@ function App() {
     body = (
       <main>
         <StudioHero />
+        <AboutCarousel />
+        <Values />
+        <MissionVision />
         <Stats />
         <Latam />
         <WhyKui />
@@ -123,8 +126,7 @@ function App() {
       <Intro onDone={handleIntroDone} />
       <Nav />
       {body}
-      {page !== "404" && <Newsletter />}
-      <Footer />
+      {page !== "404" && <Footer />}
       <ChatWidget />
 
       <TweaksPanel title="Tweaks · kui">
