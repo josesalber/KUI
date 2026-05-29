@@ -21,4 +21,5 @@ Allow: /
 User-agent: LinkedInBot
 Allow: /
 
-Sitemap: https://kuiweb.vercel.app/sitemap.xml
+Sitemap: https://kuiweb.com/sitemap.xml
+Host: https://kuiweb.com
