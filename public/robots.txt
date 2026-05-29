@@ -1,0 +1,25 @@
+# kui studio — robots
+User-agent: *
+Allow: /
+Disallow: /404
+Disallow: /uploads/
+Disallow: /scraps/
+
+# Major search & social crawlers (explicit)
+User-agent: Googlebot
+Allow: /
+
+User-agent: Bingbot
+Allow: /
+
+User-agent: facebookexternalhit
+Allow: /
+
+User-agent: Twitterbot
+Allow: /
+
+User-agent: LinkedInBot
+Allow: /
+
+Sitemap: https://kuiweb.com/sitemap.xml
+Host: https://kuiweb.com
