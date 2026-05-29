@@ -120,25 +120,25 @@ function History() {
 function Team() {
   const members = [
     {
-      slot: "team-jose-enrique",
-      src: "assets/enrique.png",
-      name: "José Enrique Salirrosas",
-      role: "Co - fundador · Producto & UX",
-      bio: "Ingeniero de software con foco en producto. Antes de kui lideró equipos de diseño en startups de SaaS en Lima. Cree que el mejor software es el que se siente inevitable.",
-      links: [
-        { kind: "linkedin", href: "https://www.linkedin.com/in/josesalirrosasb" },
-        { kind: "mail", href: "mailto:josesalirrosasbermeo@gmail.com" },
-      ],
-    },
-    {
       slot: "team-alexander",
       src: "assets/alexander.png",
       name: "Alexander Ferrua",
-      role: "Co - fundador · Arquitectura & Backend",
+      role: "Co-fundador · Producto & UX",
+      bio: "Ingeniero de software con foco en producto. Antes de kui lideró equipos de diseño en startups de SaaS en Lima y Bogotá. Cree que el mejor software es el que se siente inevitable.",
+      links: [
+        { kind: "linkedin", href: "https://linkedin.com/in/alexander-ferrua" },
+        { kind: "mail", href: "mailto:alexander@kui.studio" },
+      ],
+    },
+    {
+      slot: "team-jose-enrique",
+      src: "assets/enrique.png",
+      name: "José Enrique Salirrosas",
+      role: "Co-fundador · Ingeniería & Plataforma",
       bio: "Arquitecto de sistemas. Construyó plataformas multi-tenant para fintechs antes de fundar kui. Obsesionado con la simplicidad operativa y los sistemas que no despiertan a nadie de madrugada.",
       links: [
-        { kind: "linkedin", href: "https://www.linkedin.com/in/alexander-ferrua-r%C3%BAa-97b4b0213/" },
-        { kind: "mail", href: "mailto:alexander@kui.studio" },
+        { kind: "linkedin", href: "https://linkedin.com/in/jose-enrique-salirrosas" },
+        { kind: "mail", href: "mailto:jose@kui.studio" },
       ],
     },
   ];
@@ -428,7 +428,7 @@ function Contact() {
    FacebookFeed — live Page Plugin embed (no tabs)
    ============================================================ */
 function FacebookFeed() {
-  const FB_URL = "https://www.facebook.com/people/KUI/61589326215024/";
+  const FB_URL  = "https://www.facebook.com/people/KUI/61589326215024/";
   const FB_PAGE = "https://www.facebook.com/profile.php?id=61589326215024";
 
   return (
@@ -456,7 +456,7 @@ function FacebookFeed() {
                 <span className="fb-wall-avatar-glyph">k</span>
               </span>
               <div className="fb-wall-id">
-                <div className="fb-wall-name">kui</div>
+                <div className="fb-wall-name">kui studio</div>
                 <div className="fb-wall-handle mono">@kui · facebook</div>
               </div>
             </div>
@@ -464,7 +464,7 @@ function FacebookFeed() {
               <span className="fb-wall-follow-dot" />
               Seguir en Facebook
               <svg viewBox="0 0 16 16" fill="none" aria-hidden="true" width="13" height="13">
-                <path d="M3 13L13 3M13 3H5M13 3V11" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                <path d="M3 13L13 3M13 3H5M13 3V11" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
               </svg>
             </a>
           </div>
@@ -501,7 +501,7 @@ function FacebookFeed() {
             <a className="btn btn-ghost fb-wall-cta" href={FB_URL} target="_blank" rel="noopener noreferrer">
               Ver todas las publicaciones
               <svg className="arr" viewBox="0 0 16 16" fill="none" aria-hidden="true">
-                <path d="M3 13L13 3M13 3H5M13 3V11" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                <path d="M3 13L13 3M13 3H5M13 3V11" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
               </svg>
             </a>
           </div>

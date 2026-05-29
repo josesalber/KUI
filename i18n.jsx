@@ -357,11 +357,20 @@ function applyAllNow(lang) {
         TEXT_ORIG.set(n, orig);
       }
       if (lang === "es") {
-        if (n.nodeValue !== orig) n.nodeValue = orig;
+        // If React changed the content while in Spanish, update the cached original
+        if (n.nodeValue !== orig) TEXT_ORIG.set(n, n.nodeValue);
       } else {
         const translated = lookupTranslation(orig, lang);
         const target = translated != null ? translated : orig;
-        if (n.nodeValue !== target) n.nodeValue = target;
+        if (n.nodeValue !== target) {
+          // Check if React changed the underlying content (new orig from React)
+          if (n.nodeValue !== orig && lookupTranslation(n.nodeValue.trim(), lang) === null && !AUTO_CACHE[lang]?.[n.nodeValue.trim()]) {
+            // React updated the text — adopt the new value as original
+            TEXT_ORIG.set(n, n.nodeValue);
+          } else {
+            n.nodeValue = target;
+          }
+        }
       }
     }
     // Attributes
@@ -372,7 +381,7 @@ function applyAllNow(lang) {
       const current = el.getAttribute(attr);
       if (map[attr] == null) map[attr] = current;
       if (lang === "es") {
-        if (current !== map[attr]) el.setAttribute(attr, map[attr]);
+        if (current !== map[attr]) map[attr] = current;
       } else {
         const translated = lookupTranslation(map[attr], lang);
         const target = translated != null ? translated : map[attr];

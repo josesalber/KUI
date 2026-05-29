@@ -1,4 +1,4 @@
-/* global React, ReactDOM, Intro, Nav, Hero, Marquee, Services, Products, Stats, Latam, WhyKui, History, Approach, Stack, Testimonials, Team, Showcase, Contact, Footer, ChatWidget, StudioHero, ROICalculator, FAQ, Newsletter, CaseStudy, CustomCursor, PageTransitions, TweaksPanel, useTweaks, TweakSection, TweakColor, TweakRadio, TweakToggle, FacebookFeed, TranslatingIndicator, AboutCarousel, Values, MissionVision */
+/* global React, ReactDOM, Intro, Nav, Hero, Marquee, Services, Products, Stats, Latam, WhyKui, History, Approach, Stack, Testimonials, Team, Showcase, Contact, Footer, ChatWidget, StudioHero, ROICalculator, FAQ, Newsletter, CaseStudy, CustomCursor, PageTransitions, TweaksPanel, useTweaks, TweakSection, TweakColor, TweakRadio, TweakToggle, FacebookFeed, TranslatingIndicator, AboutCarousel, Values, MissionVision, ProductsPageFull */
 const { useEffect, useState, useCallback } = React;
 
 const TWEAK_DEFAULTS = /*EDITMODE-BEGIN*/{
@@ -101,6 +101,8 @@ function App() {
         <Contact />
       </main>
     );
+  } else if (page === "productos") {
+    body = <ProductsPageFull />;
   } else if (page === "case") {
     body = <CaseStudy />;
   } else if (page === "404") {

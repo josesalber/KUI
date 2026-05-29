@@ -270,7 +270,7 @@ function Nav() {
         </button>
         <div className={`nav-links ${menuOpen ? "is-open" : ""}`}>
           {link("#servicios", "Servicios")}
-          {link("#productos", "Productos")}
+          {link("productos", "Productos")}
           {link("estudio", "Estudio")}
           {link("contacto#equipo", "Equipo")}
           {link("contacto#contacto", "Contacto")}
@@ -330,7 +330,7 @@ function Hero() {
             no en features.
           </p>
           <div className="hero-actions">
-            <a className="btn btn-primary" href="#productos">
+            <a className="btn btn-primary" href="productos.html">
               Ver productos
               <svg className="arr" viewBox="0 0 16 16" fill="none">
                 <path d="M3 13L13 3M13 3H5M13 3V11" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />

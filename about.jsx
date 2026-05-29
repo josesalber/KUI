@@ -52,7 +52,7 @@ function AboutCarousel() {
               style={{ transform: `translateX(-${slide * 100}%)` }}
             >
               {/* Slide 0 — Quiénes somos */}
-              <div className="about-slide about-slide--hero">
+              <div className="about-slide">
                 <div className="about-slide-badge mono">01 · Quiénes somos</div>
                 <h3 className="about-slide-title">
                   Transformamos la gestión educativa con tecnología de vanguardia.
@@ -69,13 +69,10 @@ function AboutCarousel() {
                   <span className="about-pill">Toda la comunidad</span>
                   <span className="about-pill">Gestión educativa</span>
                 </div>
-                <div className="about-slide-hero" aria-hidden="true">
-                  <img src="assets/slide0.png" alt="" loading="lazy" />
-                </div>
               </div>
 
               {/* Slide 1 — Qué hacemos */}
-              <div className="about-slide about-slide--hero">
+              <div className="about-slide">
                 <div className="about-slide-badge mono">02 · Nuestra plataforma</div>
                 <h3 className="about-slide-title">
                   Todo lo que una institución educativa necesita, en un solo lugar.
@@ -100,9 +97,6 @@ function AboutCarousel() {
                   <span className="about-pill">Certificados</span>
                   <span className="about-pill">Admisión</span>
                   <span className="about-pill">Pensiones</span>
-                </div>
-                <div className="about-slide-hero" aria-hidden="true">
-                  <img src="assets/slide1.png" alt="" loading="lazy" />
                 </div>
               </div>
             </div>
