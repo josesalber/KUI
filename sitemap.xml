@@ -1,34 +1,45 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
-        xmlns:xhtml="http://www.w3.org/1999/xhtml">
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>https://kuiweb.vercel.app/</loc>
-    <lastmod>2026-05-18</lastmod>
-    <changefreq>weekly</changefreq>
+    <loc>https://kuiweb.com/</loc>
+    <lastmod>2026-05-29</lastmod>
+    <changefreq>daily</changefreq>
     <priority>1.0</priority>
   </url>
   <url>
-    <loc>https://kuiweb.vercel.app/estudio</loc>
-    <lastmod>2026-05-18</lastmod>
-    <changefreq>monthly</changefreq>
+    <loc>https://kuiweb.com/index.html</loc>
+    <lastmod>2026-05-29</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://kuiweb.com/productos.html</loc>
+    <lastmod>2026-05-29</lastmod>
+    <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://kuiweb.vercel.app/contacto</loc>
-    <lastmod>2026-05-18</lastmod>
+    <loc>https://kuiweb.com/contacto.html</loc>
+    <lastmod>2026-05-29</lastmod>
     <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
+    <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://kuiweb.vercel.app/caso-pos</loc>
-    <lastmod>2026-05-18</lastmod>
+    <loc>https://kuiweb.com/caso-lms.html</loc>
+    <lastmod>2026-05-29</lastmod>
     <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
+    <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://kuiweb.vercel.app/caso-lms</loc>
-    <lastmod>2026-05-18</lastmod>
+    <loc>https://kuiweb.com/caso-pos.html</loc>
+    <lastmod>2026-05-29</lastmod>
     <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://kuiweb.com/estudio.html</loc>
+    <lastmod>2026-05-29</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
   </url>
 </urlset>
