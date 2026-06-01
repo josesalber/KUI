@@ -269,9 +269,13 @@ function Nav() {
         </button>
         <div className={`nav-links ${menuOpen ? "is-open" : ""}`}>
           {link("#servicios", "Inicio")}
-          {link("productos", "Productos")}
+          {/*
+            {link("productos", "Productos")}
+            */}
           {link("productos#planes", "Planes")}
+          {/*
           {link("estudio", "Estudio")}
+          */}
           {link("contacto#equipo", "Equipo")}
           {link("contacto#contacto", "Contacto")}
           <LanguageSwitcher />
