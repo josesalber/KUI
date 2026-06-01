@@ -102,7 +102,7 @@ function App() {
       </main>
     );
   } else if (page === "productos") {
-    body = <ProductsPageFull />;
+    body = <ProductsPageFull showPlans />;
   } else if (page === "case") {
     body = <CaseStudy />;
   } else if (page === "404") {
@@ -111,11 +111,7 @@ function App() {
     body = (
       <main>
         <Hero />
-        <Marquee />
-        <Services />
-        <Products />
-        <ROICalculator />
-        <Showcase />
+        <ProductsPageFull />
       </main>
     );
   }

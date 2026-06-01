@@ -195,7 +195,6 @@ function Intro({ onDone }) {
       <div className="intro-pct">000 / 100</div>
     </div>
   );
-
 }
 
 /* ============================================================
@@ -269,8 +268,9 @@ function Nav() {
           <span className="bar"></span>
         </button>
         <div className={`nav-links ${menuOpen ? "is-open" : ""}`}>
-          {link("#servicios", "Servicios")}
+          {link("#servicios", "Inicio")}
           {link("productos", "Productos")}
+          {link("productos#planes", "Planes")}
           {link("estudio", "Estudio")}
           {link("contacto#equipo", "Equipo")}
           {link("contacto#contacto", "Contacto")}
@@ -308,44 +308,32 @@ function Hero() {
       <div className="hero-logo-wrap" aria-hidden="true">
         <div className="orbit o3"><div className="pin" /></div>
         <div className="orbit o2"><div className="pin" /></div>
-        <img src="assets/logo.png" alt="" className="hero-logo-img" decoding="async" />
+        <img src="assets/personaje.png" alt="" className="hero-logo-img" decoding="async" />
       </div>
 
       <div className="container hero-inner">
-        <div className="hero-eyebrow">
-          <span className="hero-eyebrow-dot" />
-          <span><strong>Disponible</strong> · 2 proyectos abiertos en 2026</span>
-        </div>
+        
 
         <h1 className="hero-headline">
-          <span className="row mask-reveal" ref={(el) => addRef(el, 0)}><span>Infraestructura</span></span>
-          <span className="row mask-reveal" ref={(el) => addRef(el, 1)}><span>digital para</span></span>
-          <span className="row mask-reveal" ref={(el) => addRef(el, 2)}><span>negocios que <em className="accent">se mueven</em>.</span></span>
+          <span className="row mask-reveal" ref={(el) => addRef(el, 0)}><span>  La educación</span></span>
+          <span className="row mask-reveal" ref={(el) => addRef(el, 1)}><span>y tecnología</span></span>
+          <span className="row mask-reveal" ref={(el) => addRef(el, 2)}><span><em className="accent">avanzan</em> juntas.</span></span>
         </h1>
 
         <div className="hero-bottom">
           <p className="hero-sub">
-            Construimos sistemas operativos para empresas en crecimiento — desde plataformas
-            de aprendizaje hasta puntos de venta para restaurantes. Software medido en velocidad,
-            no en features.
+            KUI integra la gestión académica, administrativa y la comunicación
+            institucional en una experiencia moderna, intuitiva y eficiente.
           </p>
-          <div className="hero-actions">
-            <a className="btn btn-primary" href="productos.html">
-              Ver productos
-              <svg className="arr" viewBox="0 0 16 16" fill="none">
-                <path d="M3 13L13 3M13 3H5M13 3V11" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-              </svg>
-            </a>
-            <a className="btn btn-ghost" href="#contacto">
-              Iniciar proyecto
-            </a>
+          <div className="hero-mobile-character" aria-hidden="true">
+            <img src="assets/personaje.png" alt="" className="hero-mobile-character-img" decoding="async" />
           </div>
         </div>
       </div>
 
       <div className="scroll-cue" aria-hidden="true">
         <span className="line" />
-        <span>scroll</span>
+        <span>Desliza</span>
       </div>
     </section>);
 
@@ -356,50 +344,41 @@ function Hero() {
    KUI logo inserted as a scrolling item at the centre position
    ============================================================ */
 function Marquee() {
-  const ICON = "https://cdn.simpleicons.org";
-  const techs = [
-    { name: "React",       icon: `${ICON}/react/61DAFB`,       color: "#61DAFB" },
-    { name: "Next.js",     icon: `${ICON}/nextdotjs/1a1a1a`,   color: "#1a1a1a" },
-    { name: "TypeScript",  icon: `${ICON}/typescript/3178C6`,  color: "#3178C6" },
-    { name: "Angular",     icon: `${ICON}/angular/DD0031`,     color: "#DD0031" },
-    { name: "Vite",        icon: `${ICON}/vite/646CFF`,        color: "#646CFF" },
-    { name: "kui",         icon: "assets/logo.png",            color: "#ee5a1f", isKui: true },
-    { name: "Spring Boot", icon: `${ICON}/springboot/6DB33F`,  color: "#6DB33F" },
-    { name: "PostgreSQL",  icon: `${ICON}/postgresql/336791`,  color: "#336791" },
-    { name: "Supabase",    icon: `${ICON}/supabase/3ECF8E`,    color: "#3ECF8E" },
-    { name: "Vercel",      icon: `${ICON}/vercel/1a1a1a`,      color: "#1a1a1a" },
-    { name: "Render",      icon: `${ICON}/render/46E3B7`,      color: "#46E3B7" },
-    { name: "SQL",         icon: `${ICON}/mysql/00758F`,       color: "#00758F" },
+  const schools = [
+    { name: "Colegio San Marcos", short: "SM", color: "#2f6fed" },
+    { name: "Colegio Santa Elena", short: "SE", color: "#21b59b" },
+    { name: "Colegio Los Alamos", short: "LA", color: "#ee5a1f" },
+    { name: "Colegio Innova Norte", short: "IN", color: "#6b57ff" },
+    { name: "Colegio San Jose", short: "SJ", color: "#d14e7a" },
+    { name: "Colegio Virgen del Sol", short: "VS", color: "#0f8b8d" },
+    { name: "Colegio Trilce Sur", short: "TS", color: "#d97706" },
+    { name: "Colegio Humboldt", short: "HB", color: "#3b82f6" },
+    { name: "Colegio Talentus", short: "TA", color: "#16a34a" },
+    { name: "Colegio Alpha", short: "AL", color: "#7c3aed" },
+    { name: "Colegio Jean Piaget", short: "JP", color: "#0891b2" },
+    { name: "Colegio Prescott", short: "PR", color: "#e11d48" },
   ];
 
-  // Double for seamless infinite loop — animate exactly -50%
-  const doubled = [...techs, ...techs];
+  const doubled = [...schools, ...schools, ...schools];
 
   return (
-    <section className="marquee marquee-stack" aria-label="Stack tecnológico del equipo kui">
+    <section className="marquee marquee-stack" aria-label="Instituciones educativas que pueden operar con KUI">
       <div className="marquee-track" data-no-translate="true">
-        {doubled.map((tech, i) => (
+        {doubled.map((school, i) => (
           <span
-            className={`marquee-item${tech.isKui ? " marquee-item-kui" : ""}`}
-            key={i}
-            title={tech.name}
-            aria-label={tech.name}
+            className="marquee-item marquee-school"
+            key={`${school.short}-${i}`}
+            title={school.name}
+            aria-label={school.name}
           >
-            <img
-              src={tech.icon}
-              alt={tech.name}
-              width={tech.isKui ? "44" : "38"}
-              height={tech.isKui ? "44" : "38"}
-              loading="lazy"
-              decoding="async"
-              className="marquee-icon"
-              style={{
-                filter: tech.isKui
-                  ? `drop-shadow(0 0 10px ${tech.color}88)`
-                  : `drop-shadow(0 0 6px ${tech.color}55)`,
-                borderRadius: tech.isKui ? "50%" : undefined,
-              }}
-            />
+            <span
+              className="marquee-school-mark mono"
+              style={{ background: school.color }}
+              aria-hidden="true"
+            >
+              {school.short}
+            </span>
+            <span className="marquee-school-name">{school.name}</span>
           </span>
         ))}
       </div>
@@ -851,3 +830,4 @@ function Footer() {
 Object.assign(window, {
   Intro, Nav, Hero, Marquee, Products, Stats, Approach, Showcase, CTA, Footer, Reveal
 });
+
