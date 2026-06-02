@@ -594,7 +594,7 @@ function ImplementationSection() {
           </div>
 
           <Reveal className="pp-impl-mascot">
-            <img src="assets/enseña.png" alt="Mascota KUI guiando la implementación" loading="lazy" />
+            <img src="assets/impacto.png" alt="Mascota KUI guiando la implementación" loading="lazy" />
           </Reveal>
         </div>
       </div>

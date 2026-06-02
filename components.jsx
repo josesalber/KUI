@@ -236,6 +236,12 @@ function Nav() {
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
 
+  // prevent body scroll when mobile menu open
+  useEffect(() => {
+    if (menuOpen) document.body.classList.add("no-scroll"); else document.body.classList.remove("no-scroll");
+    return () => { document.body.classList.remove("no-scroll"); };
+  }, [menuOpen]);
+
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 30);
     window.addEventListener("scroll", onScroll, { passive: true });

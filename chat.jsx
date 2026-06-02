@@ -42,6 +42,12 @@ function ChatWidget() {
     }
   }, [messages, open]);
 
+  // Lock body scroll when chat panel open to avoid double scrollbars
+  useEffect(() => {
+    if (open) document.body.classList.add("no-scroll"); else document.body.classList.remove("no-scroll");
+    return () => { document.body.classList.remove("no-scroll"); };
+  }, [open]);
+
   // Build the wa.me URL for the current pending message.
   const fullText = pendingMessage ? `Hola ${WA_NAME}, escribo desde la web.\n\n${pendingMessage}` : "";
   const waUrl = pendingMessage

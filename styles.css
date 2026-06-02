@@ -19,7 +19,29 @@
 }
 
 * { box-sizing: border-box; }
-html, body { margin: 0; padding: 0; }
+html, body { margin: 0; padding: 0; height: 100%; }
+
+/* Global scrollbar: track transparent, thumb visible */
+html {
+  /* Firefox: thin scrollbar, thumb color over transparent track */
+  scrollbar-width: thin;
+  scrollbar-color: rgba(12,10,8,0.28) transparent;
+}
+
+/* WebKit browsers (Chrome, Edge, Safari) */
+::-webkit-scrollbar { width: 12px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb {
+  background: rgba(12,10,8,0.28);
+  border-radius: 999px;
+  border: 3px solid transparent; /* give padding so track shows through */
+  background-clip: content-box;
+}
+::-webkit-scrollbar-thumb:hover { background: rgba(12,10,8,0.36); }
+
+/* Keep custom panels (chat) with slightly stronger thumb for accessibility */
+.wa-panel::-webkit-scrollbar-thumb, .wa-body::-webkit-scrollbar-thumb { background: rgba(12,10,8,0.36); }
+.wa-panel { scrollbar-width: thin; scrollbar-color: rgba(12,10,8,0.36) transparent; }
 html { background: var(--bg); }
 body {
   font-family: var(--font-body);
@@ -31,6 +53,9 @@ body {
   line-height: 1.5;
   overflow-x: hidden;
 }
+
+/* Utility: lock body scroll (used by modals/panels) */
+.no-scroll { overflow: hidden !important; }
 
 a { color: inherit; text-decoration: none; }
 button { font: inherit; cursor: pointer; border: 0; background: transparent; color: inherit; }
@@ -264,18 +289,29 @@ img { display: block; max-width: 100%; }
 .hero {
   position: relative;
   min-height: 100vh;
-  padding: 180px 0 44px;
-  overflow: hidden;
-  display: flex;
-  align-items: center;
+  padding: 180px 0 96px;
+  overflow-x: hidden;
+  /* Force visible to avoid internal scrolling that creates double scrollbar */
+  overflow-y: visible !important;
+  /* Ensure hero expands with content instead of clipping */
+  height: auto !important;
+  display: block !important;
+  align-items: flex-start;
   background:
     radial-gradient(circle at 78% 12%, rgba(238, 90, 31, 0.12), transparent 24%),
     radial-gradient(circle at 18% 76%, rgba(238, 90, 31, 0.08), transparent 28%),
     radial-gradient(circle at 8% 14%, rgba(238, 90, 31, 0.06) 0 2px, transparent 3px) 0 0 / 28px 28px,
     linear-gradient(180deg, #fffaf6 0%, #fff8f3 52%, #fff4eb 100%);
 }
-@media (max-width: 1100px) { .hero { padding: 160px 0 34px; } }
-@media (max-width: 768px) { .hero { padding: 130px 0 30px; min-height: auto; } }
+
+/* Hide internal scrollbar for hero (visual fix if inner scroll appears) */
+.hero {
+  -ms-overflow-style: none; /* IE/Edge */
+  scrollbar-width: none; /* Firefox */
+}
+.hero::-webkit-scrollbar { display: none; width: 0; height: 0; }
+@media (max-width: 1100px) { .hero { padding: 160px 0 80px; } }
+@media (max-width: 768px) { .hero { padding: 130px 0 56px; min-height: auto; } }
 .hero::after {
   content: "";
   position: absolute;
@@ -400,6 +436,22 @@ img { display: block; max-width: 100%; }
   line-height: 1.5;
   max-width: 460px;
   color: var(--ink-2);
+}
+
+/* Larger hero subtext on wide screens */
+@media (min-width: 1100px) {
+  .hero-sub {
+    font-size: 20.5px;
+    max-width: 580px;
+    line-height: 1.6;
+  }
+}
+@media (min-width: 1600px) {
+  .hero-sub {
+    font-size: 22.5px;
+    max-width: 720px;
+    line-height: 1.7;
+  }
 }
 .hero-actions {
   display: flex;
@@ -1349,7 +1401,7 @@ img { display: block; max-width: 100%; }
   justify-content: center;
 }
 .pp-impl-mascot img {
-  width: min(100%, 250px);
+  width: min(100%, 500px);
   height: auto;
   object-fit: contain;
   filter: drop-shadow(0 18px 34px rgba(12, 10, 8, 0.12));
