@@ -5,7 +5,7 @@ const path = require('path');
 const rootDir = __dirname;
 const publicDir = path.join(rootDir, 'public');
 const portArg = process.argv[2];
-const port = Number(portArg) || 5173;
+const port = Number(portArg) || Number(process.env.PORT) || 5173;
 
 const mimeTypes = {
   '.html': 'text/html; charset=utf-8',

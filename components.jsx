@@ -235,6 +235,11 @@ function Reveal({ as: Tag = "div", className = "", children, stagger, ...rest })
 function Nav() {
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
+  const [dropOpen, setDropOpen] = useState(false);
+  const dropRef = useRef(null);
+  const dropTimer = useRef(null);
+  const openDrop = () => { clearTimeout(dropTimer.current); setDropOpen(true); };
+  const closeDrop = () => { dropTimer.current = setTimeout(() => setDropOpen(false), 150); };
 
   // prevent body scroll when mobile menu open
   useEffect(() => {
@@ -248,6 +253,16 @@ function Nav() {
     onScroll();
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
+
+  // Close dropdown on outside click
+  useEffect(() => {
+    if (!dropOpen) return;
+    const handle = (e) => {
+      if (dropRef.current && !dropRef.current.contains(e.target)) setDropOpen(false);
+    };
+    document.addEventListener("mousedown", handle);
+    return () => document.removeEventListener("mousedown", handle);
+  }, [dropOpen]);
 
   const page = document.body.getAttribute("data-page") || "home";
   const link = (target, label) => {
@@ -275,6 +290,38 @@ function Nav() {
         </button>
         <div className={`nav-links ${menuOpen ? "is-open" : ""}`}>
           {link("#servicios", "Inicio")}
+
+          {/* Conócenos dropdown */}
+          <div
+            className={`nav-drop-wrap ${dropOpen ? "is-open" : ""}`}
+            ref={dropRef}
+            onMouseEnter={() => { if (window.innerWidth > 768) openDrop(); }}
+            onMouseLeave={() => { if (window.innerWidth > 768) closeDrop(); }}
+          >
+            <button
+              className="nav-link nav-drop-trigger"
+              type="button"
+              aria-haspopup="true"
+              aria-expanded={dropOpen}
+              onClick={() => setDropOpen((o) => !o)}
+            >
+              <T>Conócenos</T>
+              <svg className="nav-chev" viewBox="0 0 12 12" fill="none" width="10" height="10" aria-hidden="true">
+                <path d="M2 4l4 4 4-4" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
+              </svg>
+            </button>
+            <div className="nav-drop-menu" role="menu"
+              onMouseEnter={() => { if (window.innerWidth > 768) openDrop(); }}
+              onMouseLeave={() => { if (window.innerWidth > 768) closeDrop(); }}
+            >
+              {link("administracion", "Administración")}
+              {link("profesores", "Profesores")}
+              {link("padres", "Padres")}
+              {link("estudiantes", "Estudiantes")}
+              {link("enfermeria", "Enfermería")}
+            </div>
+          </div>
+
           {/*
             {link("productos", "Productos")}
             */}

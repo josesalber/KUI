@@ -1,4 +1,4 @@
-/* global React, ReactDOM, Intro, Nav, Hero, Marquee, Services, Products, Stats, Latam, WhyKui, History, Approach, Stack, Testimonials, Team, Showcase, Contact, Footer, ChatWidget, StudioHero, ROICalculator, FAQ, Newsletter, CaseStudy, CustomCursor, PageTransitions, TweaksPanel, useTweaks, TweakSection, TweakColor, TweakRadio, TweakToggle, FacebookFeed, TranslatingIndicator, AboutCarousel, Values, MissionVision, ProductsPageFull */
+/* global React, ReactDOM, Intro, Nav, Hero, Marquee, Services, Products, Stats, Latam, WhyKui, History, Approach, Stack, Testimonials, Team, Showcase, Contact, Footer, ChatWidget, StudioHero, ROICalculator, FAQ, Newsletter, CaseStudy, CustomCursor, PageTransitions, TweaksPanel, useTweaks, TweakSection, TweakColor, TweakRadio, TweakToggle, FacebookFeed, TranslatingIndicator, AboutCarousel, Values, MissionVision, ProductsPageFull, AudiencePanels */
 const { useEffect, useState, useCallback } = React;
 
 const TWEAK_DEFAULTS = /*EDITMODE-BEGIN*/{
@@ -103,6 +103,12 @@ function App() {
     );
   } else if (page === "productos") {
     body = <ProductsPageFull showPlans />;
+  } else if (["administracion", "profesores", "padres", "estudiantes", "enfermeria"].includes(page)) {
+    body = (
+      <main>
+        <AudiencePanels only={page} />
+      </main>
+    );
   } else if (page === "case") {
     body = <CaseStudy />;
   } else if (page === "404") {
