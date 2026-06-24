@@ -323,7 +323,7 @@ const IMPLEMENTATION_STEPS = [
   },
 ];
 
-/* â”€â”€ ProductsPageHero â”€â”€ */
+/* â"€â"€ ProductsPageHero â"€â"€ */
 function ProductsPageHero() {
   const heroRef = useRef(null);
   const monthlyPrice = 300;
@@ -401,7 +401,7 @@ function ProductsPageHero() {
   );
 }
 
-/* â”€â”€ RolesSection â”€â”€ */
+/* â"€â"€ RolesSection â"€â"€ */
 function ImpactSection() {
   const points = [
     "Control de matrí­cula, pagos y operación escolar en un solo lugar.",
@@ -456,97 +456,145 @@ function ImpactSection() {
   );
 }
 
-function BenefitsSection() {
-  const items = [
+/* ── LaptopMockup ── */
+function LaptopMockup({ id, src, placeholder }) {
+  return (
+    <div className="laptop-mockup" data-no-translate="true">
+      <div className="laptop-lid">
+        <div className="laptop-screen-area">
+          <image-slot
+            id={id}
+            src={src || ""}
+            placeholder={placeholder}
+            fit="contain"
+            position="50% 0%"
+            shape="rect"
+            radius="0"
+          ></image-slot>
+        </div>
+      </div>
+      <div className="laptop-base"><div className="laptop-notch" /></div>
+    </div>
+  );
+}
+
+/* ── RoleShowcaseSection ── */
+function RoleShowcaseSection() {
+  const cards = [
     {
-      title: "Informacion en Tiempo Real",
-      desc: "Padres y directivos pueden acceder rapidamente a calificaciones, asistencia, tareas y eventos importantes.",
-      tone: "blue",
-      icon: "chart",
+      id: "admin",
+      title: "Administradores",
+      desc: "Organiza y centraliza todo lo que tu centro educativo necesita.",
+      accent: "#3178C6",
+      device: "laptop",
     },
     {
-      title: "Comunicacion con Docentes",
-      desc: "KUI facilita una comunicacion directa y ordenada entre familias, docentes y administracion.",
-      tone: "mint",
-      icon: "idea",
+      id: "prof",
+      title: "Profesores",
+      desc: "Ingresa, planifica y califica las tareas, evaluaciones y actividades de tus estudiantes.",
+      accent: "#646CFF",
+      device: "laptop",
     },
     {
-      title: "Alerta de Tareas y Notificaciones",
-      desc: "Envio de avisos oportunos sobre tareas, eventos y novedades para mantener informada a toda la comunidad.",
-      tone: "rose",
-      icon: "alert",
-      badge: "",
+      id: "est",
+      title: "Estudiantes",
+      desc: "Entérate del contenido, tareas, evaluaciones y actividades que tus maestros tienen para ti.",
+      accent: "#3ECF8E",
+      device: "phones2",
     },
     {
-      title: "Control de matricula, Pagos y mas",
-      desc: "Matriculas, pagos, notas, asistencias y procesos clave concentrados en una sola plataforma.",
-      tone: "violet",
-      icon: "briefcase",
+      id: "padres",
+      title: "Padres",
+      desc: "Infórmate del rendimiento académico, eventos, estados de cuenta, horario y comunicados importantes.",
+      accent: "#ee5a1f",
+      device: "phone",
     },
   ];
 
   return (
-    <section className="section pp-benefits">
+    <section className="section pp-role-showcase">
       <div className="container">
-        <Reveal className="pp-benefits-head">
-          <div className="pp-impact-badge mono">Beneficios</div>
-          <h2 className="pp-benefits-title">
-            KUI en Centros<br />
-            <em>Educativos</em>.
-          </h2>
+        <Reveal className="section-head">
+          <div><div className="tag">— para todos</div></div>
+          <div className="section-kicker">
+            <h2 className="section-title">
+              KUI en Centros<br /><em>Educativos</em>.
+            </h2>
+            <p>Cada actor de la comunidad tiene su propio panel, diseñado para lo que realmente necesita.</p>
+          </div>
         </Reveal>
 
-        <div className="pp-benefits-grid">
-          {items.map((item) => (
-            <Reveal className={`pp-benefit-card is-${item.tone}`} key={item.title}>
-              <div className="pp-benefit-icon-wrap">
-                <div className="pp-benefit-icon">
-                  <BenefitIcon kind={item.icon} />
+        <div className="showcase-roles-grid">
+          {cards.map((card) => (
+            <Reveal key={card.id} className="showcase-role-card" style={{ "--card-accent": card.accent }}>
+              <div className="showcase-role-header">
+                <div className="showcase-role-avatar" data-no-translate="true">
+                  <image-slot
+                    id={`showcase-avatar-${card.id}`}
+                    src={`assets/showcase-avatar-${card.id}.png`}
+                    placeholder={`Foto: ${card.title}`}
+                    fit="cover"
+                    shape="circle"
+                  ></image-slot>
                 </div>
-                {item.badge && <span className="pp-benefit-badge mono">{item.badge}</span>}
+                <div className="showcase-role-info">
+                  <h3 className="showcase-role-title">{card.title}</h3>
+                  <p className="showcase-role-desc">{card.desc}</p>
+                </div>
               </div>
-              <div className="pp-benefit-copy">
-                <h3 className="pp-benefit-title">{item.title}</h3>
-                <p className="pp-benefit-desc">{item.desc}</p>
+
+              <div className="showcase-role-device" data-no-translate="true">
+                {card.device === "laptop" && (
+                  <LaptopMockup
+                    id={`showcase-laptop-${card.id}`}
+                    src={`assets/showcase-laptop-${card.id}.png`}
+                    placeholder={`Captura: ${card.title}`}
+                  />
+                )}
+                {card.device === "phone" && (
+                  <div className="showcase-phones1">
+                    <div className="phone-mockup">
+                      <div className="phone-screen">
+                        <image-slot
+                          id={`showcase-phone-${card.id}`}
+                          src={`assets/showcase-phone-${card.id}.png`}
+                          placeholder={`Captura móvil: ${card.title}`}
+                          fit="cover" shape="rect" radius="0"
+                        ></image-slot>
+                      </div>
+                    </div>
+                  </div>
+                )}
+                {card.device === "phones2" && (
+                  <div className="showcase-phones2">
+                    <div className="phone-mockup">
+                      <div className="phone-screen">
+                        <image-slot
+                          id={`showcase-phone-${card.id}-1`}
+                          src={`assets/showcase-phone-${card.id}-1.png`}
+                          placeholder={`Captura móvil 1: ${card.title}`}
+                          fit="cover" shape="rect" radius="0"
+                        ></image-slot>
+                      </div>
+                    </div>
+                    <div className="phone-mockup">
+                      <div className="phone-screen">
+                        <image-slot
+                          id={`showcase-phone-${card.id}-2`}
+                          src={`assets/showcase-phone-${card.id}-2.png`}
+                          placeholder={`Captura móvil 2: ${card.title}`}
+                          fit="cover" shape="rect" radius="0"
+                        ></image-slot>
+                      </div>
+                    </div>
+                  </div>
+                )}
               </div>
             </Reveal>
           ))}
         </div>
       </div>
     </section>
-  );
-}
-
-function BenefitIcon({ kind }) {
-  if (kind === "chart") {
-    return (
-      <svg viewBox="0 0 24 24" fill="none" width="34" height="34">
-        <rect x="4" y="5" width="16" height="11" rx="2.5" stroke="currentColor" strokeWidth="1.8" />
-        <path d="M8 19l2-3 2 2 4-5 2 3" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
-      </svg>
-    );
-  }
-  if (kind === "idea") {
-    return (
-      <svg viewBox="0 0 24 24" fill="none" width="34" height="34">
-        <path d="M12 4a5.5 5.5 0 00-3.7 9.57c.5.45.83.92.95 1.43h5.5c.12-.5.45-.98.95-1.43A5.5 5.5 0 0012 4z" stroke="currentColor" strokeWidth="1.8" strokeLinejoin="round" />
-        <path d="M9.5 18h5M10.5 21h3" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
-      </svg>
-    );
-  }
-  if (kind === "alert") {
-    return (
-      <svg viewBox="0 0 24 24" fill="none" width="34" height="34">
-        <path d="M7 7l10 10M17 7L7 17" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
-        <rect x="4" y="4" width="16" height="16" rx="3" stroke="currentColor" strokeWidth="1.8" />
-      </svg>
-    );
-  }
-  return (
-    <svg viewBox="0 0 24 24" fill="none" width="34" height="34">
-      <path d="M4 8h16v10H4z" stroke="currentColor" strokeWidth="1.8" strokeLinejoin="round" />
-      <path d="M9 8V6h6v2" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
-    </svg>
   );
 }
 
@@ -765,7 +813,7 @@ function RolesSection() {
   );
 }
 
-/* â”€â”€ ModulesSection â”€â”€ */
+/* â"€â"€ ModulesSection â"€â"€ */
 function ModulesSection() {
   const gridRef = useRef(null);
 
@@ -832,7 +880,80 @@ function ModulesSection() {
   );
 }
 
-/* â”€â”€ ProductsCTA â”€â”€ */
+/* ── Plans comparison data ── */
+const PLAN_FEATURES = [
+  { label: "Prueba Gratuita", vals: ["check", "check", "check"] },
+  { label: "Pasarela de pagos", vals: ["no", "check", "check"] },
+  { label: "Registro de calificaciones y gestión de libretas", vals: ["no", "check", "check"] },
+  { label: "Servidor y Dominio", vals: ["check", "check", "check"] },
+  { label: "Página web informativa", vals: ["no", "check", "check"] },
+  { label: "Oportunidades, inscripciones y matrículas", vals: ["no", "check", "check"] },
+  { label: "Documentos digitales", vals: ["check", "check", "check"] },
+  { label: "Gestión de docentes y administrativos", vals: ["no", "check", "check"] },
+  { label: "Diseño curricular (sedes, niveles, grados, secciones, áreas y asignaturas)", vals: ["no", "check", "check"] },
+  { label: "Programación de horarios, aulas y docentes", vals: ["no", "check", "check"] },
+  { label: "Evaluación y control de asistencia", vals: ["no", "check", "check"] },
+  { label: "Cierre de calificaciones por periodo", vals: ["no", "check", "check"] },
+  { label: "Aula Virtual (Cronología, Clases en vivo, Exámenes, tareas, material de estudio, foro y más)", vals: ["check", "check", "check"] },
+  { label: "Notificaciones a docentes y estudiantes", vals: ["no", "check", "check"] },
+  { label: "Gestión financiera", vals: ["no", "check", "check"] },
+  { label: "Migración inicial de datos", vals: ["paid", "check", "check"] },
+  { label: "Mensajería en los diferentes módulos", vals: ["paid", "check", "check"] },
+  { label: "Chat institucional", vals: ["paid", "check", "check"] },
+  { label: "Constancias de no adeudo", vals: ["paid", "check", "check"] },
+  { label: "Capacitaciones para Administrativos, docentes, padres de familia y alumnado en general", vals: ["paid", "check", "check"] },
+];
+
+function PlansComparisonTable() {
+  const CheckIcon = () => (
+    <svg viewBox="0 0 20 20" fill="none" width="16" height="16" aria-hidden="true">
+      <path d="M4.5 10.5l3.2 3.2L15.5 6" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
+  );
+
+  const CellVal = ({ val }) => {
+    if (val === "check") return <span className="pct-check"><CheckIcon /></span>;
+    if (val === "no") return <span className="pct-no" aria-label="No incluido">—</span>;
+    if (val === "paid") return <span className="pct-paid">S/.</span>;
+    return null;
+  };
+
+  return (
+    <div className="pp-plans-comparison">
+      <div className="pp-plans-comparison-head">
+        <h3 className="pp-plans-comparison-title">CARACTERÍSTICAS DE NUESTROS PLANES</h3>
+        <p className="pp-plans-comparison-sub">Con KUI tendrá la posibilidad de gestionar la información de su institución de forma integrada.</p>
+      </div>
+      <div className="pct-wrap">
+        <table className="pct">
+          <thead>
+            <tr>
+              <th className="pct-feat-col">Características</th>
+              <th>Otras plataformas</th>
+              <th>
+                <span className="pct-badge">Recomendado</span>
+                <br />Crecimiento
+              </th>
+              <th>Institucional</th>
+            </tr>
+          </thead>
+          <tbody>
+            {PLAN_FEATURES.map((feat, i) => (
+              <tr key={i} className={i % 2 === 0 ? "pct-row-alt" : ""}>
+                <td className="pct-label">{feat.label}</td>
+                {feat.vals.map((v, j) => (
+                  <td key={j} className="pct-cell"><CellVal val={v} /></td>
+                ))}
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  );
+}
+
+/* â"€â"€ ProductsCTA â"€â"€ */
 function PlansSection() {
   const [openIdx, setOpenIdx] = useState(0);
   const whatsappBase = "https://wa.me/51902487635?text=";
@@ -842,13 +963,13 @@ function PlansSection() {
       desc: "Ideal para instituciones que quieren comenzar con gestión ordenada y rápida implementación.",
       price: "S/ 300",
       period: "mensuales",
-      note: "Hasta 300 alumnos",
+      note: "Hasta 500 alumnos",
       featured: true,
     },
     {
       name: "Plan Crecimiento",
       desc: "Para colegios que necesitan más capacidad operativa, más usuarios y más personalización.",
-      price: "S/ 1.30",
+      price: "S/0.99",
       period: "por alumno extra",
       note: "Escala según matrí­cula",
       featured: false,
@@ -911,6 +1032,7 @@ function PlansSection() {
             </div>
           </div>
         </Reveal>
+        <PlansComparisonTable />
       </div>
     </section>
   );
@@ -991,6 +1113,61 @@ function ProductsCTA() {
   );
 }
 
+/* ── IntegrationsSection ── */
+function IntegrationsSection() {
+  const items = [
+    {
+      id: "facturacion",
+      title: "Facturación Electrónica",
+      desc: "Emite facturas electrónicas vinculadas a SUNAT directamente desde KUI. Ahorra tiempo y costo en tu gestión contable.",
+    },
+    {
+      id: "pagos",
+      title: "Pasarela de Pago",
+      desc: "Realiza pagos de matrículas, pensiones y más con tarjeta de crédito, débito o Yape. Simple, rápido y seguro.",
+    },
+    {
+      id: "mensajeria",
+      title: "Mensajería Integrada",
+      desc: "Servidor de mensajería dedicado para una comunicación eficaz entre todos los actores de la comunidad educativa.",
+    },
+  ];
+
+  return (
+    <section className="section pp-integrations">
+      <div className="container">
+        <Reveal className="pp-integrations-head">
+          <h2 className="pp-integrations-title">
+            ¿Por qué elegir KUI como<br />solución <em>integral</em>?
+          </h2>
+          <p className="pp-integrations-sub">
+            Todas las soluciones del centro educativo en un mismo ecosistema.
+            Gestión, comunicación y aprendizaje trabajando en la misma dirección.
+          </p>
+        </Reveal>
+        <div className="pp-integrations-grid">
+          {items.map((item) => (
+            <Reveal key={item.id} className="pp-integration-item">
+              <div className="pp-integration-icon" data-no-translate="true">
+                <image-slot
+                  id={`integration-icon-${item.id}`}
+                  src={`assets/integration-${item.id}.png`}
+                  placeholder={`Ícono: ${item.title}`}
+                  fit="contain"
+                  shape="rect"
+                  radius="0"
+                ></image-slot>
+              </div>
+              <h3 className="pp-integration-title">{item.title}</h3>
+              <p className="pp-integration-desc">{item.desc}</p>
+            </Reveal>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
 /* Assembled page component */
 function ProductsPageFull({ showPlans = false } = {}) {
   return (
@@ -1002,10 +1179,10 @@ function ProductsPageFull({ showPlans = false } = {}) {
         </>
       ) : (
         <>
-          <BenefitsSection />
+          <IntegrationsSection />
+          <RoleShowcaseSection />
           <ImplementationSection />
           <RolesSection />
-          <ModulesSection />
           <ProductsCTA />
         </>
       )}

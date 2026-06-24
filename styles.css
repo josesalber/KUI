@@ -6283,3 +6283,356 @@ body.has-custom-cursor button { cursor: none !important; }
   }
   .nav-drop-menu .nav-link:hover { background: transparent; color: var(--ink); }
 }
+
+
+/* ============================================================
+   Role Showcase Section (replaces pp-benefits)
+   ============================================================ */
+.pp-role-showcase {
+  background:
+    radial-gradient(circle at 78% 12%, rgba(238,90,31,0.10), transparent 24%),
+    radial-gradient(circle at 18% 76%, rgba(238,90,31,0.07), transparent 28%),
+    linear-gradient(180deg, #fffaf6 0%, #fff8f3 52%, #fff4eb 100%);
+  margin-top: -132px;
+  padding-top: 180px;
+}
+.showcase-roles-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+  margin-top: 48px;
+}
+.showcase-role-card {
+  background: #fff;
+  border: 1px solid var(--line-soft);
+  border-radius: 24px;
+  padding: 28px 28px 0;
+  overflow: hidden;
+  box-shadow: 0 4px 20px rgba(12,10,8,0.05);
+  display: flex;
+  flex-direction: column;
+}
+.showcase-role-header {
+  display: flex;
+  gap: 16px;
+  align-items: flex-start;
+  margin-bottom: 24px;
+}
+.showcase-role-avatar {
+  position: relative;
+  width: 72px;
+  height: 72px;
+  flex-shrink: 0;
+  border-radius: 50%;
+  overflow: hidden;
+  background: var(--bg-2);
+  border: 3px solid var(--card-accent, #ee5a1f);
+  box-shadow: 0 0 0 4px color-mix(in srgb, var(--card-accent, #ee5a1f) 14%, transparent);
+}
+.showcase-role-avatar image-slot {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+.showcase-role-title {
+  font-family: var(--font-display);
+  font-size: clamp(20px, 1.8vw, 26px);
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  color: var(--card-accent, #34364a);
+  margin: 4px 0 6px;
+  line-height: 1.1;
+}
+.showcase-role-desc {
+  font-size: 13.5px;
+  line-height: 1.65;
+  color: var(--muted);
+  margin: 0;
+  text-wrap: pretty;
+}
+.showcase-role-device {
+  margin-top: auto;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  padding-top: 20px;
+}
+
+/* ── Laptop mockup ── */
+.laptop-mockup {
+  width: 100%;
+}
+.laptop-lid {
+  border: 10px solid #1c1c2e;
+  border-bottom: 14px solid #1c1c2e;
+  border-radius: 10px 10px 0 0;
+  background: #0a0a14;
+  position: relative;
+  overflow: hidden;
+}
+/* camera dot */
+.laptop-lid::before {
+  content: "";
+  position: absolute;
+  top: 5px; left: 50%;
+  transform: translateX(-50%);
+  width: 5px; height: 5px;
+  border-radius: 50%;
+  background: #333;
+  z-index: 2;
+}
+.laptop-screen-area {
+  aspect-ratio: 16 / 10;
+  background: #f0f0f0;
+  position: relative;
+  overflow: hidden;
+}
+.laptop-screen-area image-slot {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+.laptop-base {
+  height: 14px;
+  background: linear-gradient(180deg, #252535 0%, #1a1a2e 100%);
+  border-radius: 0 0 4px 4px;
+  position: relative;
+}
+.laptop-notch {
+  position: absolute;
+  top: 0; left: 50%;
+  transform: translateX(-50%);
+  width: 80px; height: 7px;
+  background: #0a0a14;
+  border-radius: 0 0 8px 8px;
+}
+
+/* ── Phone arrangements inside showcase ── */
+.showcase-phones1 {
+  display: flex;
+  justify-content: center;
+  padding-bottom: 0;
+}
+.showcase-phones1 .phone-mockup { width: 180px; }
+.showcase-phones2 {
+  display: flex;
+  gap: 16px;
+  justify-content: center;
+  align-items: flex-end;
+}
+.showcase-phones2 .phone-mockup { width: 145px; }
+.showcase-phones2 .phone-mockup:first-child { margin-bottom: 20px; }
+
+@media (max-width: 900px) {
+  .showcase-roles-grid { grid-template-columns: 1fr; }
+  .pp-role-showcase { padding-top: 120px; margin-top: -80px; }
+}
+@media (max-width: 600px) {
+  .showcase-role-card { padding: 22px 22px 0; }
+  .showcase-roles-grid { gap: 14px; }
+}
+
+
+/* ============================================================
+   Integrations section — 3 icon cols below hero
+   ============================================================ */
+.pp-integrations {
+  background: #fff;
+  text-align: center;
+}
+.pp-integrations-head {
+  margin-bottom: 56px;
+}
+.pp-integrations-title {
+  font-family: var(--font-display);
+  font-size: clamp(30px, 3.8vw, 50px);
+  font-weight: 700;
+  letter-spacing: -0.04em;
+  line-height: 1.08;
+  color: #34364a;
+  margin: 0 0 16px;
+}
+.pp-integrations-title em {
+  font-style: normal;
+  color: var(--orange);
+}
+.pp-integrations-sub {
+  max-width: 560px;
+  margin: 0 auto;
+  font-size: 16px;
+  line-height: 1.75;
+  color: var(--muted);
+  text-wrap: pretty;
+}
+.pp-integrations-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 40px 48px;
+  max-width: 860px;
+  margin: 0 auto;
+}
+.pp-integration-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+}
+.pp-integration-icon {
+  position: relative;
+  width: 240px;
+  height: 240px;
+  flex-shrink: 0;
+  border-radius: 24px;
+  overflow: hidden;
+}
+.pp-integration-icon image-slot {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+.pp-integration-title {
+  font-family: var(--font-display);
+  font-size: 22px;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  color: #34364a;
+  margin: 0;
+}
+.pp-integration-desc {
+  font-size: 16px;
+  line-height: 1.72;
+  color: var(--muted);
+  margin: 0;
+  max-width: 280px;
+  text-align: center;
+  text-wrap: pretty;
+}
+@media (max-width: 700px) {
+  .pp-integrations-grid { grid-template-columns: 1fr; gap: 40px; }
+}
+
+/* ── Plans comparison table ── */
+.pp-plans-comparison {
+  margin-top: 80px;
+  padding-top: 64px;
+  border-top: 1px solid var(--line-soft);
+}
+.pp-plans-comparison-head {
+  text-align: center;
+  margin-bottom: 40px;
+}
+.pp-plans-comparison-title {
+  font-family: var(--font-display);
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin: 0 0 10px;
+}
+.pp-plans-comparison-sub {
+  font-size: 15px;
+  color: var(--muted);
+  margin: 0;
+}
+.pct-wrap {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  border-radius: 16px;
+  border: 1px solid var(--line-soft);
+}
+.pct {
+  width: 100%;
+  min-width: 580px;
+  border-collapse: collapse;
+}
+.pct thead tr {
+  background: var(--ink);
+  color: #fff;
+}
+.pct thead th {
+  padding: 16px 20px;
+  text-align: center;
+  font-family: var(--font-display);
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1.4;
+}
+.pct thead th.pct-feat-col {
+  text-align: left;
+  width: 46%;
+  border-radius: 16px 0 0 0;
+}
+.pct thead th:last-child {
+  border-radius: 0 16px 0 0;
+}
+.pct-badge {
+  display: inline-block;
+  background: var(--orange);
+  color: #fff;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  padding: 2px 8px;
+  border-radius: 20px;
+  text-transform: uppercase;
+  margin-bottom: 4px;
+}
+.pct tbody tr {
+  border-bottom: 1px solid var(--line-soft);
+  transition: background 0.15s;
+}
+.pct tbody tr:last-child {
+  border-bottom: none;
+}
+.pct tbody tr.pct-row-alt {
+  background: rgba(12,10,8,0.025);
+}
+.pct tbody tr:hover {
+  background: rgba(238,90,31,0.04);
+}
+.pct td {
+  padding: 13px 20px;
+  vertical-align: middle;
+}
+.pct-label {
+  font-size: 13.5px;
+  color: var(--ink);
+  text-align: left;
+  line-height: 1.45;
+}
+.pct-cell {
+  text-align: center;
+}
+.pct-check {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  background: rgba(62,207,142,0.15);
+  border-radius: 50%;
+  color: #3ECF8E;
+}
+.pct-no {
+  display: inline-block;
+  color: var(--muted);
+  font-size: 20px;
+  font-weight: 300;
+  line-height: 1;
+  opacity: 0.5;
+}
+.pct-paid {
+  display: inline-block;
+  font-size: 11px;
+  font-weight: 700;
+  font-family: var(--font-mono);
+  color: var(--orange);
+  background: rgba(238,90,31,0.12);
+  padding: 3px 8px;
+  border-radius: 6px;
+  letter-spacing: 0.04em;
+}
