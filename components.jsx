@@ -374,7 +374,7 @@ function Hero() {
         <h1 className="hero-headline">
           <span className="row mask-reveal" ref={(el) => addRef(el, 0)}><span>  Conectamos</span></span>
           <span className="row mask-reveal" ref={(el) => addRef(el, 1)}><span>  <em className="accent">esfuerzos,</em></span></span>
-          <span className="row mask-reveal" ref={(el) => addRef(el, 3)}><span>impulsamos el</span></span>
+          <span className="row mask-reveal" ref={(el) => addRef(el, 3)}><span>Impulsamos el</span></span>
           <span className="row mask-reveal" ref={(el) => addRef(el, 4)}><span>  <em className="accent">futuro.</em></span></span>
         </h1>
 
