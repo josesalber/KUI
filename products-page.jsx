@@ -929,12 +929,12 @@ function PlansComparisonTable() {
           <thead>
             <tr>
               <th className="pct-feat-col">Características</th>
-              <th>Otras plataformas</th>
-              <th>
+              <th className="pct-th"><span className="pct-th-name">Otras plataformas</span></th>
+              <th className="pct-th pct-th-rec">
                 <span className="pct-badge">Recomendado</span>
-                <br />Crecimiento
+                <span className="pct-th-name">KUI Crecimiento</span>
               </th>
-              <th>Institucional</th>
+              <th className="pct-th"><span className="pct-th-name">KUI Institucional</span></th>
             </tr>
           </thead>
           <tbody>
@@ -942,7 +942,7 @@ function PlansComparisonTable() {
               <tr key={i} className={i % 2 === 0 ? "pct-row-alt" : ""}>
                 <td className="pct-label">{feat.label}</td>
                 {feat.vals.map((v, j) => (
-                  <td key={j} className="pct-cell"><CellVal val={v} /></td>
+                  <td key={j} className={`pct-cell ${j === 1 ? "pct-cell-rec" : ""}`}><CellVal val={v} /></td>
                 ))}
               </tr>
             ))}
@@ -1030,6 +1030,17 @@ function PlansSection() {
                 </div>
               ))}
             </div>
+            <a
+              className="btn btn-primary pp-plans-demo"
+              href={`${whatsappBase}${encodeURIComponent("Hola KUI, quiero solicitar una demo.")}`}
+              target="_blank"
+              rel="noreferrer"
+            >
+              Solicita demo
+              <svg className="arr" viewBox="0 0 16 16" fill="none">
+                <path d="M3 13L13 3M13 3H5M13 3V11" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+              </svg>
+            </a>
           </div>
         </Reveal>
         <PlansComparisonTable />

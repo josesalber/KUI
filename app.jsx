@@ -128,6 +128,7 @@ function App() {
       <PageTransitions />
       <TranslatingIndicator />
       <Intro onDone={handleIntroDone} />
+      <PromoModal />
       <Nav />
       {body}
       {page !== "404" && <Footer />}

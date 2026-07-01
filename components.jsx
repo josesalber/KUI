@@ -885,7 +885,139 @@ function Footer() {
 
 }
 
+/* ============================================================
+   PromoModal — "Primer mes gratis" entry offer with countdown
+   Image slot: assets/promo.png (id promo-modal-image)
+   ============================================================ */
+function getMonthEnd() {
+  const now = new Date();
+  return new Date(now.getFullYear(), now.getMonth() + 1, 0, 23, 59, 59, 999);
+}
+
+function useCountdown(target) {
+  const calc = useCallback(() => {
+    const diff = Math.max(0, target - Date.now());
+    const s = Math.floor(diff / 1000);
+    return {
+      days: Math.floor(s / 86400),
+      hours: Math.floor((s % 86400) / 3600),
+      mins: Math.floor((s % 3600) / 60),
+      secs: s % 60,
+      done: diff === 0,
+    };
+  }, [target]);
+  const [t, setT] = useState(calc);
+  useEffect(() => {
+    const id = setInterval(() => setT(calc()), 1000);
+    return () => clearInterval(id);
+  }, [calc]);
+  return t;
+}
+
+function PromoModal() {
+  const [open, setOpen] = useState(false);
+  const [monthEnd] = useState(() => getMonthEnd().getTime());
+  const cd = useCountdown(monthEnd);
+  const closeRef = useRef(null);
+  const whatsapp =
+    "https://wa.me/51902487635?text=" +
+    encodeURIComponent("Hola KUI, quiero aprovechar la promoción del primer mes gratis.");
+
+  useEffect(() => {
+    if (sessionStorage.getItem("kui-promo-seen")) return;
+    const timer = setTimeout(() => setOpen(true), 1400);
+    return () => clearTimeout(timer);
+  }, []);
+
+  const close = useCallback(() => {
+    setOpen(false);
+    sessionStorage.setItem("kui-promo-seen", "1");
+  }, []);
+
+  useEffect(() => {
+    if (!open) return;
+    const onKey = (e) => { if (e.key === "Escape") close(); };
+    window.addEventListener("keydown", onKey);
+    if (closeRef.current) closeRef.current.focus();
+    document.body.style.overflow = "hidden";
+    return () => {
+      window.removeEventListener("keydown", onKey);
+      document.body.style.overflow = "";
+    };
+  }, [open, close]);
+
+  if (!open) return null;
+
+  const pad = (n) => String(n).padStart(2, "0");
+  const units = [
+    { label: "días", val: cd.days },
+    { label: "horas", val: cd.hours },
+    { label: "min", val: cd.mins },
+    { label: "seg", val: cd.secs },
+  ];
+
+  return (
+    <div className="promo-overlay" onClick={close} role="dialog" aria-modal="true" aria-labelledby="promo-title">
+      <div className="promo-modal" onClick={(e) => e.stopPropagation()}>
+        <button className="promo-close" onClick={close} aria-label="Cerrar promoción" ref={closeRef}>
+          <svg viewBox="0 0 24 24" fill="none" width="20" height="20">
+            <path d="M6 6l12 12M18 6L6 18" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+          </svg>
+        </button>
+
+        <div className="promo-visual" data-no-translate="true">
+          <image-slot
+            id="promo-modal-image"
+            src="assets/promo.png"
+            placeholder="Imagen de la promoción"
+            fit="cover"
+            shape="rect"
+            radius="0"
+          ></image-slot>
+          <div className="promo-visual-badge mono">Oferta limitada</div>
+        </div>
+
+        <div className="promo-body">
+          <div className="promo-tag mono">
+            <span className="promo-tag-dot" aria-hidden="true" />
+            Promoción del mes
+          </div>
+          <h2 className="promo-title" id="promo-title">
+            Primer mes<br /><em>gratis</em>.
+          </h2>
+          <p className="promo-desc">
+            Activa KUI en tu institución y obtén tu <strong>primer mes sin costo</strong>.
+            La promoción termina al finalizar el mes.
+          </p>
+
+          <div className="promo-countdown" aria-label="Tiempo restante de la promoción">
+            {units.map((u, i) => (
+              <React.Fragment key={u.label}>
+                <div className="promo-cd-unit">
+                  <span className="promo-cd-num">{pad(u.val)}</span>
+                  <span className="promo-cd-label mono">{u.label}</span>
+                </div>
+                {i < units.length - 1 && <span className="promo-cd-sep" aria-hidden="true">:</span>}
+              </React.Fragment>
+            ))}
+          </div>
+
+          <div className="promo-actions">
+            <a className="btn btn-primary promo-cta" href={whatsapp} target="_blank" rel="noreferrer" onClick={close}>
+              Quiero mi mes gratis
+              <svg className="arr" viewBox="0 0 16 16" fill="none">
+                <path d="M3 13L13 3M13 3H5M13 3V11" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+              </svg>
+            </a>
+            <button className="promo-dismiss" onClick={close}>Ahora no</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 Object.assign(window, {
-  Intro, Nav, Hero, Marquee, Products, Stats, Approach, Showcase, CTA, Footer, Reveal
+  Intro, Nav, Hero, Marquee, Products, Stats, Approach, Showcase, CTA, Footer, Reveal, PromoModal
 });
 
