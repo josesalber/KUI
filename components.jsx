@@ -326,6 +326,7 @@ function Nav() {
             {link("productos", "Productos")}
             */}
           {link("productos#planes", "Planes")}
+          {link("prueba", "Prueba KUI")}
           {/*
           {link("estudio", "Estudio")}
           */}

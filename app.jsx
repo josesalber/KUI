@@ -103,6 +103,8 @@ function App() {
     );
   } else if (page === "productos") {
     body = <ProductsPageFull showPlans />;
+  } else if (page === "prueba") {
+    body = <PruebaKui />;
   } else if (["administracion", "profesores", "padres", "estudiantes", "enfermeria"].includes(page)) {
     body = (
       <main>

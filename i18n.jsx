@@ -31,6 +31,7 @@ const DICT = {
   "Estudiantes":    { en: "Students",   ru: "Студенты",     ja: "学生",      zh: "学生" },
   "Enfermería":     { en: "Nursing",    ru: "Медпункт",     ja: "保健室",    zh: "校医室" },
   "Planes":         { en: "Plans",      ru: "Тарифы",       ja: "プラン",    zh: "方案" },
+  "Prueba KUI":     { en: "Try KUI",    ru: "Попробовать",  ja: "KUIを試す", zh: "试用KUI" },
   "Conócenos":      { en: "Solutions",  ru: "Решения",      ja: "ソリューション", zh: "解决方案" },
   "Contacto":       { en: "Contact",    ru: "Контакты",     ja: "お問い合わせ", zh: "联系" },
   "Hablemos":       { en: "Let's talk", ru: "Поговорим",    ja: "話そう",    zh: "聊聊" },
