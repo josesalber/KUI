@@ -93,7 +93,7 @@ function PruebaKui() {
                   <rect x="3.5" y="7" width="9" height="6" rx="1.5" stroke="currentColor" strokeWidth="1.3" />
                   <path d="M5.5 7V5a2.5 2.5 0 015 0v2" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" />
                 </svg>
-                colegioawa.vercel.app
+                colegiokui.com
               </div>
               <a className="demo-window-open" href={DEMO_URL} target="_blank" rel="noreferrer">
                 Abrir demo
