@@ -954,24 +954,41 @@ function PlansComparisonTable() {
 }
 
 /* â"€â"€ ProductsCTA â"€â"€ */
+const PPC_MIN = 250;
+const PPC_MAX = 5000;
+const PPC_BASE = 40; // S/ por 250 alumnos
+// +1 sol por alumno sobre 250
+
 function PlansSection() {
   const [openIdx, setOpenIdx] = useState(0);
+  const [period, setPeriod] = useState("mes"); // "mes" | "ano"
+  const [students, setStudents] = useState(PPC_MIN);
   const whatsappBase = "https://wa.me/51902487635?text=";
+  const visualRef = useRef(null);
+
+  const monthly = PPC_BASE + Math.max(0, students - PPC_MIN); // 40 + 1/alumno extra
+  const shown = period === "mes" ? monthly : monthly * 12;
+  const fmt = (n) => `S/ ${n.toLocaleString("es-PE")}`;
+  const pct = (students - PPC_MIN) / (PPC_MAX - PPC_MIN); // 0..1
+
   const plans = [
     {
       name: "Plan Inicial",
-      desc: "Ideal para instituciones que quieren comenzar con gestión ordenada y rápida implementación.",
-      price: "S/ 300",
-      period: "mensuales",
-      note: "Hasta 500 alumnos",
+      desc: "Ideal para instituciones que quieren comenzar con gestión ordenada y rápida implementación. Precio según los alumnos que elijas en el slider.",
+      price: fmt(shown),
+      period: period === "mes" ? "mensuales" : "anuales",
+      note: `${students.toLocaleString("es-PE")} alumnos`,
+      visual: "assets/kuiplanes.png",
       featured: true,
     },
     {
-      name: "Plan Crecimiento",
-      desc: "Para colegios que necesitan más capacidad operativa, más usuarios y más personalización.",
-      price: "S/0.99",
-      period: "por alumno extra",
-      note: "Escala según matrí­cula",
+      name: "Plan Rocket",
+      desc: "¿Tu colegio recién empieza su digitalización? Accede GRATIS a KUI y despega. Onboarding guiado sin costo el primer ciclo — migramos tus datos y capacitamos a tu equipo.",
+      price: "Gratis",
+      period: "colegios nuevos",
+      note: "Acceso gratuito para instituciones que inician",
+      visual: "assets/rocket.png",
+      rocket: true,
       featured: false,
     },
     {
@@ -980,30 +997,96 @@ function PlansSection() {
       price: "A medida",
       period: "cotización directa",
       note: "Incluye propuesta personalizada",
+      visual: "assets/personaje.png",
       featured: false,
     },
   ];
+
+  const activeVisual = (plans[openIdx] && plans[openIdx].visual) || "assets/kuiplanes.png";
+
+  // Crossfade left image when the selected plan changes (GSAP)
+  useEffect(() => {
+    const el = visualRef.current;
+    if (!el) return;
+    if (window.gsap) {
+      window.gsap.fromTo(el, { autoAlpha: 0, scale: 0.94 }, { autoAlpha: 1, scale: 1, duration: 0.45, ease: "power2.out" });
+    }
+  }, [activeVisual]);
 
   return (
     <section className="section pp-plans" id="planes">
       <div className="container">
         <Reveal className="pp-plans-shell">
           <div className="pp-plans-visual">
-            <img src="assets/kuiplanes.png" alt="" className="pp-plans-image" loading="lazy" />
+            <img key={activeVisual} ref={visualRef} src={activeVisual} alt="" className="pp-plans-image" loading="lazy" />
           </div>
 
           <div className="pp-plans-copy">
             <div className="pp-impact-badge mono">Precios</div>
             <h2 className="pp-plans-title">
-              Adquiere <em>KUI</em><br />
-              desde.
+              Adquiere <em>KUI</em> desde.
             </h2>
+
+            {/* Calculadora: slider alumnos + switch mes/año */}
+            <div className="ppc">
+              <div className="ppc-top">
+                <div className="ppc-price">
+                  <span className="ppc-price-num">{fmt(shown)}</span>
+                  <span className="ppc-price-per">/ {period === "mes" ? "mes" : "año"}</span>
+                </div>
+                <div className="ppc-switch" role="tablist" aria-label="Periodo de facturación">
+                  <button
+                    className={`ppc-switch-opt ${period === "mes" ? "is-active" : ""}`}
+                    onClick={() => setPeriod("mes")}
+                    role="tab"
+                    aria-selected={period === "mes"}
+                  >
+                    Por mes
+                  </button>
+                  <button
+                    className={`ppc-switch-opt ${period === "ano" ? "is-active" : ""}`}
+                    onClick={() => setPeriod("ano")}
+                    role="tab"
+                    aria-selected={period === "ano"}
+                  >
+                    Por año
+                  </button>
+                </div>
+              </div>
+
+              <div className="ppc-slider">
+                <div className="kp-track">
+                  <div className="kp-fill" style={{ width: `${pct * 100}%` }} />
+                  <div className="kp-thumb" style={{ left: `${pct * 100}%` }} aria-hidden="true" />
+                  <div className="kp-bubble" style={{ left: `${pct * 100}%` }}>{students}</div>
+                  <input
+                    className="kp-range"
+                    type="range"
+                    min={PPC_MIN}
+                    max={PPC_MAX}
+                    step="1"
+                    value={students}
+                    onChange={(e) => setStudents(Number(e.target.value))}
+                    aria-label="Cantidad de alumnos"
+                  />
+                </div>
+                <div className="ppc-caps">
+                  <span>{PPC_MIN}</span>
+                  <span>{PPC_MAX}</span>
+                </div>
+              </div>
+              <div className="ppc-note mono">
+                {students.toLocaleString("es-PE")} alumnos · desde S/40 por 250 · +S/1 por alumno
+              </div>
+            </div>
+
             <div className="pp-plans-list">
               {plans.map((plan, idx) => (
-                <div className={`pp-plan-card ${plan.featured ? "is-featured" : ""} ${openIdx === idx ? "is-open" : ""}`} key={plan.name}>
+                <div className={`pp-plan-card ${plan.featured ? "is-featured" : ""} ${plan.rocket ? "is-rocket" : ""} ${openIdx === idx ? "is-open" : ""}`} key={plan.name}>
                   <button className="pp-plan-toggle" onClick={() => setOpenIdx(openIdx === idx ? -1 : idx)}>
-                    <div>
+                    <div className="pp-plan-name-wrap">
                       <h3 className="pp-plan-name">{plan.name}</h3>
+                      {plan.rocket && <span className="pp-plan-tag mono">GRATIS</span>}
                     </div>
                     <span className="pp-plan-toggle-icon">{openIdx === idx ? "−" : "+"}</span>
                   </button>

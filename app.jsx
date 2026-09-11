@@ -1,4 +1,4 @@
-/* global React, ReactDOM, Intro, Nav, Hero, Marquee, Services, Products, Stats, Latam, WhyKui, History, Approach, Stack, Testimonials, Team, Showcase, Contact, Footer, ChatWidget, StudioHero, ROICalculator, FAQ, Newsletter, CaseStudy, CustomCursor, PageTransitions, TweaksPanel, useTweaks, TweakSection, TweakColor, TweakRadio, TweakToggle, FacebookFeed, TranslatingIndicator, AboutCarousel, Values, MissionVision, ProductsPageFull, AudiencePanels */
+/* global React, ReactDOM, Intro, Nav, Hero, RocketReveal, Marquee, Services, Products, Stats, Latam, WhyKui, History, Approach, Stack, Testimonials, Team, Showcase, Contact, Footer, ChatWidget, StudioHero, ROICalculator, FAQ, Newsletter, CaseStudy, CustomCursor, PageTransitions, TweaksPanel, useTweaks, TweakSection, TweakColor, TweakRadio, TweakToggle, FacebookFeed, TranslatingIndicator, AboutCarousel, Values, MissionVision, ProductsPageFull, AudiencePanels */
 const { useEffect, useState, useCallback } = React;
 
 const TWEAK_DEFAULTS = /*EDITMODE-BEGIN*/{
@@ -96,7 +96,6 @@ function App() {
   } else if (page === "contacto") {
     body = (
       <main>
-        <Team />
         <FacebookFeed />
         <Contact />
       </main>
@@ -119,6 +118,7 @@ function App() {
     body = (
       <main>
         <Hero />
+        <RocketReveal />
         <ProductsPageFull />
       </main>
     );

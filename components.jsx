@@ -330,7 +330,6 @@ function Nav() {
           {/*
           {link("estudio", "Estudio")}
           */}
-          {link("contacto#equipo", "Equipo")}
           {link("contacto#contacto", "Contacto")}
           <LanguageSwitcher />
           <a className="nav-cta" href={page === "contacto" ? "#contacto" : "contacto.html#contacto"} onClick={() => setMenuOpen(false)}>
@@ -396,6 +395,77 @@ function Hero() {
       </div>
     </section>);
 
+}
+
+/* ============================================================
+   RocketReveal — scroll-driven Plan Rocket reveal (GSAP ScrollTrigger)
+   ============================================================ */
+function RocketReveal() {
+  const rootRef = useRef(null);
+
+  useEffect(() => {
+    const gsap = window.gsap;
+    const ScrollTrigger = window.ScrollTrigger;
+    if (!gsap || !ScrollTrigger || !rootRef.current) return;
+    gsap.registerPlugin(ScrollTrigger);
+
+    const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (reduce) return; // leave static, CSS shows it
+
+    const ctx = gsap.context(() => {
+      const tl = gsap.timeline({
+        scrollTrigger: {
+          trigger: rootRef.current,
+          start: "top 78%",
+          end: "bottom 60%",
+          scrub: 0.6,
+        },
+      });
+      tl.fromTo(".rr-img",
+        { scale: 0.66, yPercent: 12, autoAlpha: 0 },
+        { scale: 1, yPercent: 0, autoAlpha: 1, ease: "none" }, 0);
+      tl.fromTo(".rr-line span",
+        { yPercent: 120 },
+        { yPercent: 0, ease: "none", stagger: 0.12 }, 0.05);
+      tl.fromTo(".rr-tail",
+        { autoAlpha: 0, y: 24 },
+        { autoAlpha: 1, y: 0, ease: "none" }, 0.35);
+    }, rootRef);
+
+    return () => ctx.revert();
+  }, []);
+
+  return (
+    <section className="rr" ref={rootRef} aria-label="Plan Rocket">
+      <div className="container rr-inner">
+        <div className="rr-media">
+          <img
+            src="assets/rocket.png"
+            alt="Mascota KUI en la línea de salida, lista para arrancar"
+            className="rr-img"
+            loading="lazy"
+            decoding="async"
+          />
+        </div>
+        <h2 className="rr-headline">
+          <span className="rr-line"><span>Conoce <em>Plan Rocket</em></span></span>
+          <span className="rr-line"><span>Sal al mundo <em>gratis</em>.</span></span>
+        </h2>
+        <div className="rr-tail">
+          <p className="rr-text">
+            ¿Tu colegio recién empieza su digitalización? Despega con KUI sin costo el primer ciclo —
+            onboarding guiado, migración de datos y capacitación incluidas.
+          </p>
+          <a className="rr-cta" href="productos.html#planes">
+            Empieza gratis
+            <svg viewBox="0 0 16 16" fill="none" aria-hidden="true">
+              <path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
+            </svg>
+          </a>
+        </div>
+      </div>
+    </section>
+  );
 }
 
 /* ============================================================
@@ -841,7 +911,6 @@ function Footer() {
               <li>{link("estudio", "Sobre kui")}</li>
               <li>{link("estudio#historia", "Historia")}</li>
               <li>{link("estudio#stack", "Stack")}</li>
-              <li>{link("contacto#equipo", "Equipo")}</li>
             </ul>
           </div>
           <div className="footer-col footer-anim">
@@ -1019,6 +1088,6 @@ function PromoModal() {
 }
 
 Object.assign(window, {
-  Intro, Nav, Hero, Marquee, Products, Stats, Approach, Showcase, CTA, Footer, Reveal, PromoModal
+  Intro, Nav, Hero, RocketReveal, Marquee, Products, Stats, Approach, Showcase, CTA, Footer, Reveal, PromoModal
 });
 
