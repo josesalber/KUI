@@ -1,0 +1,592 @@
+<!doctype html>
+<html lang="es">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Empieza gratis · KUI · Plan Rocket 6 meses</title>
+  <meta name="robots" content="noindex, nofollow" />
+  <meta name="theme-color" content="#ee5a1f" />
+  <link rel="icon" href="assets/logo.png" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,500;12..96,600;12..96,700;12..96,800&family=Geist:wght@300;400;500;600;700&family=JetBrains+Mono:wght@300;400;500&display=swap"
+    rel="stylesheet" />
+
+  <style>
+    /* ============ Registro / Checkout KUI ============ */
+    :root {
+      --pay-orange: #ee5a1f;
+      --pay-orange-soft: rgba(238, 90, 31, 0.1);
+      --pay-orange-glow: rgba(238, 90, 31, 0.35);
+      --pay-ink: #0d0c0b;
+      --pay-bg: #ffffff;
+      --pay-bg-right: #ffffff;
+      --pay-line: #e4e1db;
+      --pay-line-strong: #0d0c0b;
+      --pay-muted: #6b675f;
+      --pay-ok: #1f9d55;
+    }
+    * { box-sizing: border-box; }
+    html, body { margin: 0; padding: 0; background: var(--pay-bg); color: var(--pay-ink); font-family: "Geist", system-ui, sans-serif; -webkit-font-smoothing: antialiased; }
+
+    /* Layout 2 columnas */
+    .reg-shell { display: grid; grid-template-columns: minmax(0, 560px) 1fr; min-height: 100vh; }
+    @media (max-width: 940px) { .reg-shell { grid-template-columns: 1fr; } }
+
+    /* ---- Columna izquierda: formulario ---- */
+    .reg-left { padding: clamp(24px, 4vw, 56px) clamp(20px, 4vw, 64px); display: flex; flex-direction: column; }
+    .reg-topline { display: flex; align-items: center; justify-content: space-between; gap: 16px; margin-bottom: clamp(28px, 5vw, 48px); }
+    .reg-brand { display: inline-flex; align-items: center; gap: 10px; font-family: "Bricolage Grotesque", sans-serif; font-weight: 700; font-size: 22px; color: var(--pay-ink); text-decoration: none; }
+    .reg-brand img { height: 30px; width: auto; }
+
+    .reg-back { display: inline-flex; align-items: center; gap: 7px; padding: 8px 14px; border-radius: 999px; border: 1px solid var(--pay-line); background: #fff; color: var(--pay-ink); font-weight: 600; font-size: 13px; text-decoration: none; transition: border-color .15s ease, transform .15s ease; }
+    .reg-back:hover { border-color: var(--pay-orange); transform: translateX(-2px); }
+
+    .reg-timer { display: inline-flex; align-items: center; gap: 8px; padding: 8px 14px; border-radius: 999px; background: var(--pay-orange-soft); font-family: "JetBrains Mono", monospace; font-size: 13px; color: var(--pay-orange); font-weight: 500; }
+    .reg-timer.is-low { animation: reg-pulse 1s ease infinite; }
+    @keyframes reg-pulse { 50% { opacity: .5; } }
+
+    .reg-h1 { font-family: "Bricolage Grotesque", sans-serif; font-weight: 700; font-size: clamp(30px, 5vw, 46px); letter-spacing: -0.02em; margin: 0 0 30px; line-height: 1.05; }
+    .reg-h1 span { color: var(--pay-orange); }
+
+    /* Stepper */
+    .reg-steps { display: flex; align-items: center; margin-bottom: 34px; }
+    .reg-step { display: flex; align-items: center; gap: 9px; }
+    .reg-step-dot { width: 26px; height: 26px; border-radius: 50%; display: grid; place-items: center; font-size: 13px; font-weight: 700; border: 1.5px solid var(--pay-line); color: var(--pay-muted); background: #fff; flex-shrink: 0; }
+    .reg-step.is-active .reg-step-dot { background: var(--pay-ink); border-color: var(--pay-ink); color: #fff; }
+    .reg-step.is-done .reg-step-dot { background: var(--pay-ok); border-color: var(--pay-ok); color: #fff; }
+    .reg-step-label { font-size: 13px; font-weight: 600; color: var(--pay-muted); white-space: nowrap; }
+    .reg-step.is-active .reg-step-label { color: var(--pay-ink); }
+    .reg-step-line { flex: 1; height: 1.5px; background: var(--pay-line); margin: 0 12px; min-width: 18px; }
+    .reg-step-line.is-done { background: var(--pay-ok); }
+
+    /* Campos con label sobre el borde (estilo referencia) */
+    .reg-field { position: relative; margin-bottom: 20px; }
+    .reg-field label { position: absolute; top: -8px; left: 14px; background: #fff; padding: 0 6px; font-size: 12px; font-weight: 600; color: var(--pay-muted); }
+    .reg-field.is-focus label, .reg-field.is-filled label { color: var(--pay-orange); }
+    .reg-field input, .reg-field select { width: 100%; padding: 16px 15px; border: 1.5px solid var(--pay-line-strong); border-radius: 12px; font-size: 15px; font-family: inherit; background: #fff; color: var(--pay-ink); transition: border-color .15s ease, box-shadow .15s ease; }
+    .reg-field input:focus, .reg-field select:focus { outline: none; border-color: var(--pay-orange); box-shadow: 0 0 0 3px var(--pay-orange-soft); }
+    .reg-field.is-invalid input, .reg-field.is-invalid select { border-color: #d64545; }
+    .reg-err { color: #d64545; font-size: 12px; margin-top: 6px; display: none; }
+    .reg-field.is-invalid .reg-err { display: block; }
+    .reg-prefix-wrap { display: flex; align-items: center; border: 1.5px solid var(--pay-line-strong); border-radius: 12px; overflow: hidden; }
+    .reg-prefix-wrap:focus-within { border-color: var(--pay-orange); box-shadow: 0 0 0 3px var(--pay-orange-soft); }
+    .reg-prefix { padding: 16px 4px 16px 15px; color: var(--pay-muted); font-size: 15px; white-space: nowrap; }
+    .reg-prefix-wrap input { border: none !important; box-shadow: none !important; padding-left: 2px; }
+    .reg-row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+    @media (max-width: 480px) { .reg-row2 { grid-template-columns: 1fr; } }
+
+    .reg-check { display: flex; align-items: flex-start; gap: 10px; margin: 6px 0 26px; cursor: pointer; }
+    .reg-check input { position: absolute; opacity: 0; width: 0; height: 0; }
+    .reg-check-box { width: 22px; height: 22px; border-radius: 6px; border: 1.5px solid var(--pay-line-strong); display: grid; place-items: center; flex-shrink: 0; transition: background .15s ease, border-color .15s ease; }
+    .reg-check input:checked + .reg-check-box { background: var(--pay-orange); border-color: var(--pay-orange); }
+    .reg-check-box svg { width: 13px; height: 13px; opacity: 0; }
+    .reg-check input:checked + .reg-check-box svg { opacity: 1; }
+    .reg-check-text { font-size: 14px; color: var(--pay-orange); font-weight: 500; padding-top: 1px; }
+    .reg-check.is-invalid .reg-check-box { border-color: #d64545; }
+
+    /* Precio en paso institucional */
+    .reg-price-box { border: 1.5px dashed var(--pay-orange-glow); background: var(--pay-orange-soft); border-radius: 14px; padding: 16px 18px; margin: 4px 0 22px; }
+    .reg-price-row { display: flex; align-items: baseline; justify-content: space-between; }
+    .reg-price-amt { font-family: "Bricolage Grotesque", sans-serif; font-weight: 700; font-size: 28px; color: var(--pay-orange); }
+    .reg-price-amt small { font-size: 14px; color: var(--pay-muted); font-weight: 500; }
+    .reg-price-hint { font-size: 12px; color: var(--pay-muted); margin-top: 8px; }
+
+    /* Paso validación */
+    .reg-rocket { display: flex; align-items: center; gap: 16px; background: linear-gradient(135deg, #0d0c0b, #241a12); color: #fff; border-radius: 16px; padding: 18px 20px; margin-bottom: 20px; }
+    .reg-rocket .em { font-size: 40px; line-height: 1; }
+    .reg-rocket h3 { font-family: "Bricolage Grotesque", sans-serif; margin: 0 0 3px; font-size: 20px; }
+    .reg-rocket h3 span { color: var(--pay-orange); }
+    .reg-rocket p { margin: 0; font-size: 13px; color: rgba(255,255,255,.72); }
+    .reg-summary { border: 1px solid var(--pay-line); border-radius: 14px; padding: 6px 18px; margin-bottom: 20px; }
+    .reg-sum-line { display: flex; justify-content: space-between; padding: 12px 0; border-bottom: 1px dashed var(--pay-line); font-size: 14px; }
+    .reg-sum-line:last-child { border-bottom: none; }
+    .reg-sum-line span:last-child { font-weight: 600; }
+    .reg-today { display: flex; justify-content: space-between; align-items: center; padding: 12px 2px 4px; }
+    .reg-today b { font-family: "Bricolage Grotesque", sans-serif; font-size: 30px; color: var(--pay-ok); }
+
+    /* Botones */
+    .reg-actions { display: flex; align-items: center; justify-content: space-between; gap: 14px; margin-top: auto; padding-top: 10px; }
+    .reg-actions.end { justify-content: flex-end; }
+    .reg-btn { display: inline-flex; align-items: center; justify-content: center; gap: 9px; padding: 14px 26px; border: none; border-radius: 12px; background: var(--pay-ink); color: #fff; font-size: 15px; font-weight: 700; font-family: inherit; cursor: pointer; transition: transform .15s ease, opacity .15s ease, background .15s ease; }
+    .reg-btn:hover { transform: translateY(-1px); }
+    .reg-btn.is-primary { background: var(--pay-orange); box-shadow: 0 8px 22px var(--pay-orange-glow); }
+    .reg-btn:disabled { opacity: .5; cursor: not-allowed; transform: none; }
+    .reg-textbtn { background: none; border: none; font-family: inherit; font-size: 15px; font-weight: 600; color: var(--pay-muted); cursor: pointer; padding: 10px 4px; }
+    .reg-textbtn:hover { color: var(--pay-ink); }
+
+    .reg-secure { display: flex; align-items: center; gap: 7px; margin-top: 16px; font-size: 12px; color: var(--pay-muted); }
+    .reg-secure svg { width: 14px; height: 14px; }
+    .reg-msg { display: none; margin-top: 14px; padding: 12px 15px; border-radius: 11px; font-size: 14px; line-height: 1.5; }
+    .reg-msg.is-error { display: block; background: #fdecec; color: #b83232; border: 1px solid #f3c2c2; }
+    .reg-msg.is-ok { display: block; background: #e9f7ef; color: #1f7a45; border: 1px solid #b8e6c9; }
+
+    /* ---- Columna derecha: carrusel (imagen las coloca el usuario) ---- */
+    .reg-right { background: var(--pay-bg-right); display: flex; flex-direction: column; justify-content: center; padding: clamp(28px, 4vw, 56px) clamp(24px, 4vw, 56px); border-left: 1px solid var(--pay-line); overflow: hidden; }
+
+    /* Cada slide: captura izquierda + texto derecha */
+    .reg-slide-grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: clamp(20px, 3vw, 40px); align-items: center; }
+    /* Captura completa, sin recorte */
+    .reg-cap { border-radius: 16px; background: transparent; display: grid; place-items: center; text-align: center; color: #b8b3aa; font-size: 12px; overflow: hidden; max-height: 74vh; min-height: 240px; }
+    .reg-cap img { width: 100%; height: auto; max-height: 74vh; object-fit: contain; display: block; }
+
+    .reg-feature h2 { font-family: "Bricolage Grotesque", sans-serif; font-size: clamp(20px, 2.4vw, 28px); margin: 0 0 12px; letter-spacing: -0.01em; }
+    .reg-feature p { color: var(--pay-muted); font-size: 15px; line-height: 1.55; margin: 0 0 20px; }
+    .reg-feature ul { list-style: none; padding: 0; margin: 0; display: grid; gap: 12px; }
+    .reg-feature li { display: flex; align-items: center; gap: 12px; font-size: 15px; }
+    .reg-feature li .tick { width: 22px; height: 22px; border-radius: 6px; background: var(--pay-orange-soft); color: var(--pay-orange); display: grid; place-items: center; flex-shrink: 0; }
+    .reg-feature li .tick svg { width: 13px; height: 13px; }
+    .reg-dots { display: flex; gap: 7px; }
+    .reg-dots span { width: 26px; height: 4px; border-radius: 999px; background: var(--pay-line); }
+    .reg-dots span.is-on { background: var(--pay-orange); }
+
+    /* Responsive: dentro del slide, apilar captura sobre texto en pantallas medianas */
+    @media (max-width: 1160px) { .reg-slide-grid { grid-template-columns: 1fr; } .reg-cap { max-height: 52vh; } .reg-cap img { max-height: 52vh; } }
+    /* Bajo 940px se oculta la columna derecha; el formulario ocupa todo el ancho */
+    @media (max-width: 940px) { .reg-right { display: none; } }
+
+    /* Overlay expiracion */
+    .reg-expired { position: fixed; inset: 0; z-index: 100; display: none; align-items: center; justify-content: center; background: rgba(13,12,11,.72); backdrop-filter: blur(6px); padding: 24px; }
+    .reg-expired.is-open { display: flex; }
+    .reg-expired-box { background: #fff; border-radius: 20px; padding: 36px 30px; max-width: 400px; text-align: center; }
+    .reg-expired-box h2 { font-family: "Bricolage Grotesque", sans-serif; margin: 0 0 8px; font-size: 24px; }
+    .reg-expired-box p { color: var(--pay-muted); margin: 0 0 22px; }
+
+    /* Link términos dentro del checkbox */
+    .reg-terms-link { background: none; border: none; padding: 0; font: inherit; color: var(--pay-orange); font-weight: 600; text-decoration: underline; cursor: pointer; }
+
+    /* Modal términos */
+    .reg-modal { position: fixed; inset: 0; z-index: 120; display: none; align-items: center; justify-content: center; background: rgba(13,12,11,.6); backdrop-filter: blur(5px); padding: 24px; }
+    .reg-modal.is-open { display: flex; }
+    .reg-modal-box { background: #fff; border-radius: 20px; max-width: 620px; width: 100%; max-height: 84vh; display: flex; flex-direction: column; overflow: hidden; }
+    .reg-modal-head { display: flex; align-items: center; justify-content: space-between; padding: 22px 26px; border-bottom: 1px solid var(--pay-line); }
+    .reg-modal-head h2 { font-family: "Bricolage Grotesque", sans-serif; margin: 0; font-size: 22px; }
+    .reg-modal-close { background: none; border: 1px solid var(--pay-line); border-radius: 999px; width: 34px; height: 34px; font-size: 18px; cursor: pointer; color: var(--pay-ink); line-height: 1; }
+    .reg-modal-body { padding: 22px 26px; overflow-y: auto; }
+    .reg-modal-body h3 { font-family: "Bricolage Grotesque", sans-serif; font-size: 16px; margin: 20px 0 6px; }
+    .reg-modal-body h3:first-child { margin-top: 0; }
+    .reg-modal-body p { font-size: 14px; line-height: 1.6; color: var(--pay-muted); margin: 0 0 10px; }
+    .reg-modal-foot { padding: 16px 26px; border-top: 1px solid var(--pay-line); display: flex; justify-content: flex-end; }
+
+    /* Carrusel derecho */
+    .reg-carousel { position: relative; cursor: grab; touch-action: pan-y; user-select: none; }
+    .reg-carousel.is-drag { cursor: grabbing; }
+    .reg-cap img { pointer-events: none; -webkit-user-drag: none; }
+    .reg-slide { display: none; animation: reg-fade .35s ease; }
+    .reg-slide.is-on { display: block; }
+    @keyframes reg-fade { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+    .reg-carousel-nav { display: flex; align-items: center; justify-content: space-between; margin-top: 26px; }
+    .reg-arrows { display: flex; gap: 8px; }
+    .reg-arrow { width: 38px; height: 38px; border-radius: 999px; border: 1px solid var(--pay-line); background: #fff; cursor: pointer; display: grid; place-items: center; color: var(--pay-ink); transition: border-color .15s ease; }
+    .reg-arrow:hover { border-color: var(--pay-orange); }
+  </style>
+</head>
+
+<body>
+  <div id="pay-root"></div>
+
+  <script src="https://unpkg.com/react@18.3.1/umd/react.production.min.js" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.production.min.js" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" crossorigin="anonymous"></script>
+  <script src="https://checkout.culqi.com/js/v4"></script>
+
+  <script type="text/babel">
+    const { useState, useEffect, useRef, useCallback } = React;
+
+    /* ===================== CONFIG (ajustar a produccion) ===================== */
+    const CULQI_PUBLIC_KEY = "pk_test_zs2Xf3e5X7QQCSnf";                                   // llave publica (segura en front)
+    const CHECKOUT_API = "https://backend-central-0j9o.onrender.com/api/public/checkout"; // endpoint backend
+    const MEMBRESIA_URL = "https://membresia.kuiweb.com/login";                            // destino tras crear cuenta
+
+    const MIN_ALUMNOS = 250;
+    const BASE_PRICE = 200;  // S/ minimo (piso) por 250 alumnos
+    const TRIAL_MESES = 6;
+    const TIPOS = [
+      { value: "COLEGIO", label: "Colegio" },
+      { value: "INSTITUTO", label: "Instituto" },
+      { value: "ACADEMIA", label: "Academia" },
+    ];
+    const CARGOS = ["Dueño(a)", "Director(a)", "Administrador(a)", "Coordinador(a)", "Otro"];
+    const fmt = (n) => `S/ ${n.toLocaleString("es-PE")}`;
+
+    /* Secciones del carrusel derecho. Reemplaza "img" por tu captura (1 por sección). */
+    const SLIDES = [
+      {
+        titulo: "Chat, Noticias, Agenda, Perfil y Apps",
+        texto: "Comunica a todo tu colegio y a las familias dentro de una misma plataforma.",
+        img: "assets/reg-1.png",
+        bullets: ["Chat, grupos, agenda y comunicados.", "Noticias, comentarios e interacciones.", "Acceso por roles y usuarios.", "Ubicación del hogar en el mapa."],
+      },
+      {
+        titulo: "Gestión académica completa",
+        texto: "Matrícula, notas, asistencia y horarios en un solo lugar, sin planillas sueltas.",
+        img: "assets/reg-2.png",
+        bullets: ["Matrícula y legajos digitales.", "Notas y libretas automáticas.", "Asistencia por curso y sección.", "Horarios y calendario escolar."],
+      },
+      {
+        titulo: "Pagos, pensiones y reportes",
+        texto: "Cobra pensiones en línea y controla la economía del colegio en tiempo real.",
+        img: "assets/reg-3.png",
+        bullets: ["Pago de pensiones con tarjeta o Yape.", "Estados de cuenta por familia.", "Reportes y alertas de morosidad.", "Facturación electrónica SUNAT."],
+      },
+    ];
+
+    function useCountdown(seconds, onExpire) {
+      const [left, setLeft] = useState(seconds);
+      const cb = useRef(onExpire); cb.current = onExpire;
+      useEffect(() => {
+        if (left <= 0) { cb.current && cb.current(); return; }
+        const id = setInterval(() => setLeft((s) => s - 1), 1000);
+        return () => clearInterval(id);
+      }, [left]);
+      const mm = String(Math.floor(left / 60)).padStart(2, "0");
+      const ss = String(left % 60).padStart(2, "0");
+      return { label: `${mm}:${ss}`, left };
+    }
+
+    /* Campo con label flotante sobre el borde */
+    function Field({ label, value, error, children }) {
+      const [focus, setFocus] = useState(false);
+      const filled = value !== undefined && value !== "" && value !== null;
+      return (
+        <div className={`reg-field ${focus ? "is-focus" : ""} ${filled ? "is-filled" : ""} ${error ? "is-invalid" : ""}`}
+          onFocus={() => setFocus(true)} onBlur={() => setFocus(false)}>
+          <label>{label}</label>
+          {children}
+          <div className="reg-err">{error}</div>
+        </div>
+      );
+    }
+
+    function Checkout() {
+      const [step, setStep] = useState(0); // 0 Personal · 1 Institucional · 2 Validacion
+      // Paso 1
+      const [nombreCompleto, setNombreCompleto] = useState("");
+      const [email, setEmail] = useState("");
+      const [cargo, setCargo] = useState(CARGOS[0]);
+      const [tel, setTel] = useState("");
+      const [acepta, setAcepta] = useState(false);
+      // Paso 2
+      const [subdominio, setSubdominio] = useState("");
+      const [ruc, setRuc] = useState("");
+      const [alumnos, setAlumnos] = useState("");
+      const [tipo, setTipo] = useState("COLEGIO");
+      const [nombreInst, setNombreInst] = useState("");
+      // estado
+      const [errors, setErrors] = useState({});
+      const [loading, setLoading] = useState(false);
+      const [msg, setMsg] = useState(null);
+      const [expired, setExpired] = useState(false);
+      const [slide, setSlide] = useState(0);
+      const nSlides = SLIDES.length;
+      const goSlide = (d) => setSlide((s) => (s + d + nSlides) % nSlides);
+      // Arrastre / swipe del carrusel
+      const dragX = useRef(null);
+      const [dragging, setDragging] = useState(false);
+      const onDragStart = (e) => { dragX.current = (e.touches ? e.touches[0].clientX : e.clientX); setDragging(true); };
+      const onDragEnd = (e) => {
+        if (dragX.current === null) return;
+        const end = (e.changedTouches ? e.changedTouches[0].clientX : e.clientX);
+        const dx = end - dragX.current;
+        if (Math.abs(dx) > 50) goSlide(dx < 0 ? 1 : -1);
+        dragX.current = null; setDragging(false);
+      };
+      const { label: timer, left } = useCountdown(600, () => setExpired(true));
+
+      const nAlumnos = Number(alumnos) || 0;
+      const mensual = Math.max(BASE_PRICE, BASE_PRICE + Math.max(0, nAlumnos - MIN_ALUMNOS));
+
+      /* Culqi config */
+      useEffect(() => {
+        if (!window.Culqi) return;
+        window.Culqi.publicKey = CULQI_PUBLIC_KEY;
+        window.Culqi.settings({ title: "KUI · Plan Rocket", currency: "PEN", amount: mensual * 100 });
+        window.Culqi.options({
+          lang: "es", installments: false,
+          paymentMethods: { tarjeta: true, yape: false, bancaMovil: false, billetera: false, cuotealo: false },
+          style: { buttonBackground: "#ee5a1f", menuColor: "#ee5a1f", linksColor: "#ee5a1f", buttonText: "Registrar tarjeta" },
+        });
+      }, [mensual]);
+
+      useEffect(() => {
+        window.culqi = function () {
+          if (window.Culqi.token) enviarCheckout(window.Culqi.token.id);
+          else if (window.Culqi.error) { setLoading(false); setMsg({ type: "error", text: window.Culqi.error.user_message || "No se pudo registrar la tarjeta." }); }
+        };
+        return () => { window.culqi = undefined; };
+      });
+
+      const emailOk = (v) => /^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(v);
+
+      const validarPaso1 = () => {
+        const e = {};
+        if (!nombreCompleto.trim()) e.nombreCompleto = "Ingresa tu nombre completo";
+        if (!emailOk(email)) e.email = "Correo no valido";
+        if (!tel.trim()) e.tel = "Ingresa un telefono";
+        if (!acepta) e.acepta = "Debes aceptar los terminos";
+        setErrors(e); return Object.keys(e).length === 0;
+      };
+      const validarPaso2 = () => {
+        const e = {};
+        if (!nombreInst.trim()) e.nombreInst = "Nombre de la institucion";
+        if (!subdominio.trim()) e.subdominio = "Indica el dominio deseado";
+        if (!ruc.trim()) e.ruc = "RUC o codigo modular";
+        if (!alumnos || nAlumnos <= 0) e.alumnos = "Indica la cantidad de estudiantes";
+        setErrors(e); return Object.keys(e).length === 0;
+      };
+
+      const siguiente = () => {
+        setMsg(null);
+        if (step === 0 && validarPaso1()) { setErrors({}); setStep(1); }
+        else if (step === 1 && validarPaso2()) { setErrors({}); setStep(2); }
+      };
+      const atras = () => { setMsg(null); setErrors({}); setStep((s) => Math.max(0, s - 1)); };
+
+      const pagar = () => {
+        setMsg(null);
+        if (expired) return;
+        if (!window.Culqi) { setMsg({ type: "error", text: "No se pudo cargar la pasarela. Recarga la pagina." }); return; }
+        setLoading(true);
+        window.Culqi.open();
+      };
+
+      const enviarCheckout = useCallback(async (token) => {
+        try {
+          const res = await fetch(CHECKOUT_API, {
+            method: "POST", headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              culqiToken: token, plan: "ROCKET", trialMeses: TRIAL_MESES,
+              alumnos: nAlumnos, montoMensual: mensual,
+              contacto: { nombreCompleto: nombreCompleto.trim(), email: email.trim(), cargo, telefono: tel.trim() },
+              institucion: { nombre: nombreInst.trim(), tipo, dominioDeseado: subdominio.trim(), ruc: ruc.trim(), emailContacto: email.trim() },
+            }),
+          });
+          if (!res.ok) { const err = await res.json().catch(() => ({})); throw new Error(err.message || "El registro fallo. Intenta de nuevo."); }
+          const data = await res.json();
+          setMsg({ type: "ok", text: "Cuenta creada. Redirigiendo a tu plataforma KUI..." });
+          setTimeout(() => { window.location.href = data.loginUrl || MEMBRESIA_URL; }, 1400);
+        } catch (err) { setLoading(false); setMsg({ type: "error", text: err.message }); }
+      }, [nAlumnos, mensual, nombreCompleto, email, cargo, tel, nombreInst, tipo, subdominio, ruc]);
+
+      const StepDot = ({ i, label }) => (
+        <div className={`reg-step ${step === i ? "is-active" : ""} ${step > i ? "is-done" : ""}`}>
+          <div className="reg-step-dot">{step > i ? "✓" : i + 1}</div>
+          <div className="reg-step-label">{label}</div>
+        </div>
+      );
+
+      return (
+        <div className="reg-shell">
+          {/* ---------------- IZQUIERDA ---------------- */}
+          <div className="reg-left">
+            <div className="reg-topline">
+              <a className="reg-brand" href="index.html">
+                <img src="assets/logo.png" alt="KUI" />
+                kui
+              </a>
+              <div style={{ display: "flex", gap: 10, alignItems: "center" }}>
+                <div className={`reg-timer ${left <= 60 ? "is-low" : ""}`}>⏳ {timer}</div>
+                <a className="reg-back" href="index.html">← Volver a KUI</a>
+              </div>
+            </div>
+
+            <h1 className="reg-h1">Empieza <span>gratis</span>.</h1>
+
+            <div className="reg-steps">
+              <StepDot i={0} label="Personal" />
+              <div className={`reg-step-line ${step > 0 ? "is-done" : ""}`} />
+              <StepDot i={1} label="Institucional" />
+              <div className={`reg-step-line ${step > 1 ? "is-done" : ""}`} />
+              <StepDot i={2} label="Validación" />
+            </div>
+
+            {/* -------- Paso 1: Personal -------- */}
+            {step === 0 && (
+              <div>
+                <Field label="Nombre completo *" value={nombreCompleto} error={errors.nombreCompleto}>
+                  <input type="text" value={nombreCompleto} placeholder="Juan Pérez"
+                    onChange={(e) => setNombreCompleto(e.target.value)} />
+                </Field>
+                <Field label="Ingresa tu correo *" value={email} error={errors.email}>
+                  <input type="email" value={email} placeholder="director@colegio.edu.pe"
+                    onChange={(e) => setEmail(e.target.value)} />
+                </Field>
+                <div className="reg-row2">
+                  <Field label="Cargo *" value={cargo}>
+                    <select value={cargo} onChange={(e) => setCargo(e.target.value)}>
+                      {CARGOS.map((c) => <option key={c} value={c}>{c}</option>)}
+                    </select>
+                  </Field>
+                  <Field label="Tel. o celular *" value={tel} error={errors.tel}>
+                    <input type="tel" value={tel} placeholder="999 999 999"
+                      onChange={(e) => setTel(e.target.value)} />
+                  </Field>
+                </div>
+
+                <div className={`reg-check ${errors.acepta ? "is-invalid" : ""}`}>
+                  <label style={{ display: "flex", alignItems: "flex-start", gap: 10, cursor: "pointer", margin: 0 }}>
+                    <input type="checkbox" checked={acepta} onChange={(e) => setAcepta(e.target.checked)} />
+                    <span className="reg-check-box">
+                      <svg viewBox="0 0 16 16" fill="none"><path d="M3 8.5l3.5 3.5L13 4.5" stroke="#fff" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" /></svg>
+                    </span>
+                  </label>
+                  <span className="reg-check-text">
+                    Acepto las <a className="reg-terms-link" href="terminos.html" target="_blank" rel="noreferrer">políticas, los términos y condiciones</a>.
+                  </span>
+                </div>
+
+                <div className="reg-actions end">
+                  <button className="reg-btn is-primary" onClick={siguiente} disabled={expired}>Siguiente →</button>
+                </div>
+              </div>
+            )}
+
+            {/* -------- Paso 2: Institucional -------- */}
+            {step === 1 && (
+              <div>
+                <Field label="Nombre de la institución *" value={nombreInst} error={errors.nombreInst}>
+                  <input type="text" value={nombreInst} placeholder="Colegio San Martín"
+                    onChange={(e) => setNombreInst(e.target.value)} />
+                </Field>
+
+                <Field label="Dominio deseado *" value={subdominio} error={errors.subdominio}>
+                  <input type="text" value={subdominio} placeholder="micolegio.edu.pe o el nombre que prefieras"
+                    onChange={(e) => setSubdominio(e.target.value)} />
+                </Field>
+
+                <div className="reg-row2">
+                  <Field label="RUC o cód. modular *" value={ruc} error={errors.ruc}>
+                    <input type="text" value={ruc} placeholder="20481234567"
+                      onChange={(e) => setRuc(e.target.value)} />
+                  </Field>
+                  <Field label="Cant. estudiantes *" value={alumnos} error={errors.alumnos}>
+                    <input type="number" min="1" value={alumnos} placeholder="850"
+                      onChange={(e) => setAlumnos(e.target.value)} />
+                  </Field>
+                </div>
+
+                <Field label="Tipo de institución" value={tipo}>
+                  <select value={tipo} onChange={(e) => setTipo(e.target.value)}>
+                    {TIPOS.map((t) => <option key={t.value} value={t.value}>{t.label}</option>)}
+                  </select>
+                </Field>
+
+                <div className="reg-price-box">
+                  <div className="reg-price-row">
+                    <span style={{ fontSize: 13, color: "var(--pay-muted)", fontWeight: 600 }}>Precio mensual estimado</span>
+                    <span className="reg-price-amt">{fmt(mensual)}<small>/mes</small></span>
+                  </div>
+                  <div className="reg-price-hint">Base {fmt(BASE_PRICE)} por {MIN_ALUMNOS} estudiantes · +S/1 por estudiante adicional · primeros {TRIAL_MESES} meses gratis.</div>
+                </div>
+
+                <div className="reg-actions">
+                  <button className="reg-textbtn" onClick={atras}>← Atrás</button>
+                  <button className="reg-btn is-primary" onClick={siguiente} disabled={expired}>Siguiente →</button>
+                </div>
+              </div>
+            )}
+
+            {/* -------- Paso 3: Validacion / Pago -------- */}
+            {step === 2 && (
+              <div>
+                <div className="reg-rocket">
+                  <div className="em">🚀</div>
+                  <div>
+                    <h3>Plan Rocket · <span>6 meses gratis</span></h3>
+                    <p>Registras tu tarjeta hoy. El primer cobro ocurre recién tras {TRIAL_MESES} meses.</p>
+                  </div>
+                </div>
+
+                <div className="reg-summary">
+                  <div className="reg-sum-line"><span>Institución</span><span>{nombreInst || "—"}</span></div>
+                  <div className="reg-sum-line"><span>Estudiantes</span><span>{nAlumnos.toLocaleString("es-PE")}</span></div>
+                  <div className="reg-sum-line"><span>Precio mensual</span><span>{fmt(mensual)}</span></div>
+                  <div className="reg-sum-line"><span>Meses gratis</span><span>{TRIAL_MESES}</span></div>
+                </div>
+
+                <div className="reg-today">
+                  <span style={{ fontSize: 14, color: "var(--pay-muted)" }}>A pagar hoy</span>
+                  <b>S/ 0</b>
+                </div>
+
+                <button className={`reg-btn is-primary`} style={{ width: "100%", marginTop: 8 }} onClick={pagar} disabled={loading || expired}>
+                  {loading ? "Procesando..." : "Registrar tarjeta y crear cuenta"}
+                </button>
+
+                <div className="reg-secure">
+                  <svg viewBox="0 0 24 24" fill="none"><path d="M12 2l7 4v6c0 5-3.5 8-7 10-3.5-2-7-5-7-10V6l7-4z" stroke="currentColor" strokeWidth="1.5" strokeLinejoin="round" /></svg>
+                  Pago procesado por Culqi · datos cifrados
+                </div>
+
+                {msg && <div className={`reg-msg is-${msg.type}`}>{msg.text}</div>}
+
+                <div className="reg-actions" style={{ marginTop: 18 }}>
+                  <button className="reg-textbtn" onClick={atras}>← Atrás</button>
+                </div>
+              </div>
+            )}
+          </div>
+
+          {/* ---------------- DERECHA: carrusel de 3 secciones (imagenes las coloca el usuario) ---------------- */}
+          <div className="reg-right">
+            <div className={`reg-carousel ${dragging ? "is-drag" : ""}`}
+              onPointerDown={onDragStart} onPointerUp={onDragEnd}
+              onTouchStart={onDragStart} onTouchEnd={onDragEnd}>
+              {SLIDES.map((sl, i) => (
+                <div className={`reg-slide ${slide === i ? "is-on" : ""}`} key={i}>
+                  <div className="reg-slide-grid">
+                    {/* Captura (izquierda) — reemplaza el src por tu imagen */}
+                    <div className="reg-cap">
+                      <img src={sl.img} alt="" onError={(e) => { e.target.style.display = 'none'; e.target.parentNode.append(`Captura ${i + 1}`); }} />
+                    </div>
+                    {/* Texto (derecha) */}
+                    <div className="reg-feature">
+                      <h2>{sl.titulo}</h2>
+                      <p>{sl.texto}</p>
+                      <ul>
+                        {sl.bullets.map((t) => (
+                          <li key={t}>
+                            <span className="tick"><svg viewBox="0 0 16 16" fill="none"><path d="M3 8.5l3.5 3.5L13 4.5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" /></svg></span>
+                            {t}
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+              ))}
+
+              <div className="reg-carousel-nav">
+                <div className="reg-dots">
+                  {SLIDES.map((_, i) => (
+                    <span key={i} className={slide === i ? "is-on" : ""} style={{ cursor: "pointer" }} onClick={() => setSlide(i)} />
+                  ))}
+                </div>
+                <div className="reg-arrows">
+                  <button className="reg-arrow" onClick={() => goSlide(-1)} aria-label="Anterior">‹</button>
+                  <button className="reg-arrow" onClick={() => goSlide(1)} aria-label="Siguiente">›</button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div className={`reg-expired ${expired ? "is-open" : ""}`}>
+            <div className="reg-expired-box">
+              <div style={{ fontSize: 42, marginBottom: 6 }}>⏳</div>
+              <h2>Se agotó el tiempo</h2>
+              <p>La reserva expiró. Vuelve a KUI para comenzar de nuevo.</p>
+              <a className="reg-btn is-primary" href="index.html" style={{ textDecoration: "none" }}>Volver a KUI</a>
+            </div>
+          </div>
+        </div>
+      );
+    }
+
+    ReactDOM.createRoot(document.getElementById("pay-root")).render(<Checkout />);
+  </script>
+</body>
+
+</html>

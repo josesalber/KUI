@@ -35,6 +35,9 @@ const DICT = {
   "Conócenos":      { en: "Solutions",  ru: "Решения",      ja: "ソリューション", zh: "解决方案" },
   "Contacto":       { en: "Contact",    ru: "Контакты",     ja: "お問い合わせ", zh: "联系" },
   "Hablemos":       { en: "Let's talk", ru: "Поговорим",    ja: "話そう",    zh: "聊聊" },
+  "Adquiere":       { en: "Get started", ru: "Начать",       ja: "始める",    zh: "立即获取" },
+  "Empieza gratis": { en: "Start free",  ru: "Начать бесплатно", ja: "無料で始める", zh: "免费开始" },
+  "Volver a KUI":   { en: "Back to KUI", ru: "Назад в KUI", ja: "KUIに戻る", zh: "返回 KUI" },
 
   // ───── Hero ─────
   "Infraestructura":             { en: "Digital",          ru: "Цифровая",     ja: "デジタル", zh: "数字化" },

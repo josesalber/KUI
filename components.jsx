@@ -332,9 +332,9 @@ function Nav() {
           */}
           {link("contacto#contacto", "Contacto")}
           <LanguageSwitcher />
-          <a className="nav-cta" href={page === "contacto" ? "#contacto" : "contacto.html#contacto"} onClick={() => setMenuOpen(false)}>
+          <a className="nav-cta" href="pago.html" onClick={() => setMenuOpen(false)}>
             <span className="pulse" />
-            <T>Hablemos</T>
+            <T>Empieza gratis</T>
           </a>
         </div>
       </div>

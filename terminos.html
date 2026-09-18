@@ -1,0 +1,182 @@
+<!doctype html>
+<html lang="es">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Políticas, Términos y Condiciones · KUI</title>
+  <meta name="description" content="Términos y condiciones de uso, política de privacidad y política de suscripción de la plataforma KUI." />
+  <meta name="theme-color" content="#ee5a1f" />
+  <link rel="icon" href="assets/logo.png" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,700;12..96,800&family=Geist:wght@300;400;500;600;700&display=swap"
+    rel="stylesheet" />
+
+  <style>
+    :root {
+      --orange: #ee5a1f;
+      --ink: #0d0c0b;
+      --bg: #f7f5f1;
+      --card: #ffffff;
+      --line: #e4e1db;
+      --muted: #6b675f;
+    }
+    * { box-sizing: border-box; }
+    html, body { margin: 0; padding: 0; background: var(--bg); color: var(--ink); font-family: "Geist", system-ui, sans-serif; -webkit-font-smoothing: antialiased; line-height: 1.6; }
+
+    .doc-topbar { position: sticky; top: 0; z-index: 20; display: flex; align-items: center; justify-content: space-between; padding: 14px clamp(16px, 4vw, 48px); background: rgba(247,245,241,.9); backdrop-filter: blur(12px); border-bottom: 1px solid var(--line); }
+    .doc-brand { display: inline-flex; align-items: center; gap: 10px; font-family: "Bricolage Grotesque", sans-serif; font-weight: 700; font-size: 20px; color: var(--ink); text-decoration: none; }
+    .doc-brand img { height: 28px; }
+    .doc-back { display: inline-flex; align-items: center; gap: 7px; padding: 9px 16px; border-radius: 999px; border: 1px solid var(--line); background: #fff; color: var(--ink); font-weight: 600; font-size: 13px; text-decoration: none; transition: border-color .15s ease; }
+    .doc-back:hover { border-color: var(--orange); }
+
+    .doc-wrap { max-width: 820px; margin: 0 auto; padding: clamp(32px, 6vw, 72px) clamp(20px, 5vw, 40px) 100px; }
+    .doc-kicker { font-family: "Geist", sans-serif; font-size: 13px; font-weight: 600; letter-spacing: .04em; text-transform: uppercase; color: var(--orange); margin-bottom: 12px; }
+    .doc-h1 { font-family: "Bricolage Grotesque", sans-serif; font-weight: 700; font-size: clamp(30px, 6vw, 46px); line-height: 1.05; letter-spacing: -0.02em; margin: 0 0 14px; }
+    .doc-meta { color: var(--muted); font-size: 14px; margin: 0 0 30px; }
+
+    .doc-note { background: #fff6ef; border: 1px solid #f4d3bd; border-radius: 12px; padding: 14px 18px; font-size: 14px; color: #8a4b22; margin-bottom: 36px; }
+
+    .doc-toc { background: var(--card); border: 1px solid var(--line); border-radius: 16px; padding: 20px 24px; margin-bottom: 44px; }
+    .doc-toc h2 { font-family: "Bricolage Grotesque", sans-serif; font-size: 16px; margin: 0 0 12px; }
+    .doc-toc ol { margin: 0; padding-left: 20px; columns: 2; column-gap: 28px; font-size: 14px; }
+    @media (max-width: 560px) { .doc-toc ol { columns: 1; } }
+    .doc-toc a { color: var(--ink); text-decoration: none; }
+    .doc-toc a:hover { color: var(--orange); text-decoration: underline; }
+
+    .doc-wrap h2.sec { font-family: "Bricolage Grotesque", sans-serif; font-size: clamp(20px, 3vw, 26px); margin: 44px 0 12px; scroll-margin-top: 80px; }
+    .doc-wrap h3 { font-family: "Bricolage Grotesque", sans-serif; font-size: 17px; margin: 24px 0 6px; }
+    .doc-wrap p { margin: 0 0 14px; color: #33302b; }
+    .doc-wrap ul { margin: 0 0 16px; padding-left: 22px; color: #33302b; }
+    .doc-wrap li { margin-bottom: 7px; }
+    .doc-wrap strong { color: var(--ink); }
+    .ph { background: var(--orange); color: #fff; padding: 1px 7px; border-radius: 5px; font-size: 13px; font-weight: 600; }
+
+    .doc-foot { border-top: 1px solid var(--line); margin-top: 60px; padding-top: 24px; font-size: 13px; color: var(--muted); }
+  </style>
+</head>
+
+<body>
+  <div class="doc-topbar">
+    <a class="doc-brand" href="index.html"><img src="assets/logo.png" alt="KUI" /> kui</a>
+    <a class="doc-back" href="pago.html">← Volver al registro</a>
+  </div>
+
+  <div class="doc-wrap">
+    <div class="doc-kicker">Documento legal</div>
+    <h1 class="doc-h1">Políticas, Términos y Condiciones</h1>
+    <p class="doc-meta">Plataforma KUI · Última actualización: <span id="fecha"></span></p>
+
+    <div class="doc-note">
+      <strong>Aviso:</strong> este documento es una plantilla base preparada según el marco legal peruano. Antes de su publicación en producción, debe ser revisada y validada por un abogado, y deben completarse los campos marcados como <span class="ph">DATO</span> (razón social, RUC, domicilio, correo, etc.).
+    </div>
+
+    <div class="doc-toc">
+      <h2>Contenido</h2>
+      <ol>
+        <li><a href="#identificacion">Identificación del titular</a></li>
+        <li><a href="#objeto">Objeto y aceptación</a></li>
+        <li><a href="#definiciones">Definiciones</a></li>
+        <li><a href="#cuenta">Registro y cuenta</a></li>
+        <li><a href="#servicio">Descripción del servicio</a></li>
+        <li><a href="#plan">Plan Rocket y periodo gratuito</a></li>
+        <li><a href="#precios">Precios y facturación</a></li>
+        <li><a href="#pagos">Pagos y pasarela</a></li>
+        <li><a href="#cancelacion">Cancelación y reembolsos</a></li>
+        <li><a href="#obligaciones">Obligaciones del usuario</a></li>
+        <li><a href="#propiedad">Propiedad intelectual</a></li>
+        <li><a href="#disponibilidad">Disponibilidad y soporte</a></li>
+        <li><a href="#responsabilidad">Limitación de responsabilidad</a></li>
+        <li><a href="#privacidad">Política de privacidad</a></li>
+        <li><a href="#datos-menores">Datos de menores de edad</a></li>
+        <li><a href="#consumidor">Derechos del consumidor</a></li>
+        <li><a href="#modificaciones">Modificaciones</a></li>
+        <li><a href="#ley">Ley aplicable y jurisdicción</a></li>
+        <li><a href="#contacto">Contacto</a></li>
+      </ol>
+    </div>
+
+    <h2 class="sec" id="identificacion">1. Identificación del titular</h2>
+    <p>La plataforma KUI (en adelante, "KUI", "la Plataforma" o "nosotros") es operada por <span class="ph">RAZÓN SOCIAL S.A.C.</span>, con RUC N° <span class="ph">RUC</span>, domicilio en <span class="ph">DIRECCIÓN FISCAL</span>, Lima, Perú, correo de contacto <span class="ph">correo@kuiweb.com</span>.</p>
+
+    <h2 class="sec" id="objeto">2. Objeto y aceptación</h2>
+    <p>Estos Términos y Condiciones regulan el acceso y uso de la Plataforma, un servicio de software como servicio (SaaS) de gestión académica y administrativa para instituciones educativas. Al registrarse, marcar la casilla de aceptación y utilizar la Plataforma, el usuario declara haber leído, entendido y aceptado estos Términos, así como la Política de Privacidad. Si el usuario no está de acuerdo, debe abstenerse de usar la Plataforma.</p>
+    <p>El usuario que contrata en representación de una institución declara contar con facultades suficientes para obligarla.</p>
+
+    <h2 class="sec" id="definiciones">3. Definiciones</h2>
+    <ul>
+      <li><strong>Institución:</strong> el colegio, instituto o academia que contrata el servicio.</li>
+      <li><strong>Usuario administrador:</strong> la persona que registra y administra la cuenta de la Institución.</li>
+      <li><strong>Suscripción:</strong> el plan de pago recurrente contratado.</li>
+      <li><strong>Periodo gratuito:</strong> los 6 primeros meses sin cargo del Plan Rocket.</li>
+    </ul>
+
+    <h2 class="sec" id="cuenta">4. Registro y cuenta</h2>
+    <p>El registro exige datos veraces, completos y actualizados: nombre, correo, cargo, teléfono y datos de la Institución. El usuario es responsable de la confidencialidad de sus credenciales y de toda actividad realizada bajo su cuenta. KUI puede suspender cuentas con información falsa o usos indebidos.</p>
+
+    <h2 class="sec" id="servicio">5. Descripción del servicio</h2>
+    <p>KUI ofrece herramientas de gestión académica (matrícula, notas, asistencia, horarios), comunicación (chat, noticias, agenda) y administración (pensiones, reportes). Las funciones concretas pueden variar según el plan y evolucionar en el tiempo.</p>
+
+    <h2 class="sec" id="plan">6. Plan Rocket y periodo gratuito</h2>
+    <p>El Plan Rocket otorga <strong>6 meses de uso gratuito</strong>. Para activarlo, el usuario registra un medio de pago, pero <strong>no se genera ningún cobro durante el periodo gratuito</strong>. Finalizado ese periodo, y salvo cancelación previa, la suscripción se renueva de forma automática y se inicia el cobro mensual.</p>
+
+    <h2 class="sec" id="precios">7. Precios y facturación</h2>
+    <p>La mensualidad se calcula según la cantidad de estudiantes declarada: un mínimo de <strong>S/ 200 por hasta 250 estudiantes</strong>, más <strong>S/ 1 por cada estudiante adicional</strong>. Los precios se expresan en soles (PEN) e incluyen los impuestos que correspondan según la legislación vigente. KUI puede actualizar sus precios notificando con antelación razonable; los cambios no afectan periodos ya facturados.</p>
+
+    <h2 class="sec" id="pagos">8. Pagos y pasarela</h2>
+    <p>Los pagos se procesan a través de <strong>Culqi</strong>, pasarela certificada bajo el estándar PCI-DSS. KUI <strong>no almacena</strong> el número completo de la tarjeta ni el código de seguridad; estos datos son gestionados de forma cifrada por la pasarela. El cobro recurrente se realiza automáticamente al medio de pago registrado.</p>
+
+    <h2 class="sec" id="cancelacion">9. Cancelación y reembolsos</h2>
+    <p>El usuario puede cancelar la suscripción en cualquier momento desde la Plataforma. La cancelación durante el periodo gratuito evita todo cobro. Tras el inicio de la facturación, la cancelación detiene los cobros futuros pero <strong>no genera reembolso por el mes en curso ya facturado</strong>, salvo que la ley disponga lo contrario.</p>
+
+    <h2 class="sec" id="obligaciones">10. Obligaciones del usuario</h2>
+    <ul>
+      <li>Usar la Plataforma conforme a la ley y a estos Términos.</li>
+      <li>No vulnerar la seguridad ni intentar accesos no autorizados.</li>
+      <li>Tratar los datos de estudiantes y familias conforme a la normativa de protección de datos, en su calidad de responsable del tratamiento de dichos datos.</li>
+      <li>Mantener actualizada su información de facturación.</li>
+    </ul>
+
+    <h2 class="sec" id="propiedad">11. Propiedad intelectual</h2>
+    <p>El software, la marca KUI, el diseño, el código y los contenidos propios son de titularidad de <span class="ph">RAZÓN SOCIAL</span>. La contratación otorga una licencia de uso limitada, no exclusiva e intransferible, mientras dure la suscripción. Los datos que la Institución carga siguen siendo de su propiedad.</p>
+
+    <h2 class="sec" id="disponibilidad">12. Disponibilidad y soporte</h2>
+    <p>KUI procura una disponibilidad continua, pero el servicio puede interrumpirse por mantenimiento, causas técnicas o fuerza mayor. El soporte se brinda por los canales indicados en la Plataforma.</p>
+
+    <h2 class="sec" id="responsabilidad">13. Limitación de responsabilidad</h2>
+    <p>En la medida permitida por la ley, KUI no responde por daños indirectos, lucro cesante ni pérdida de datos derivada de un mal uso de la Plataforma o de causas ajenas a su control. Nada en estos Términos limita la responsabilidad que la ley no permita excluir.</p>
+
+    <h2 class="sec" id="privacidad">14. Política de privacidad</h2>
+    <p>KUI trata los datos personales conforme a la <strong>Ley N° 29733, Ley de Protección de Datos Personales</strong>, y su Reglamento (D.S. N° 003-2013-JUS). Los datos recabados (identificación, contacto, facturación) se usan para prestar el servicio, gestionar la suscripción y comunicarse con el usuario. No se ceden a terceros salvo obligación legal o a encargados de tratamiento necesarios para operar el servicio (por ejemplo, la pasarela de pago).</p>
+    <p>El titular de los datos puede ejercer sus derechos de acceso, rectificación, cancelación y oposición (derechos ARCO) escribiendo a <span class="ph">correo@kuiweb.com</span>. Los datos se conservan mientras dure la relación contractual y los plazos legales aplicables.</p>
+
+    <h2 class="sec" id="datos-menores">15. Datos de menores de edad</h2>
+    <p>La Plataforma trata datos de estudiantes que pueden ser menores de edad, por encargo de la Institución. La Institución es responsable de contar con el consentimiento de los padres o tutores cuando la ley lo exija. KUI actúa como encargado del tratamiento y aplica medidas de seguridad conforme a la normativa vigente.</p>
+
+    <h2 class="sec" id="consumidor">16. Derechos del consumidor</h2>
+    <p>Cuando corresponda, resulta aplicable el <strong>Código de Protección y Defensa del Consumidor (Ley N° 29571)</strong>. El usuario puede presentar reclamos por los canales de la Plataforma y a través del Libro de Reclamaciones, así como acudir a INDECOPI.</p>
+
+    <h2 class="sec" id="modificaciones">17. Modificaciones</h2>
+    <p>KUI puede modificar estos Términos. Los cambios relevantes se comunican por la Plataforma o por correo con antelación razonable. El uso continuado tras la entrada en vigor implica aceptación de la versión actualizada.</p>
+
+    <h2 class="sec" id="ley">18. Ley aplicable y jurisdicción</h2>
+    <p>Estos Términos se rigen por las leyes de la República del Perú. Cualquier controversia se somete a los jueces y tribunales del distrito judicial de <span class="ph">Lima</span>, salvo norma imperativa en contrario.</p>
+
+    <h2 class="sec" id="contacto">19. Contacto</h2>
+    <p>Para consultas sobre estos Términos o sobre el tratamiento de datos: <span class="ph">correo@kuiweb.com</span> · <span class="ph">teléfono</span> · <span class="ph">dirección</span>.</p>
+
+    <div class="doc-foot">
+      © <span id="anio"></span> KUI · <span class="ph">RAZÓN SOCIAL</span>. Documento sujeto a revisión legal antes de su publicación definitiva.
+    </div>
+  </div>
+
+  <script>
+    document.getElementById("fecha").textContent = new Date().toLocaleDateString("es-PE", { year: "numeric", month: "long", day: "numeric" });
+    document.getElementById("anio").textContent = new Date().getFullYear();
+  </script>
+</body>
+
+</html>
