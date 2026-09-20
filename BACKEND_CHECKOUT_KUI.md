@@ -45,7 +45,9 @@ Público (sin JWT). Es el que el frontend ya está llamando.
   "plan": "ROCKET",
   "trialMeses": 6,
   "alumnos": 850,
-  "montoMensual": 640,
+  "montoMensual": 800,
+  "montoHoy": 0,
+  "metodoPago": "card",
   "contacto": {
     "nombreCompleto": "Juan Pérez",
     "email": "director@colegio.edu.pe",
@@ -62,11 +64,30 @@ Público (sin JWT). Es el que el frontend ya está llamando.
 }
 ```
 
+- `plan` = `"ROCKET"` o `"INICIAL"`. Determina si hoy se cobra o no (ver §4.1).
+- `trialMeses` = meses de prueba (6 para ROCKET, 0 para INICIAL).
+- `montoHoy` = lo que se cobra **hoy** en soles (0 para ROCKET; el primer mes para INICIAL). El frontend lo envía, pero **recalcúlalo en el backend**; no confíes en el cliente.
+- `metodoPago` = tipo de token Culqi devuelto: `"card"` o `"yape"`. Solo INICIAL admite `yape` (ver §4.1).
 - `contacto` = persona que registra (paso Personal). Úsalo para crear el usuario admin de la institución y el correo de bienvenida.
 - `institucion.dominioDeseado` = **texto libre** con el dominio que la institución desea (paso Institucional). No es un subdominio fijo: el equipo KUI provisiona/registra el dominio después, de forma manual. Guárdalo como preferencia; no lo valides como único ni asumas formato.
 - `institucion.ruc` = RUC o código modular.
 - `montoMensual` viene en **soles** (S/). Para Culqi conviértelo a **céntimos** → `montoMensual * 100`.
-- Recalcula y valida `montoMensual` en el backend (no confíes en el valor del cliente). Fórmula: `max(200, 200 + (alumnos - 250))` soles → **mínimo S/200**. `alumnos` es obligatorio y > 0.
+- Recalcula y valida `montoMensual` en el backend (no confíes en el valor del cliente). Fórmula: `max(base, base + (alumnos - 250))` soles, donde `base` depende del plan: **ROCKET = 200**, **INICIAL = 40**. `alumnos` es obligatorio y > 0.
+
+### 4.1 Diferencia entre planes (importante para Yape)
+
+El checkout ahora sirve dos planes con lógica de cobro distinta:
+
+| Plan | Cobro hoy | Trial | Métodos | Medio para cobro recurrente |
+|------|-----------|-------|---------|------------------------------|
+| ROCKET | No (S/0) | 6 meses | Solo tarjeta | Tarjeta tokenizada hoy |
+| INICIAL | Sí (primer mes) | 0 | Tarjeta o **Yape** | Tarjeta (ver limitación Yape) |
+
+- **ROCKET** → flujo de suscripción con `trial_days` (pasos 4–5 abajo). No se cobra hoy. Rechaza `metodoPago = "yape"` para ROCKET.
+- **INICIAL con tarjeta** → crea cliente + tarjeta, cobra el primer mes hoy (crea la suscripción sin trial, o un cargo inmediato + suscripción) y deja la tarjeta guardada para los meses siguientes.
+- **INICIAL con Yape** → **Yape es un pago único; no deja medio para cobros recurrentes.** Con el token Yape crea un cargo hoy (`POST {CULQI_API}/charges`) por `montoHoy`. Para los meses siguientes NO tienes tarjeta guardada. Define política: (a) al finalizar el primer mes, enviar correo pidiendo registrar tarjeta antes del siguiente ciclo, o (b) enviar mensualmente un enlace/QR de pago Yape. Marca la institución con `requiereMedioRecurrente = true` hasta que registre tarjeta.
+
+> Validación mínima: si `plan = "ROCKET"` y `metodoPago = "yape"`, responde error (Yape no soporta el trial con cobro recurrente).
 
 **Pasos del backend:**
 
@@ -173,7 +194,7 @@ Tres constantes al inicio del `<script>` de `pago.html`, listas para apuntar a p
 
 ```js
 const CULQI_PUBLIC_KEY = "pk_test_zs2Xf3e5X7QQCSnf";               // → pk_live_... en prod
-const CHECKOUT_API = "https://backend-central-0j9o.onrender.com/api/public/checkout"; // → URL real del endpoint
+const CHECKOUT_API = "https://backend-central-lost.onrender.com/api/public/checkout"; // → URL real del endpoint
 const MEMBRESIA_URL = "https://membresia.kuiweb.com/login";        // → URL real de MEMBRESIA
 ```
 

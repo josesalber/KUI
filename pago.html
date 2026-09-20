@@ -198,12 +198,36 @@
 
     /* ===================== CONFIG (ajustar a produccion) ===================== */
     const CULQI_PUBLIC_KEY = "pk_test_zs2Xf3e5X7QQCSnf";                                   // llave publica (segura en front)
-    const CHECKOUT_API = "https://backend-central-0j9o.onrender.com/api/public/checkout"; // endpoint backend
+    const CHECKOUT_API = "https://backend-central-lost.onrender.com/api/public/checkout"; // endpoint backend
     const MEMBRESIA_URL = "https://membresia.kuiweb.com/login";                            // destino tras crear cuenta
 
-    const MIN_ALUMNOS = 250;
-    const BASE_PRICE = 200;  // S/ minimo (piso) por 250 alumnos
-    const TRIAL_MESES = 6;
+    /* Planes con checkout. Se elige con ?plan=inicial|rocket (default rocket).
+       - rocket: 6 meses gratis, hoy solo tokeniza tarjeta, sin Yape (Yape no guarda medio recurrente).
+       - inicial: cobra el primer mes hoy, admite tarjeta y Yape (pago unico). */
+    const PLANS = {
+      rocket: {
+        key: "ROCKET", label: "Plan Rocket", emoji: "🚀",
+        base: 200, minAlumnos: 250, trialMeses: 6, chargeToday: false,
+        methods: { tarjeta: true, yape: false },
+        culqiTitle: "KUI · Registro de tarjeta", culqiButton: "Registrar tarjeta",
+        cta: "Registrar tarjeta y crear cuenta",
+      },
+      inicial: {
+        key: "INICIAL", label: "Plan Inicial", emoji: "🎒",
+        base: 40, minAlumnos: 250, trialMeses: 0, chargeToday: true,
+        methods: { tarjeta: true, yape: true },
+        culqiTitle: "KUI · Plan Inicial", culqiButton: "Pagar",
+        cta: "Pagar y crear cuenta",
+      },
+    };
+    const PLAN = (() => {
+      const p = (new URLSearchParams(location.search).get("plan") || "rocket").toLowerCase();
+      return PLANS[p] || PLANS.rocket;
+    })();
+
+    const MIN_ALUMNOS = PLAN.minAlumnos;
+    const BASE_PRICE = PLAN.base;  // S/ minimo (piso) por MIN_ALUMNOS alumnos
+    const TRIAL_MESES = PLAN.trialMeses;
     const TIPOS = [
       { value: "COLEGIO", label: "Colegio" },
       { value: "INSTITUTO", label: "Instituto" },
@@ -298,18 +322,20 @@
 
       const nAlumnos = Number(alumnos) || 0;
       const mensual = Math.max(BASE_PRICE, BASE_PRICE + Math.max(0, nAlumnos - MIN_ALUMNOS));
+      const montoHoy = PLAN.chargeToday ? mensual : 0; // rocket tokeniza (0); inicial cobra el primer mes hoy
 
-      /* Culqi config */
+      /* Culqi config. Yape solo se ofrece en planes que cobran hoy (PLAN.methods.yape).
+         Yape es pago unico, no guarda medio para cobro recurrente; por eso no aplica al trial de Rocket. */
       useEffect(() => {
         if (!window.Culqi) return;
         window.Culqi.publicKey = CULQI_PUBLIC_KEY;
-        window.Culqi.settings({ title: "KUI · Plan Rocket", currency: "PEN", amount: mensual * 100 });
+        window.Culqi.settings({ title: PLAN.culqiTitle, currency: "PEN", amount: montoHoy * 100 });
         window.Culqi.options({
           lang: "es", installments: false,
-          paymentMethods: { tarjeta: true, yape: false, bancaMovil: false, billetera: false, cuotealo: false },
-          style: { buttonBackground: "#ee5a1f", menuColor: "#ee5a1f", linksColor: "#ee5a1f", buttonText: "Registrar tarjeta" },
+          paymentMethods: { tarjeta: PLAN.methods.tarjeta, yape: PLAN.methods.yape, bancaMovil: false, billetera: false, cuotealo: false },
+          style: { buttonBackground: "#ee5a1f", menuColor: "#ee5a1f", linksColor: "#ee5a1f", buttonText: PLAN.culqiButton },
         });
-      }, [mensual]);
+      }, [montoHoy]);
 
       useEffect(() => {
         window.culqi = function () {
@@ -358,8 +384,9 @@
           const res = await fetch(CHECKOUT_API, {
             method: "POST", headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
-              culqiToken: token, plan: "ROCKET", trialMeses: TRIAL_MESES,
-              alumnos: nAlumnos, montoMensual: mensual,
+              culqiToken: token, plan: PLAN.key, trialMeses: TRIAL_MESES,
+              alumnos: nAlumnos, montoMensual: mensual, montoHoy: montoHoy,
+              metodoPago: (window.Culqi.token && window.Culqi.token.type) || "card",
               contacto: { nombreCompleto: nombreCompleto.trim(), email: email.trim(), cargo, telefono: tel.trim() },
               institucion: { nombre: nombreInst.trim(), tipo, dominioDeseado: subdominio.trim(), ruc: ruc.trim(), emailContacto: email.trim() },
             }),
@@ -369,7 +396,7 @@
           setMsg({ type: "ok", text: "Cuenta creada. Redirigiendo a tu plataforma KUI..." });
           setTimeout(() => { window.location.href = data.loginUrl || MEMBRESIA_URL; }, 1400);
         } catch (err) { setLoading(false); setMsg({ type: "error", text: err.message }); }
-      }, [nAlumnos, mensual, nombreCompleto, email, cargo, tel, nombreInst, tipo, subdominio, ruc]);
+      }, [nAlumnos, mensual, montoHoy, nombreCompleto, email, cargo, tel, nombreInst, tipo, subdominio, ruc]);
 
       const StepDot = ({ i, label }) => (
         <div className={`reg-step ${step === i ? "is-active" : ""} ${step > i ? "is-done" : ""}`}>
@@ -479,7 +506,7 @@
                     <span style={{ fontSize: 13, color: "var(--pay-muted)", fontWeight: 600 }}>Precio mensual estimado</span>
                     <span className="reg-price-amt">{fmt(mensual)}<small>/mes</small></span>
                   </div>
-                  <div className="reg-price-hint">Base {fmt(BASE_PRICE)} por {MIN_ALUMNOS} estudiantes · +S/1 por estudiante adicional · primeros {TRIAL_MESES} meses gratis.</div>
+                  <div className="reg-price-hint">Base {fmt(BASE_PRICE)} por {MIN_ALUMNOS} estudiantes · +S/1 por estudiante adicional{TRIAL_MESES > 0 ? ` · primeros ${TRIAL_MESES} meses gratis` : ""}.</div>
                 </div>
 
                 <div className="reg-actions">
@@ -493,10 +520,12 @@
             {step === 2 && (
               <div>
                 <div className="reg-rocket">
-                  <div className="em">🚀</div>
+                  <div className="em">{PLAN.emoji}</div>
                   <div>
-                    <h3>Plan Rocket · <span>6 meses gratis</span></h3>
-                    <p>Registras tu tarjeta hoy. El primer cobro ocurre recién tras {TRIAL_MESES} meses.</p>
+                    <h3>{PLAN.label}{PLAN.trialMeses > 0 ? <> · <span>{PLAN.trialMeses} meses gratis</span></> : null}</h3>
+                    <p>{PLAN.chargeToday
+                      ? "Pagas el primer mes hoy con tarjeta o Yape. Luego el cobro es mensual segun tus estudiantes."
+                      : `Registras tu tarjeta hoy. El primer cobro ocurre recien tras ${PLAN.trialMeses} meses.`}</p>
                   </div>
                 </div>
 
@@ -504,16 +533,16 @@
                   <div className="reg-sum-line"><span>Institución</span><span>{nombreInst || "—"}</span></div>
                   <div className="reg-sum-line"><span>Estudiantes</span><span>{nAlumnos.toLocaleString("es-PE")}</span></div>
                   <div className="reg-sum-line"><span>Precio mensual</span><span>{fmt(mensual)}</span></div>
-                  <div className="reg-sum-line"><span>Meses gratis</span><span>{TRIAL_MESES}</span></div>
+                  {TRIAL_MESES > 0 && <div className="reg-sum-line"><span>Meses gratis</span><span>{TRIAL_MESES}</span></div>}
                 </div>
 
                 <div className="reg-today">
                   <span style={{ fontSize: 14, color: "var(--pay-muted)" }}>A pagar hoy</span>
-                  <b>S/ 0</b>
+                  <b>{fmt(montoHoy)}</b>
                 </div>
 
                 <button className={`reg-btn is-primary`} style={{ width: "100%", marginTop: 8 }} onClick={pagar} disabled={loading || expired}>
-                  {loading ? "Procesando..." : "Registrar tarjeta y crear cuenta"}
+                  {loading ? "Procesando..." : PLAN.cta}
                 </button>
 
                 <div className="reg-secure">

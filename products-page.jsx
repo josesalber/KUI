@@ -980,6 +980,8 @@ function PlansSection() {
       note: `${students.toLocaleString("es-PE")} alumnos`,
       visual: "assets/kuiplanes.png",
       featured: true,
+      href: "pago.html?plan=inicial",
+      cta: "Empezar",
     },
     {
       name: "Plan Rocket",
@@ -990,6 +992,8 @@ function PlansSection() {
       visual: "assets/rocket.png",
       rocket: true,
       featured: false,
+      href: "pago.html?plan=rocket",
+      cta: "Empezar gratis",
     },
     {
       name: "Plan Institucional",
@@ -999,6 +1003,7 @@ function PlansSection() {
       note: "Incluye propuesta personalizada",
       visual: "assets/personaje.png",
       featured: false,
+      cta: "Obtenerlo",
     },
   ];
 
@@ -1100,11 +1105,11 @@ function PlansSection() {
                         </div>
                         <a
                           className={`pp-plan-btn ${plan.featured ? "is-featured" : ""}`}
-                          href={`${whatsappBase}${encodeURIComponent(`Hola KUI, me interesa ${plan.name}.`)}`}
-                          target="_blank"
-                          rel="noreferrer"
+                          href={plan.href || `${whatsappBase}${encodeURIComponent(`Hola KUI, me interesa ${plan.name}.`)}`}
+                          target={plan.href ? "_self" : "_blank"}
+                          rel={plan.href ? undefined : "noreferrer"}
                         >
-                          Obtenerlo
+                          {plan.cta || "Obtenerlo"}
                         </a>
                       </div>
                       <div className="pp-plan-note mono">{plan.note}</div>
