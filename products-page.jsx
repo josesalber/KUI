@@ -466,7 +466,7 @@ function LaptopMockup({ id, src, placeholder }) {
             id={id}
             src={src || ""}
             placeholder={placeholder}
-            fit="contain"
+            fit="cover"
             position="50% 0%"
             shape="rect"
             radius="0"
@@ -478,41 +478,126 @@ function LaptopMockup({ id, src, placeholder }) {
   );
 }
 
-/* ── RoleShowcaseSection ── */
+/* ── RoleShowcaseSection ──
+   Roles como orbes flotantes (avatar circular + etiqueta). Al presionar un
+   orbe se despliega abajo el panel de ese rol (descripcion + mockups del
+   dispositivo). Entrada, flotacion idle y despliegue animados con GSAP. */
+const ROLE_CARDS = [
+  { id: "admin", title: "Administradores", avatar: "assets/admin_avatar.png", desc: "Organiza y centraliza todo lo que tu centro educativo necesita.", accent: "#3178C6", device: "laptop" },
+  { id: "prof", title: "Profesores", avatar: "assets/profe_avatar.png", desc: "Ingresa, planifica y califica las tareas, evaluaciones y actividades de tus estudiantes.", accent: "#646CFF", device: "laptop" },
+  { id: "est", title: "Estudiantes", avatar: "assets/est_avatar.png", desc: "Entérate del contenido, tareas, evaluaciones y actividades que tus maestros tienen para ti.", accent: "#3ECF8E", device: "phones2" },
+  { id: "padres", title: "Padres", avatar: "assets/padre_avatar.png", desc: "Infórmate del rendimiento académico, eventos, estados de cuenta, horario y comunicados importantes.", accent: "#ee5a1f", device: "phone" },
+];
+
+function RoleDevice({ card }) {
+  if (card.device === "laptop") {
+    return (
+      <LaptopMockup
+        id={`showcase-laptop-${card.id}`}
+        src={`assets/showcase-laptop-${card.id}.png`}
+        placeholder={`Captura: ${card.title}`}
+      />
+    );
+  }
+  if (card.device === "phone") {
+    return (
+      <div className="showcase-phones1">
+        <div className="phone-mockup">
+          <div className="phone-screen">
+            <image-slot
+              id={`showcase-phone-${card.id}`}
+              src={`assets/showcase-phone-${card.id}.png`}
+              placeholder={`Captura móvil: ${card.title}`}
+              fit="cover" shape="rect" radius="0"
+            ></image-slot>
+          </div>
+        </div>
+      </div>
+    );
+  }
+  return (
+    <div className="showcase-phones2">
+      {[1, 2].map((k) => (
+        <div className="phone-mockup" key={k}>
+          <div className="phone-screen">
+            <image-slot
+              id={`showcase-phone-${card.id}-${k}`}
+              src={`assets/showcase-phone-${card.id}-${k}.png`}
+              placeholder={`Captura móvil ${k}: ${card.title}`}
+              fit="cover" shape="rect" radius="0"
+            ></image-slot>
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+}
+
 function RoleShowcaseSection() {
-  const cards = [
-    {
-      id: "admin",
-      title: "Administradores",
-      desc: "Organiza y centraliza todo lo que tu centro educativo necesita.",
-      accent: "#3178C6",
-      device: "laptop",
-    },
-    {
-      id: "prof",
-      title: "Profesores",
-      desc: "Ingresa, planifica y califica las tareas, evaluaciones y actividades de tus estudiantes.",
-      accent: "#646CFF",
-      device: "laptop",
-    },
-    {
-      id: "est",
-      title: "Estudiantes",
-      desc: "Entérate del contenido, tareas, evaluaciones y actividades que tus maestros tienen para ti.",
-      accent: "#3ECF8E",
-      device: "phones2",
-    },
-    {
-      id: "padres",
-      title: "Padres",
-      desc: "Infórmate del rendimiento académico, eventos, estados de cuenta, horario y comunicados importantes.",
-      accent: "#ee5a1f",
-      device: "phone",
-    },
-  ];
+  const [active, setActive] = useState(-1); // -1 = ningun rol desplegado
+  const rootRef = useRef(null);
+  const panelRef = useRef(null);
+  const card = active >= 0 ? ROLE_CARDS[active] : null;
+
+  const toggle = (i) => setActive((cur) => (cur === i ? -1 : i));
+
+  // Entrada + efecto magnetico de los orbes (GSAP, sin framer-motion).
+  // Replica MagneticSelect (pull / bounce / give): el anillo persigue el
+  // cursor y vuelve con rebote elastico al salir.
+  useEffect(() => {
+    const gsap = window.gsap;
+    const ScrollTrigger = window.ScrollTrigger;
+    if (!gsap || !rootRef.current) return;
+    if (ScrollTrigger) gsap.registerPlugin(ScrollTrigger);
+
+    const PULL = 0.5;      // give: fraccion del desplazamiento del cursor
+    const MAX = 55;        // pull: desplazamiento maximo en px
+    const clamp = (v) => Math.max(-MAX, Math.min(MAX, v));
+
+    // Entrada del boton al hacer scroll (una vez)
+    const ctx = gsap.context(() => {
+      gsap.from(".role-orb", {
+        autoAlpha: 0, y: 40, scale: 0.7, duration: 0.7, ease: "back.out(1.6)", stagger: 0.12,
+        scrollTrigger: ScrollTrigger ? { trigger: rootRef.current, start: "top 80%", once: true } : undefined,
+      });
+    }, rootRef);
+
+    // Efecto magnetico (listeners directos sobre el DOM, fuera del context)
+    const cleanups = [];
+    rootRef.current.querySelectorAll(".role-orb").forEach((orb) => {
+      const ring = orb.querySelector(".role-orb-ring");
+      if (!ring) return;
+      // bounce: rebote elastico al soltar (give)
+      const xTo = gsap.quickTo(ring, "x", { duration: 0.6, ease: "elastic.out(1, 0.35)" });
+      const yTo = gsap.quickTo(ring, "y", { duration: 0.6, ease: "elastic.out(1, 0.35)" });
+      const onMove = (e) => {
+        const r = orb.getBoundingClientRect();
+        xTo(clamp((e.clientX - (r.left + r.width / 2)) * PULL));
+        yTo(clamp((e.clientY - (r.top + r.height / 2)) * PULL));
+      };
+      const onLeave = () => { xTo(0); yTo(0); };
+      orb.addEventListener("pointermove", onMove);
+      orb.addEventListener("pointerleave", onLeave);
+      cleanups.push(() => {
+        orb.removeEventListener("pointermove", onMove);
+        orb.removeEventListener("pointerleave", onLeave);
+      });
+    });
+
+    return () => { cleanups.forEach((fn) => fn()); ctx.revert(); };
+  }, []);
+
+  // Reveal de las imagenes del rol seleccionado (sin div blanco)
+  useEffect(() => {
+    const gsap = window.gsap;
+    if (!gsap || active < 0 || !panelRef.current) return;
+    gsap.fromTo(panelRef.current,
+      { autoAlpha: 0, y: 28, scale: 0.96 },
+      { autoAlpha: 1, y: 0, scale: 1, duration: 0.6, ease: "power3.out" });
+  }, [active]);
 
   return (
-    <section className="section pp-role-showcase">
+    <section className="section pp-role-showcase" ref={rootRef}>
       <div className="container">
         <Reveal className="section-head">
           <div><div className="tag">— para todos</div></div>
@@ -520,79 +605,38 @@ function RoleShowcaseSection() {
             <h2 className="section-title">
               KUI en Centros<br /><em>Educativos</em>.
             </h2>
-            <p>Cada actor de la comunidad tiene su propio panel, diseñado para lo que realmente necesita.</p>
+            <p>Presiona un rol para ver el panel que KUI diseñó para cada actor de la comunidad.</p>
           </div>
         </Reveal>
 
-        <div className="showcase-roles-grid">
-          {cards.map((card) => (
-            <Reveal key={card.id} className="showcase-role-card" style={{ "--card-accent": card.accent }}>
-              <div className="showcase-role-header">
-                <div className="showcase-role-avatar" data-no-translate="true">
-                  <image-slot
-                    id={`showcase-avatar-${card.id}`}
-                    src={`assets/showcase-avatar-${card.id}.png`}
-                    placeholder={`Foto: ${card.title}`}
-                    fit="cover"
-                    shape="circle"
-                  ></image-slot>
-                </div>
-                <div className="showcase-role-info">
-                  <h3 className="showcase-role-title">{card.title}</h3>
-                  <p className="showcase-role-desc">{card.desc}</p>
-                </div>
-              </div>
-
-              <div className="showcase-role-device" data-no-translate="true">
-                {card.device === "laptop" && (
-                  <LaptopMockup
-                    id={`showcase-laptop-${card.id}`}
-                    src={`assets/showcase-laptop-${card.id}.png`}
-                    placeholder={`Captura: ${card.title}`}
-                  />
-                )}
-                {card.device === "phone" && (
-                  <div className="showcase-phones1">
-                    <div className="phone-mockup">
-                      <div className="phone-screen">
-                        <image-slot
-                          id={`showcase-phone-${card.id}`}
-                          src={`assets/showcase-phone-${card.id}.png`}
-                          placeholder={`Captura móvil: ${card.title}`}
-                          fit="cover" shape="rect" radius="0"
-                        ></image-slot>
-                      </div>
-                    </div>
-                  </div>
-                )}
-                {card.device === "phones2" && (
-                  <div className="showcase-phones2">
-                    <div className="phone-mockup">
-                      <div className="phone-screen">
-                        <image-slot
-                          id={`showcase-phone-${card.id}-1`}
-                          src={`assets/showcase-phone-${card.id}-1.png`}
-                          placeholder={`Captura móvil 1: ${card.title}`}
-                          fit="cover" shape="rect" radius="0"
-                        ></image-slot>
-                      </div>
-                    </div>
-                    <div className="phone-mockup">
-                      <div className="phone-screen">
-                        <image-slot
-                          id={`showcase-phone-${card.id}-2`}
-                          src={`assets/showcase-phone-${card.id}-2.png`}
-                          placeholder={`Captura móvil 2: ${card.title}`}
-                          fit="cover" shape="rect" radius="0"
-                        ></image-slot>
-                      </div>
-                    </div>
-                  </div>
-                )}
-              </div>
-            </Reveal>
+        <div className="roles-orbit">
+          {ROLE_CARDS.map((c, i) => (
+            <button
+              key={c.id}
+              className={`role-orb ${active === i ? "is-active" : ""}`}
+              style={{ "--card-accent": c.accent }}
+              aria-expanded={active === i}
+              onClick={() => toggle(i)}
+            >
+              <span className="role-orb-ring" data-no-translate="true">
+                <image-slot
+                  id={`showcase-avatar-${c.id}`}
+                  src={c.avatar}
+                  placeholder={c.title}
+                  fit="cover"
+                  shape="circle"
+                ></image-slot>
+              </span>
+              <span className="role-orb-label">{c.title}</span>
+            </button>
           ))}
         </div>
+
+        {card && (
+          <div className="role-stage" ref={panelRef} key={card.id} data-no-translate="true">
+            <RoleDevice card={card} />
+          </div>
+        )}
       </div>
     </section>
   );
@@ -678,35 +722,102 @@ function ImplementationIcon({ kind }) {
   );
 }
 
-function RolesSection() {
-  const [active, setActive] = useState(null);
-  const gridRef = useRef(null);
-  const detailRef = useRef(null);
+/* SlideConfirm — boton deslizable (estilo bencho slide-confirm). Al arrastrar
+   el tirador hasta el final dispara onConfirm; si no llega, vuelve con resorte. */
+function SlideConfirm({ label = "Ver toda la capacidad", onConfirm }) {
+  const trackRef = useRef(null);
+  const handleRef = useRef(null);
+  const [done, setDone] = useState(false);
 
   useEffect(() => {
+    const track = trackRef.current;
+    const handle = handleRef.current;
+    if (!track || !handle) return;
+    let dragging = false, startX = 0, x = 0, max = 0, raf = 0;
+    const apply = () => {
+      handle.style.transform = `translateX(${x}px)`;
+      track.style.setProperty("--sc-progress", max ? x / max : 0);
+    };
+    const setX = (v) => { x = Math.max(0, Math.min(max, v)); apply(); };
+    const down = (e) => {
+      if (done) return;
+      dragging = true;
+      cancelAnimationFrame(raf);
+      max = track.clientWidth - handle.offsetWidth - 10;
+      const cx = e.touches ? e.touches[0].clientX : e.clientX;
+      startX = cx - x;
+    };
+    const move = (e) => {
+      if (!dragging) return;
+      const cx = e.touches ? e.touches[0].clientX : e.clientX;
+      setX(cx - startX);
+    };
+    const up = () => {
+      if (!dragging) return;
+      dragging = false;
+      if (x >= max * 0.88) { setX(max); setDone(true); onConfirm && onConfirm(); }
+      else {
+        const spring = () => { x *= 0.72; if (x < 0.5) x = 0; apply(); if (x > 0) raf = requestAnimationFrame(spring); };
+        spring();
+      }
+    };
+    handle.addEventListener("pointerdown", down);
+    window.addEventListener("pointermove", move);
+    window.addEventListener("pointerup", up);
+    handle.addEventListener("touchstart", down, { passive: true });
+    window.addEventListener("touchmove", move, { passive: true });
+    window.addEventListener("touchend", up);
+    return () => {
+      cancelAnimationFrame(raf);
+      handle.removeEventListener("pointerdown", down);
+      window.removeEventListener("pointermove", move);
+      window.removeEventListener("pointerup", up);
+      handle.removeEventListener("touchstart", down);
+      window.removeEventListener("touchmove", move);
+      window.removeEventListener("touchend", up);
+    };
+  }, [done, onConfirm]);
+
+  return (
+    <div className={`slide-confirm ${done ? "is-done" : ""}`} ref={trackRef}>
+      <div className="slide-confirm-fill" aria-hidden="true" />
+      <span className="slide-confirm-label">{label}</span>
+      <button className="slide-confirm-handle" ref={handleRef} type="button" aria-label={label}>
+        <svg viewBox="0 0 24 24" fill="none" width="22" height="22" aria-hidden="true">
+          <path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+        </svg>
+      </button>
+    </div>
+  );
+}
+
+function RolesSection() {
+  const [active, setActive] = useState(null);
+  const [revealed, setRevealed] = useState(false);
+  const gridRef = useRef(null);
+  const detailRef = useRef(null);
+  const contentRef = useRef(null);
+
+  // Entrada de las tarjetas al revelar (anime), solo cuando revealed
+  useEffect(() => {
+    if (!revealed) return;
     const el = gridRef.current;
     if (!el || typeof window.anime !== "function") return;
-    const io = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((e) => {
-          if (e.isIntersecting) {
-            window.anime({
-              targets: el.querySelectorAll(".role-card"),
-              translateY: [40, 0],
-              opacity: [0, 1],
-              delay: window.anime.stagger(60),
-              duration: 800,
-              easing: "easeOutQuart",
-            });
-            io.unobserve(el);
-          }
-        });
-      },
-      { threshold: 0.08 }
-    );
-    io.observe(el);
-    return () => io.disconnect();
-  }, []);
+    window.anime({
+      targets: el.querySelectorAll(".role-card"),
+      translateY: [40, 0],
+      opacity: [0, 1],
+      delay: window.anime.stagger(60),
+      duration: 800,
+      easing: "easeOutQuart",
+    });
+  }, [revealed]);
+
+  // Reveal del bloque completo con GSAP al confirmar
+  useEffect(() => {
+    if (!revealed || !contentRef.current || !window.gsap) return;
+    window.gsap.fromTo(contentRef.current, { autoAlpha: 0, y: 30 }, { autoAlpha: 1, y: 0, duration: 0.6, ease: "power3.out" });
+  }, [revealed]);
 
   // Animate detail panel on open
   useEffect(() => {
@@ -723,9 +834,19 @@ function RolesSection() {
 
   const activeRole = ROLES.find((r) => r.id === active);
 
+  if (!revealed) {
+    return (
+      <section className="section pp-roles pp-roles-gate" id="roles">
+        <div className="container">
+          <SlideConfirm label="Ver toda la capacidad" onConfirm={() => setRevealed(true)} />
+        </div>
+      </section>
+    );
+  }
+
   return (
     <section className="section pp-roles" id="roles">
-      <div className="container">
+      <div className="container" ref={contentRef}>
         <Reveal className="section-head">
           <div><div className="tag">— roles</div></div>
           <div className="section-kicker">
@@ -1149,8 +1270,8 @@ function ProductsCTA() {
       a: "Si. KUI funciona en web y se adapta correctamente a dispositivos moviles para que directivos, docentes y familias accedan sin friccion.",
     },
     {
-      q: "Como protege KUI la seguridad de la informacion?",
-      a: "KUI trabaja con control de accesos por rol, trazabilidad operativa y buenas practicas de resguardo para mantener protegida la informacion institucional.",
+      q: "Puedo cobrar matriculas y pensiones desde KUI?",
+      a: "Si. KUI integra la pasarela de pago Culqi, asi las familias pagan matriculas y pensiones en linea con tarjeta o Yape, y tu colegio recibe el dinero de forma segura.",
     },
   ];
 
@@ -1212,61 +1333,6 @@ function ProductsCTA() {
   );
 }
 
-/* ── IntegrationsSection ── */
-function IntegrationsSection() {
-  const items = [
-    {
-      id: "facturacion",
-      title: "Facturación Electrónica",
-      desc: "Emite facturas electrónicas vinculadas a SUNAT directamente desde KUI. Ahorra tiempo y costo en tu gestión contable.",
-    },
-    {
-      id: "pagos",
-      title: "Pasarela de Pago",
-      desc: "Realiza pagos de matrículas, pensiones y más con tarjeta de crédito, débito o Yape. Simple, rápido y seguro.",
-    },
-    {
-      id: "mensajeria",
-      title: "Mensajería Integrada",
-      desc: "Servidor de mensajería dedicado para una comunicación eficaz entre todos los actores de la comunidad educativa.",
-    },
-  ];
-
-  return (
-    <section className="section pp-integrations">
-      <div className="container">
-        <Reveal className="pp-integrations-head">
-          <h2 className="pp-integrations-title">
-            ¿Por qué elegir KUI como<br />solución <em>integral</em>?
-          </h2>
-          <p className="pp-integrations-sub">
-            Todas las soluciones del centro educativo en un mismo ecosistema.
-            Gestión, comunicación y aprendizaje trabajando en la misma dirección.
-          </p>
-        </Reveal>
-        <div className="pp-integrations-grid">
-          {items.map((item) => (
-            <Reveal key={item.id} className="pp-integration-item">
-              <div className="pp-integration-icon" data-no-translate="true">
-                <image-slot
-                  id={`integration-icon-${item.id}`}
-                  src={`assets/integration-${item.id}.png`}
-                  placeholder={`Ícono: ${item.title}`}
-                  fit="contain"
-                  shape="rect"
-                  radius="0"
-                ></image-slot>
-              </div>
-              <h3 className="pp-integration-title">{item.title}</h3>
-              <p className="pp-integration-desc">{item.desc}</p>
-            </Reveal>
-          ))}
-        </div>
-      </div>
-    </section>
-  );
-}
-
 /* Assembled page component */
 function ProductsPageFull({ showPlans = false } = {}) {
   return (
@@ -1278,7 +1344,6 @@ function ProductsPageFull({ showPlans = false } = {}) {
         </>
       ) : (
         <>
-          <IntegrationsSection />
           <RoleShowcaseSection />
           <ImplementationSection />
           <RolesSection />

@@ -1,4 +1,4 @@
-/* global React, ReactDOM, Intro, Nav, Hero, RocketReveal, Marquee, Services, Products, Stats, Latam, WhyKui, History, Approach, Stack, Testimonials, Team, Showcase, Contact, Footer, ChatWidget, StudioHero, ROICalculator, FAQ, Newsletter, CaseStudy, CustomCursor, PageTransitions, TweaksPanel, useTweaks, TweakSection, TweakColor, TweakRadio, TweakToggle, FacebookFeed, TranslatingIndicator, AboutCarousel, Values, MissionVision, ProductsPageFull, AudiencePanels */
+/* global React, ReactDOM, Intro, Nav, HeroCarousel, Marquee, Services, Products, Stats, Latam, WhyKui, History, Approach, Stack, Testimonials, Team, Showcase, Contact, Footer, ChatWidget, StudioHero, ROICalculator, FAQ, Newsletter, CaseStudy, CustomCursor, PageTransitions, TweaksPanel, useTweaks, TweakSection, TweakColor, TweakRadio, TweakToggle, FacebookFeed, TranslatingIndicator, AboutCarousel, Values, MissionVision, ProductsPageFull, AudiencePanels */
 const { useEffect, useState, useCallback } = React;
 
 const TWEAK_DEFAULTS = /*EDITMODE-BEGIN*/{
@@ -117,8 +117,7 @@ function App() {
   } else {
     body = (
       <main>
-        <Hero />
-        <RocketReveal />
+        <HeroCarousel />
         <ProductsPageFull />
       </main>
     );

@@ -332,7 +332,13 @@ function Nav() {
           */}
           {link("contacto#contacto", "Contacto")}
           <LanguageSwitcher />
-          <a className="nav-cta" href="pago.html" onClick={() => setMenuOpen(false)}>
+          <a
+            className="nav-cta"
+            href={"https://wa.me/51902487635?text=" + encodeURIComponent("Hola KUI, quiero empezar gratis.")}
+            target="_blank"
+            rel="noreferrer"
+            onClick={() => setMenuOpen(false)}
+          >
             <span className="pulse" />
             <T>Empieza gratis</T>
           </a>
@@ -343,126 +349,151 @@ function Nav() {
 }
 
 /* ============================================================
-   Hero
+   HeroCarousel — carrusel principal full-bleed. Fusiona las 3 cards
+   principales (aula, Plan Rocket, niveles) en un solo hero con
+   crossfade, autoplay, flechas, puntos, swipe y teclado. Cada slide
+   es una foto completa con texto y CTA encima (mismo lenguaje visual
+   que .hero--photo).
    ============================================================ */
-function Hero() {
-  const wordRefs = useRef([]);
+const HERO_SLIDES = [
+  {
+    id: "aula",
+    img: "assets/indexaula.png",
+    alt: "Estudiantes usando KUI en el aula, con la mascota KUI guiando la clase",
+    align: "left",
+    pos: "center 30%",
+    title: <>Conectamos <em>esfuerzos,</em><br />Impulsamos el <em>futuro.</em></>,
+    text: "Ordena tu institución hoy. Da el paso hacia el futuro.",
+    cta: { label: "Empieza gratis", href: "https://wa.me/51902487635?text=" + encodeURIComponent("Hola KUI, quiero empezar gratis.") },
+  },
+  {
+    id: "rocket",
+    img: "assets/rocket.png",
+    alt: "Mascota KUI en la línea de salida, lista para arrancar",
+    align: "left",
+    pos: "62% 22%",
+    title: <>Conoce <em>Plan Rocket</em><br />Sal al mundo <em>gratis</em>.</>,
+    text: "¿Tu colegio recién empieza su digitalización? Despega con KUI sin costo el primer ciclo — onboarding guiado, migración de datos y capacitación incluidas.",
+    cta: { label: "Empieza gratis", href: "productos.html#planes" },
+  },
+  {
+    id: "niveles",
+    img: "assets/niveles.png",
+    alt: "Mascota KUI en cada etapa: Nido, Kinder, Colegio, Instituto y Grupo Educativo",
+    align: "center",
+    pos: "center 42%",
+    title: <>Tecnología que se adapta<br />a cada <em>necesidad</em></>,
+    text: "Un mismo ecosistema KUI para cada etapa: Nido, Kinder, Colegio, Instituto y Grupo Educativo.",
+    cta: { label: "Ver planes", href: "productos.html#planes" },
+  },
+];
+const HERO_INTERVAL = 6000;
 
+function HeroCarousel() {
+  const [active, setActive] = useState(0);
+  const [paused, setPaused] = useState(false);
+  const dragX = useRef(null);
+  const n = HERO_SLIDES.length;
+
+  const go = (dir) => setActive((i) => (i + dir + n) % n);
+  const to = (i) => setActive(((i % n) + n) % n);
+
+  // Autoplay (se pausa en hover / interaccion)
   useEffect(() => {
-    // hero text mask reveal — staggered
-    const targets = wordRefs.current.filter(Boolean);
-    targets.forEach((el, i) => {
-      setTimeout(() => el.classList.add("in"), 200 + i * 140);
-    });
-  }, []);
+    if (paused) return;
+    const id = setInterval(() => setActive((i) => (i + 1) % n), HERO_INTERVAL);
+    return () => clearInterval(id);
+  }, [paused, n]);
 
-  const addRef = (el, i) => { wordRefs.current[i] = el; };
+  // Teclado: flechas mueven el carrusel
+  useEffect(() => {
+    const onKey = (e) => {
+      if (e.key === "ArrowLeft") go(-1);
+      else if (e.key === "ArrowRight") go(1);
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [n]);
+
+  const rootRef = useRef(null);
+
+  const onDown = (e) => { dragX.current = (e.touches ? e.touches[0].clientX : e.clientX); };
+  const onUp = (e) => {
+    if (dragX.current === null) return;
+    const end = (e.changedTouches ? e.changedTouches[0].clientX : e.clientX);
+    const dx = end - dragX.current;
+    if (Math.abs(dx) > 60) go(dx < 0 ? 1 : -1);
+    dragX.current = null;
+  };
 
   return (
-    <section className="hero">
-      <LinesCanvas />
-      <div className="hero-glow" />
-      <div className="hero-logo-wrap" aria-hidden="true">
-        <div className="orbit o3"><div className="pin" /></div>
-        <div className="orbit o2"><div className="pin" /></div>
-        <img src="assets/personaje.png" alt="" className="hero-logo-img" decoding="async" />
-      </div>
-
-      <div className="container hero-inner">
-        
-
-        <h1 className="hero-headline">
-          <span className="row mask-reveal" ref={(el) => addRef(el, 0)}><span>  Conectamos</span></span>
-          <span className="row mask-reveal" ref={(el) => addRef(el, 1)}><span>  <em className="accent">esfuerzos,</em></span></span>
-          <span className="row mask-reveal" ref={(el) => addRef(el, 3)}><span>Impulsamos el</span></span>
-          <span className="row mask-reveal" ref={(el) => addRef(el, 4)}><span>  <em className="accent">futuro.</em></span></span>
-        </h1>
-
-        <div className="hero-bottom">
-          <p className="hero-sub">
-            KUI integra la gestión académica, administrativa y la comunicación
-            institucional en una experiencia moderna, intuitiva y eficiente.
-          </p>
-          <div className="hero-mobile-character" aria-hidden="true">
-            <img src="assets/personaje.png" alt="" className="hero-mobile-character-img" decoding="async" />
+    <section
+      className="hc hero--photo"
+      ref={rootRef}
+      aria-roledescription="carrusel"
+      aria-label="Presentación KUI"
+      onMouseEnter={() => setPaused(true)}
+      onMouseLeave={() => setPaused(false)}
+      onPointerDown={onDown}
+      onPointerUp={onUp}
+      onTouchStart={onDown}
+      onTouchEnd={onUp}
+    >
+      {HERO_SLIDES.map((s, i) => (
+        <div
+          key={s.id}
+          className={`hc-slide ${i === active ? "is-active" : ""} hc-align-${s.align}`}
+          aria-hidden={i !== active}
+        >
+          <img
+            src={s.img}
+            alt={s.alt}
+            className="hc-photo"
+            style={{ objectPosition: s.pos }}
+            decoding="async"
+            fetchpriority={i === 0 ? "high" : "low"}
+            loading={i === 0 ? "eager" : "lazy"}
+          />
+          <div className="hc-overlay" aria-hidden="true" />
+          <div className="container hc-inner">
+            <div className="hc-content">
+              <h1 className="hc-title">{s.title}</h1>
+              <p className="hc-text">{s.text}</p>
+              <a
+                className="hc-cta"
+                href={s.cta.href}
+                target={s.cta.href.startsWith("http") ? "_blank" : undefined}
+                rel={s.cta.href.startsWith("http") ? "noreferrer" : undefined}
+              >
+                {s.cta.label}
+                <svg viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                  <path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
+                </svg>
+              </a>
+            </div>
           </div>
         </div>
+      ))}
+
+      <button className="hc-arrow hc-prev" onClick={() => go(-1)} aria-label="Anterior">‹</button>
+      <button className="hc-arrow hc-next" onClick={() => go(1)} aria-label="Siguiente">›</button>
+
+      <div className="hc-dots" role="tablist" aria-label="Ir a diapositiva">
+        {HERO_SLIDES.map((s, i) => (
+          <button
+            key={s.id}
+            className={`hc-dot ${i === active ? "is-active" : ""}`}
+            role="tab"
+            aria-selected={i === active}
+            aria-label={`Diapositiva ${i + 1}`}
+            onClick={() => to(i)}
+          />
+        ))}
       </div>
 
       <div className="scroll-cue" aria-hidden="true">
         <span className="line" />
         <span>Desliza</span>
-      </div>
-    </section>);
-
-}
-
-/* ============================================================
-   RocketReveal — scroll-driven Plan Rocket reveal (GSAP ScrollTrigger)
-   ============================================================ */
-function RocketReveal() {
-  const rootRef = useRef(null);
-
-  useEffect(() => {
-    const gsap = window.gsap;
-    const ScrollTrigger = window.ScrollTrigger;
-    if (!gsap || !ScrollTrigger || !rootRef.current) return;
-    gsap.registerPlugin(ScrollTrigger);
-
-    const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    if (reduce) return; // leave static, CSS shows it
-
-    const ctx = gsap.context(() => {
-      const tl = gsap.timeline({
-        scrollTrigger: {
-          trigger: rootRef.current,
-          start: "top 78%",
-          end: "bottom 60%",
-          scrub: 0.6,
-        },
-      });
-      tl.fromTo(".rr-img",
-        { scale: 0.66, yPercent: 12, autoAlpha: 0 },
-        { scale: 1, yPercent: 0, autoAlpha: 1, ease: "none" }, 0);
-      tl.fromTo(".rr-line span",
-        { yPercent: 120 },
-        { yPercent: 0, ease: "none", stagger: 0.12 }, 0.05);
-      tl.fromTo(".rr-tail",
-        { autoAlpha: 0, y: 24 },
-        { autoAlpha: 1, y: 0, ease: "none" }, 0.35);
-    }, rootRef);
-
-    return () => ctx.revert();
-  }, []);
-
-  return (
-    <section className="rr" ref={rootRef} aria-label="Plan Rocket">
-      <div className="container rr-inner">
-        <div className="rr-media">
-          <img
-            src="assets/rocket.png"
-            alt="Mascota KUI en la línea de salida, lista para arrancar"
-            className="rr-img"
-            loading="lazy"
-            decoding="async"
-          />
-        </div>
-        <h2 className="rr-headline">
-          <span className="rr-line"><span>Conoce <em>Plan Rocket</em></span></span>
-          <span className="rr-line"><span>Sal al mundo <em>gratis</em>.</span></span>
-        </h2>
-        <div className="rr-tail">
-          <p className="rr-text">
-            ¿Tu colegio recién empieza su digitalización? Despega con KUI sin costo el primer ciclo —
-            onboarding guiado, migración de datos y capacitación incluidas.
-          </p>
-          <a className="rr-cta" href="productos.html#planes">
-            Empieza gratis
-            <svg viewBox="0 0 16 16" fill="none" aria-hidden="true">
-              <path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
-            </svg>
-          </a>
-        </div>
       </div>
     </section>
   );
@@ -1088,6 +1119,6 @@ function PromoModal() {
 }
 
 Object.assign(window, {
-  Intro, Nav, Hero, RocketReveal, Marquee, Products, Stats, Approach, Showcase, CTA, Footer, Reveal, PromoModal
+  Intro, Nav, HeroCarousel, Marquee, Products, Stats, Approach, Showcase, CTA, Footer, Reveal, PromoModal
 });
 
