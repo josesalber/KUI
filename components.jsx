@@ -372,8 +372,8 @@ const HERO_SLIDES = [
     alt: "Mascota KUI en la línea de salida, lista para arrancar",
     align: "left",
     pos: "62% 22%",
-    title: <>Conoce <em>Plan Rocket</em><br />Sal al mundo <em>gratis</em>.</>,
-    text: "¿Tu colegio recién empieza su digitalización? Despega con KUI sin costo el primer ciclo — onboarding guiado, migración de datos y capacitación incluidas.",
+    title: <>Conoce <em>Plan Rocket</em><br /><em>3 meses gratis</em>.</>,
+    text: "¿Tu colegio recién empieza su digitalización? Despega con KUI: 3 meses gratis con onboarding, migración de datos y capacitación. Luego continúas con el Plan Inicial.",
     cta: { label: "Empieza gratis", href: "productos.html#planes" },
   },
   {

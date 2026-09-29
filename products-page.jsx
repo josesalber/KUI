@@ -1077,8 +1077,8 @@ function PlansComparisonTable() {
 /* â"€â"€ ProductsCTA â"€â"€ */
 const PPC_MIN = 250;
 const PPC_MAX = 5000;
-const PPC_BASE = 40; // S/ por 250 alumnos
-// +1 sol por alumno sobre 250
+const PPC_BASE = 180;      // S/ mensual base (hasta PPC_THRESHOLD alumnos)
+const PPC_THRESHOLD = 300; // +1 sol por alumno sobre este numero
 
 function PlansSection() {
   const [openIdx, setOpenIdx] = useState(0);
@@ -1087,7 +1087,7 @@ function PlansSection() {
   const whatsappBase = "https://wa.me/51902487635?text=";
   const visualRef = useRef(null);
 
-  const monthly = PPC_BASE + Math.max(0, students - PPC_MIN); // 40 + 1/alumno extra
+  const monthly = PPC_BASE + Math.max(0, students - PPC_THRESHOLD); // 180 + 1/alumno sobre 300
   const shown = period === "mes" ? monthly : monthly * 12;
   const fmt = (n) => `S/ ${n.toLocaleString("es-PE")}`;
   const pct = (students - PPC_MIN) / (PPC_MAX - PPC_MIN); // 0..1
@@ -1101,19 +1101,21 @@ function PlansSection() {
       note: `${students.toLocaleString("es-PE")} alumnos`,
       visual: "assets/kuiplanes.png",
       featured: true,
-      href: "pago.html?plan=inicial",
+      href: whatsappBase + encodeURIComponent(
+        `Hola KUI, me interesa el Plan Inicial.\nAlumnos: ${students.toLocaleString("es-PE")}\nPrecio estimado: ${fmt(monthly)} / mes${period === "ano" ? ` (${fmt(monthly * 12)} / año)` : ""}`
+      ),
       cta: "Empezar",
     },
     {
       name: "Plan Rocket",
-      desc: "¿Tu colegio recién empieza su digitalización? Accede GRATIS a KUI y despega. Onboarding guiado sin costo el primer ciclo — migramos tus datos y capacitamos a tu equipo.",
-      price: "Gratis",
-      period: "colegios nuevos",
-      note: "Acceso gratuito para instituciones que inician",
+      desc: "¿Tu colegio recién empieza su digitalización? Accede GRATIS a KUI durante 3 meses: onboarding guiado, migración de datos y capacitación incluidas. Al terminar los 3 meses, tu colegio pasa al Plan Inicial.",
+      price: "Gratis 3 meses",
+      period: "luego Plan Inicial",
+      note: "Gratis 3 meses · después continúa como Plan Inicial",
       visual: "assets/rocket.png",
       rocket: true,
       featured: false,
-      href: "pago.html?plan=rocket",
+      href: whatsappBase + encodeURIComponent("Hola KUI, quiero el Plan Rocket (3 meses gratis y luego Plan Inicial)."),
       cta: "Empezar gratis",
     },
     {
@@ -1202,7 +1204,7 @@ function PlansSection() {
                 </div>
               </div>
               <div className="ppc-note mono">
-                {students.toLocaleString("es-PE")} alumnos · desde S/40 por 250 · +S/1 por alumno
+                {students.toLocaleString("es-PE")} alumnos · desde S/180 hasta 300 · +S/1 por alumno sobre 300
               </div>
             </div>
 
@@ -1227,8 +1229,8 @@ function PlansSection() {
                         <a
                           className={`pp-plan-btn ${plan.featured ? "is-featured" : ""}`}
                           href={plan.href || `${whatsappBase}${encodeURIComponent(`Hola KUI, me interesa ${plan.name}.`)}`}
-                          target={plan.href ? "_self" : "_blank"}
-                          rel={plan.href ? undefined : "noreferrer"}
+                          target="_blank"
+                          rel="noreferrer"
                         >
                           {plan.cta || "Obtenerlo"}
                         </a>
