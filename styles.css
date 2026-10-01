@@ -126,6 +126,13 @@ img { display: block; max-width: 100%; }
   border-radius: 50%;
   box-shadow: 0 0 30px var(--orange);
 }
+.intro-logo-img {
+  height: 150px;
+  width: auto;
+  object-fit: contain;
+  display: block;
+}
+@media (max-width: 768px) { .intro-logo-img { height: 96px; } }
 .intro-pct {
   position: absolute;
   bottom: 40px;
@@ -173,8 +180,8 @@ img { display: block; max-width: 100%; }
   letter-spacing: -0.03em;
 }
 @media (max-width: 768px) { .brand { font-size: 20px; } }
-.brand img { width: 36px; height: 36px; border-radius: 8px; }
-@media (max-width: 768px) { .brand img { width: 30px; height: 30px; } }
+.brand img { height: 44px; width: auto; border-radius: 8px; object-fit: contain; display: block; }
+@media (max-width: 768px) { .brand img { height: 38px; width: auto; } }
 .brand sup {
   font-family: var(--font-mono);
   font-size: 10px;

@@ -45,6 +45,7 @@ function sendFile(response, filePath) {
     }
     response.statusCode = 200;
     response.setHeader('Content-Type', contentType);
+    response.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate');
     response.end(data);
   });
 }

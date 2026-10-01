@@ -190,7 +190,7 @@ function Intro({ onDone }) {
       <div className="intro-bar" style={{ left: "50%", width: "25%" }} />
       <div className="intro-bar" style={{ left: "75%", width: "25%" }} />
       <div className="intro-logo">
-        kui<span className="dot" />
+        <img src="assets/logo.png" alt="kui" className="intro-logo-img" decoding="async" />
       </div>
       <div className="intro-pct">000 / 100</div>
     </div>
@@ -281,7 +281,7 @@ function Nav() {
     <nav className={`nav ${scrolled ? "scrolled" : ""} ${menuOpen ? "menu-open" : ""}`}>
       <div className="container nav-inner">
         <a href="index.html" className="brand" aria-label="kui" onClick={() => setMenuOpen(false)}>
-          <img src="assets/logo.png" alt="" width="32" height="32" decoding="async" />
+          <img src="assets/logo.png" alt="" width="66" height="49" decoding="async" />
           kui
         </a>
         <button className={`nav-toggle ${menuOpen ? "is-active" : ""}`} onClick={() => setMenuOpen(!menuOpen)} aria-label="Toggle menu">
