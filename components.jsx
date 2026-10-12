@@ -1067,7 +1067,7 @@ function PromoModal() {
         <div className="promo-visual" data-no-translate="true">
           <image-slot
             id="promo-modal-image"
-            src="assets/promo.png"
+            src="assets/promo.png?v=3meses"
             placeholder="Imagen de la promoción"
             fit="cover"
             shape="rect"
