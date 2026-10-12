@@ -391,9 +391,22 @@ const HERO_INTERVAL = 6000;
 
 function HeroCarousel() {
   const [active, setActive] = useState(0);
+  const [prev, setPrev] = useState(null);
   const [paused, setPaused] = useState(false);
   const dragX = useRef(null);
+  const prevRef = useRef(0);
   const n = HERO_SLIDES.length;
+
+  // Mantener el slide saliente opaco debajo mientras el entrante hace
+  // fade-in encima: evita que el crossfade deje ver el fondo (recuadro blanco).
+  useEffect(() => {
+    const last = prevRef.current;
+    if (last === active) return;
+    setPrev(last);
+    prevRef.current = active;
+    const id = setTimeout(() => setPrev(null), 850);
+    return () => clearTimeout(id);
+  }, [active]);
 
   const go = (dir) => setActive((i) => (i + dir + n) % n);
   const to = (i) => setActive(((i % n) + n) % n);
@@ -442,7 +455,7 @@ function HeroCarousel() {
       {HERO_SLIDES.map((s, i) => (
         <div
           key={s.id}
-          className={`hc-slide ${i === active ? "is-active" : ""} hc-align-${s.align}`}
+          className={`hc-slide ${i === active ? "is-active" : ""} ${i === prev ? "is-prev" : ""} hc-align-${s.align}`}
           aria-hidden={i !== active}
         >
           <img
@@ -921,7 +934,7 @@ function Footer() {
             <span className="footer-logo-text">kui<em>.</em></span>
           </div>
           <p className="footer-tagline mono">
-            Infraestructura digital para negocios que se mueven.
+            Infraestructura digital para instituciones que se mueven.
           </p>
         </div>
 

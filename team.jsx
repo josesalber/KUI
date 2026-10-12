@@ -327,12 +327,7 @@ function ContactForm() {
             value={state.interest}
             onChange={(e) => set("interest", e.target.value)}
           >
-            <option>POS para restaurante</option>
-            <option>LMS / educación</option>
-            <option>Producto a medida</option>
-            <option>Integraciones / API</option>
-            <option>Inventario / Stock</option>
-            <option>Otro</option>
+            <option>Plataforma Educativa</option>
           </select>
         </label>
         <label className="field">
@@ -342,9 +337,7 @@ function ContactForm() {
             value={state.budget}
             onChange={(e) => set("budget", e.target.value)}
           >
-            <option>USD 200 – 500</option>
-            <option>USD 500 – 1,000</option>
-            <option>Aún no lo sé</option>
+            <option>200 – 500</option>
           </select>
         </label>
       </div>
