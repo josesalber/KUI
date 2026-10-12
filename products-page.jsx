@@ -1055,14 +1055,13 @@ function PlansComparisonTable() {
                 <span className="pct-badge">Recomendado</span>
                 <span className="pct-th-name">KUI Crecimiento</span>
               </th>
-              <th className="pct-th"><span className="pct-th-name">KUI Institucional</span></th>
             </tr>
           </thead>
           <tbody>
             {PLAN_FEATURES.map((feat, i) => (
               <tr key={i} className={i % 2 === 0 ? "pct-row-alt" : ""}>
                 <td className="pct-label">{feat.label}</td>
-                {feat.vals.map((v, j) => (
+                {feat.vals.slice(0, 2).map((v, j) => (
                   <td key={j} className={`pct-cell ${j === 1 ? "pct-cell-rec" : ""}`}><CellVal val={v} /></td>
                 ))}
               </tr>
