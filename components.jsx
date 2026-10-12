@@ -373,7 +373,7 @@ const HERO_SLIDES = [
     align: "left",
     pos: "62% 22%",
     title: <>Conoce <em>Plan Rocket</em><br /><em>3 meses gratis</em>.</>,
-    text: "¿Tu colegio recién empieza su digitalización? Despega con KUI: 3 meses gratis con onboarding, migración de datos y capacitación. Luego continúas con el Plan Inicial.",
+    text: "¿Tu colegio recién empieza su digitalización? Despega con KUI: 3 meses gratis con onboarding, migración de datos y capacitación. Luego continúas con el Plan Base.",
     cta: { label: "Empieza gratis", href: "productos.html#planes" },
   },
   {

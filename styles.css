@@ -6158,19 +6158,9 @@ body.has-custom-cursor button { cursor: none !important; }
   overflow: hidden;
   background: #0c0a08;
 }
-/* Degradado al pie: la foto se funde a blanco hacia la seccion siguiente */
-.hc::after {
-  content: "";
-  position: absolute;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  height: 180px;
-  z-index: 3;
-  pointer-events: none;
-  background: linear-gradient(180deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0.78) 62%, #ffffff 100%);
-}
-@media (max-width: 700px) { .hc::after { height: 120px; } }
+/* Sin degradado blanco al pie: la foto llega limpia al borde
+   (el recuadro blanco inferior se eliminó) */
+.hc::after { display: none; }
 .hc-slide {
   position: absolute;
   inset: 0;

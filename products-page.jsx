@@ -326,9 +326,9 @@ const IMPLEMENTATION_STEPS = [
 /* â"€â"€ ProductsPageHero â"€â"€ */
 function ProductsPageHero() {
   const heroRef = useRef(null);
-  const monthlyPrice = 300;
+  const monthlyPrice = 270;
   const includedStudents = 300;
-  const extraStudentPrice = 1.3;
+  const extraStudentPrice = 1;
 
   useEffect(() => {
     const el = heroRef.current;
@@ -1077,7 +1077,7 @@ function PlansComparisonTable() {
 /* â"€â"€ ProductsCTA â"€â"€ */
 const PPC_MIN = 250;
 const PPC_MAX = 5000;
-const PPC_BASE = 180;      // S/ mensual base (hasta PPC_THRESHOLD alumnos)
+const PPC_BASE = 270;      // S/ mensual base (hasta PPC_THRESHOLD alumnos)
 const PPC_THRESHOLD = 300; // +1 sol por alumno sobre este numero
 
 function PlansSection() {
@@ -1087,14 +1087,14 @@ function PlansSection() {
   const whatsappBase = "https://wa.me/51902487635?text=";
   const visualRef = useRef(null);
 
-  const monthly = PPC_BASE + Math.max(0, students - PPC_THRESHOLD); // 180 + 1/alumno sobre 300
+  const monthly = PPC_BASE + Math.max(0, students - PPC_THRESHOLD); // 270 + 1/alumno sobre 300
   const shown = period === "mes" ? monthly : monthly * 12;
   const fmt = (n) => `S/ ${n.toLocaleString("es-PE")}`;
   const pct = (students - PPC_MIN) / (PPC_MAX - PPC_MIN); // 0..1
 
   const plans = [
     {
-      name: "Plan Inicial",
+      name: "Plan Base",
       desc: "Ideal para instituciones que quieren comenzar con gestión ordenada y rápida implementación. Precio según los alumnos que elijas en el slider.",
       price: fmt(shown),
       period: period === "mes" ? "mensuales" : "anuales",
@@ -1102,31 +1102,21 @@ function PlansSection() {
       visual: "assets/kuiplanes.png",
       featured: true,
       href: whatsappBase + encodeURIComponent(
-        `Hola KUI, me interesa el Plan Inicial.\nAlumnos: ${students.toLocaleString("es-PE")}\nPrecio estimado: ${fmt(monthly)} / mes${period === "ano" ? ` (${fmt(monthly * 12)} / año)` : ""}`
+        `Hola KUI, me interesa el Plan Base.\nAlumnos: ${students.toLocaleString("es-PE")}\nPrecio estimado: ${fmt(monthly)} / mes${period === "ano" ? ` (${fmt(monthly * 12)} / año)` : ""}`
       ),
       cta: "Empezar",
     },
     {
       name: "Plan Rocket",
-      desc: "¿Tu colegio recién empieza su digitalización? Accede GRATIS a KUI durante 3 meses: onboarding guiado, migración de datos y capacitación incluidas. Al terminar los 3 meses, tu colegio pasa al Plan Inicial.",
+      desc: "¿Tu colegio recién empieza su digitalización? Accede GRATIS a KUI durante 3 meses: onboarding guiado, migración de datos y capacitación incluidas. Al terminar los 3 meses, tu colegio pasa al Plan Base.",
       price: "Gratis 3 meses",
-      period: "luego Plan Inicial",
-      note: "Gratis 3 meses · después continúa como Plan Inicial",
+      period: "luego Plan Base",
+      note: "Gratis 3 meses · después continúa como Plan Base",
       visual: "assets/rocket.png",
       rocket: true,
       featured: false,
-      href: whatsappBase + encodeURIComponent("Hola KUI, quiero el Plan Rocket (3 meses gratis y luego Plan Inicial)."),
+      href: whatsappBase + encodeURIComponent("Hola KUI, quiero el Plan Rocket (3 meses gratis y luego Plan Base)."),
       cta: "Empezar gratis",
-    },
-    {
-      name: "Plan Institucional",
-      desc: "Para grupos educativos o instituciones con necesidades avanzadas de operación y acompañamiento.",
-      price: "A medida",
-      period: "cotización directa",
-      note: "Incluye propuesta personalizada",
-      visual: "assets/personaje.png",
-      featured: false,
-      cta: "Obtenerlo",
     },
   ];
 
@@ -1204,7 +1194,7 @@ function PlansSection() {
                 </div>
               </div>
               <div className="ppc-note mono">
-                {students.toLocaleString("es-PE")} alumnos · desde S/180 hasta 300 · +S/1 por alumno sobre 300
+                {students.toLocaleString("es-PE")} alumnos · desde S/270 hasta 300 · +S/1 por alumno sobre 300
               </div>
             </div>
 
