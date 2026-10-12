@@ -974,6 +974,8 @@ function Footer() {
         <div className="footer-bot footer-anim">
           <span>© 2026 kui studio — Lima, Perú</span>
           <span className="footer-bot-right mono">
+            <a href="terminos.html">Términos y condiciones</a>
+            <span className="footer-bot-sep" aria-hidden="true">·</span>
             <a href="mailto:kui.sitooo@gmail.com">kui.sitooo@gmail.com</a>
           </span>
         </div>

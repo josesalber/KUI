@@ -2788,8 +2788,10 @@ body:has(.hero--photo) .nav.menu-open .lang-trigger {
   flex-wrap: wrap;
   gap: 12px;
 }
+.footer-bot-right { display: inline-flex; align-items: center; gap: 10px; }
 .footer-bot-right a { color: rgba(247,245,241,0.5); transition: color 0.2s; }
 .footer-bot-right a:hover { color: var(--orange); }
+.footer-bot-sep { color: rgba(247,245,241,0.25); }
 @media (max-width: 600px) { .footer-bot { flex-direction: column; gap: 10px; align-items: flex-start; } }
 
 /* ----- Reveal animations (driven by IO/GSAP) ----- */
