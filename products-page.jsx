@@ -1089,6 +1089,9 @@ function PlansSection() {
 
   const monthly = PPC_BASE + Math.max(0, students - PPC_THRESHOLD); // 270 + 1/alumno sobre 300
   const shown = period === "mes" ? monthly : monthly * 12;
+  // Referencia de mercado (otras plataformas académicas en Perú suelen cobrar
+  // una base más alta, más por alumno y módulos/soporte aparte). Sin nombres.
+  const otherMonthly = Math.round(450 + Math.max(0, students - PPC_THRESHOLD) * 2.5);
   const fmt = (n) => `S/ ${n.toLocaleString("es-PE")}`;
   const pct = (students - PPC_MIN) / (PPC_MAX - PPC_MIN); // 0..1
 
@@ -1195,6 +1198,22 @@ function PlansSection() {
               </div>
               <div className="ppc-note mono">
                 {students.toLocaleString("es-PE")} alumnos · desde S/270 hasta 300 · +S/1 por alumno sobre 300
+              </div>
+
+              <div className="ppc-compare" aria-label="Comparación de precios con otras plataformas">
+                <div className="ppc-compare-row is-other">
+                  <span className="ppc-compare-label mono">Otras plataformas</span>
+                  <span className="ppc-compare-bar"><span className="ppc-compare-fill" style={{ width: "100%" }} /></span>
+                  <span className="ppc-compare-val">desde {fmt(otherMonthly)}<small>/mes</small></span>
+                </div>
+                <div className="ppc-compare-row is-kui">
+                  <span className="ppc-compare-label mono">KUI · Plan Base</span>
+                  <span className="ppc-compare-bar"><span className="ppc-compare-fill" style={{ width: `${Math.round((monthly / otherMonthly) * 100)}%` }} /></span>
+                  <span className="ppc-compare-val">{fmt(monthly)}<small>/mes</small></span>
+                </div>
+                <p className="ppc-compare-foot mono">
+                  Precios referenciales del mercado. Con KUI, implementación, soporte y todos los módulos van incluidos.
+                </p>
               </div>
             </div>
 
