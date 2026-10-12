@@ -928,23 +928,6 @@ function Footer() {
         {/* Main grid */}
         <div className="footer-grid">
           <div className="footer-col footer-anim">
-            <h4>Productos</h4>
-            <ul>
-              <li>{link("#productos", "kui · POS")}</li>
-              <li>{link("#productos", "kui · LMS")}</li>
-              <li>{link("#productos", "kui · Pay")}</li>
-              <li>{link("#productos", "kui · Stock")}</li>
-            </ul>
-          </div>
-          <div className="footer-col footer-anim">
-            <h4>Studio</h4>
-            <ul>
-              <li>{link("estudio", "Sobre kui")}</li>
-              <li>{link("estudio#historia", "Historia")}</li>
-              <li>{link("estudio#stack", "Stack")}</li>
-            </ul>
-          </div>
-          <div className="footer-col footer-anim">
             <h4>Contacto</h4>
             <ul>
               <li><a href="mailto:kui.sitooo@gmail.com">kui.sitooo@gmail.com</a></li>
@@ -987,7 +970,7 @@ function Footer() {
 }
 
 /* ============================================================
-   PromoModal — "Primer mes gratis" entry offer with countdown
+   PromoModal — "3 meses gratis" entry offer with countdown
    Image slot: assets/promo.png (id promo-modal-image)
    ============================================================ */
 function getMonthEnd() {
@@ -1022,7 +1005,7 @@ function PromoModal() {
   const closeRef = useRef(null);
   const whatsapp =
     "https://wa.me/51902487635?text=" +
-    encodeURIComponent("Hola KUI, quiero aprovechar la promoción del primer mes gratis.");
+    encodeURIComponent("Hola KUI, quiero aprovechar la promoción de 3 meses gratis.");
 
   useEffect(() => {
     if (sessionStorage.getItem("kui-promo-seen")) return;
@@ -1084,10 +1067,10 @@ function PromoModal() {
             Promoción del mes
           </div>
           <h2 className="promo-title" id="promo-title">
-            Primer mes<br /><em>gratis</em>.
+            3 meses<br /><em>gratis</em>.
           </h2>
           <p className="promo-desc">
-            Activa KUI en tu institución y obtén tu <strong>primer mes sin costo</strong>.
+            Activa KUI en tu institución y obtén tus <strong>3 primeros meses sin costo</strong>.
             La promoción termina al finalizar el mes.
           </p>
 
@@ -1105,7 +1088,7 @@ function PromoModal() {
 
           <div className="promo-actions">
             <a className="btn btn-primary promo-cta" href={whatsapp} target="_blank" rel="noreferrer" onClick={close}>
-              Quiero mi mes gratis
+              Quiero mis 3 meses gratis
               <svg className="arr" viewBox="0 0 16 16" fill="none">
                 <path d="M3 13L13 3M13 3H5M13 3V11" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
               </svg>

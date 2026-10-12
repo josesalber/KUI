@@ -2749,7 +2749,7 @@ body:has(.hero--photo) .nav.menu-open .lang-trigger {
 
 .footer-grid {
   display: grid;
-  grid-template-columns: 1fr 1fr 1fr 1fr;
+  grid-template-columns: 1fr 1fr;
   gap: 40px;
   margin-bottom: 56px;
 }
@@ -6176,7 +6176,9 @@ body.has-custom-cursor button { cursor: none !important; }
   inset: 0;
   opacity: 0;
   visibility: hidden;
-  transition: opacity 0.8s ease;
+  /* visibility hide waits for the fade so the outgoing photo stays
+     behind the bottom white gradient (no white box flash on slide) */
+  transition: opacity 0.8s ease, visibility 0s linear 0.8s;
   display: flex;
   align-items: center;
 }
@@ -6184,6 +6186,7 @@ body.has-custom-cursor button { cursor: none !important; }
   opacity: 1;
   visibility: visible;
   z-index: 1;
+  transition: opacity 0.8s ease, visibility 0s;
 }
 .hc-photo {
   position: absolute;
