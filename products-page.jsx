@@ -1074,6 +1074,9 @@ function PlansComparisonTable() {
 }
 
 /* â"€â"€ ProductsCTA â"€â"€ */
+// Secuencia del polo KUI que rota con el scroll (frames 1..8)
+const POLO_FRAMES = Array.from({ length: 8 }, (_, i) => `assets/camiseta/${i + 1}.png`);
+
 const PPC_MIN = 250;
 const PPC_MAX = 5000;
 const PPC_BASE = 270;      // S/ mensual base (hasta PPC_THRESHOLD alumnos)
@@ -1085,6 +1088,7 @@ function PlansSection() {
   const [students, setStudents] = useState(PPC_MIN);
   const whatsappBase = "https://wa.me/51902487635?text=";
   const visualRef = useRef(null);
+  const visualWrapRef = useRef(null);
 
   const monthly = PPC_BASE + Math.max(0, students - PPC_THRESHOLD); // 270 + 1/alumno sobre 300
   const shown = period === "mes" ? monthly : monthly * 12;
@@ -1122,23 +1126,44 @@ function PlansSection() {
     },
   ];
 
-  const activeVisual = (plans[openIdx] && plans[openIdx].visual) || "assets/kuiplanes.png";
-
-  // Crossfade left image when the selected plan changes (GSAP)
+  // Secuencia del polo KUI dirigida por scroll (GSAP ScrollTrigger).
+  // El frame cambia según el avance del scroll sobre la sección de planes.
   useEffect(() => {
-    const el = visualRef.current;
-    if (!el) return;
-    if (window.gsap) {
-      window.gsap.fromTo(el, { autoAlpha: 0, scale: 0.94 }, { autoAlpha: 1, scale: 1, duration: 0.45, ease: "power2.out" });
+    const img = visualRef.current;
+    const trigger = visualWrapRef.current;
+    if (!img || !trigger) return;
+
+    // Precargar frames para evitar parpadeo al cambiar src.
+    const preloaded = POLO_FRAMES.map((src) => { const im = new Image(); im.src = src; return im; });
+    const n = POLO_FRAMES.length;
+    const state = { f: 0 };
+
+    if (!(window.gsap && window.ScrollTrigger)) {
+      img.src = POLO_FRAMES[0];
+      return;
     }
-  }, [activeVisual]);
+    const gsap = window.gsap;
+    gsap.registerPlugin(window.ScrollTrigger);
+
+    const st = window.ScrollTrigger.create({
+      trigger,
+      start: "top 80%",
+      end: "bottom 20%",
+      scrub: 0.4,
+      onUpdate: (self) => {
+        const idx = Math.min(n - 1, Math.max(0, Math.round(self.progress * (n - 1))));
+        if (idx !== state.f) { state.f = idx; img.src = POLO_FRAMES[idx]; }
+      },
+    });
+    return () => st.kill();
+  }, []);
 
   return (
     <section className="section pp-plans" id="planes">
       <div className="container">
         <Reveal className="pp-plans-shell">
-          <div className="pp-plans-visual">
-            <img key={activeVisual} ref={visualRef} src={activeVisual} alt="" className="pp-plans-image" loading="lazy" />
+          <div className="pp-plans-visual" ref={visualWrapRef}>
+            <img ref={visualRef} src={POLO_FRAMES[0]} alt="Polo KUI" className="pp-plans-image pp-plans-polo" decoding="async" />
           </div>
 
           <div className="pp-plans-copy">
