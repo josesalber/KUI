@@ -5604,15 +5604,6 @@ body.has-custom-cursor button { cursor: none !important; }
   aspect-ratio: auto;
   filter: drop-shadow(0 20px 32px rgba(238,90,31,0.10));
 }
-/* Secuencia del polo KUI (rota con el scroll): polo completo, sin recorte */
-.pp-plans-polo {
-  object-fit: contain;
-  aspect-ratio: 1 / 1;
-  width: min(100%, 560px);
-  background: transparent;
-  border-radius: 0;
-  filter: drop-shadow(0 22px 34px rgba(238,90,31,0.14));
-}
 .pp-plans-title {
   margin: 0 0 18px;
   font-family: var(--font-display);
