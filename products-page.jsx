@@ -1076,7 +1076,7 @@ function PlansComparisonTable() {
 /* â"€â"€ ProductsCTA â"€â"€ */
 const PPC_MIN = 250;
 const PPC_MAX = 5000;
-const PPC_BASE = 270;      // S/ mensual base (hasta PPC_THRESHOLD alumnos)
+const PPC_BASE = 300;      // S/ mensual base (hasta PPC_THRESHOLD alumnos)
 const PPC_THRESHOLD = 300; // +1 sol por alumno sobre este numero
 
 function PlansSection() {
@@ -1196,7 +1196,7 @@ function PlansSection() {
                 </div>
               </div>
               <div className="ppc-note mono">
-                {students.toLocaleString("es-PE")} alumnos · desde S/270 hasta 300 · +S/1 por alumno sobre 300
+                {students.toLocaleString("es-PE")} alumnos · S/300 base · +S/1 por alumno sobre 300
               </div>
 
               <div className="ppc-compare" aria-label="Comparación de precios con otras plataformas">
@@ -1343,6 +1343,52 @@ function ProductsCTA() {
   );
 }
 
+/* ── QueEsKuiSection — "¿Qué es KUIWEB?" + "¿Por qué elegir
+   nuestros sistemas?" con texto a un lado y el Carousel (Bencho)
+   al otro. El Carousel vive en carousel.jsx (window.Carousel). */
+function QueEsKuiSection() {
+  const CarouselCmp = typeof window !== "undefined" ? window.Carousel : null;
+  return (
+    <section className="section kw-about" id="que-es-kuiweb">
+      <div className="container">
+        <Reveal className="kw-about-grid">
+          <div className="kw-about-copy">
+            <div className="tag">— ¿qué es KUIWEB?</div>
+            <h2 className="kw-about-title">
+              Una plataforma <em>nueva</em> para tu institución.
+            </h2>
+            <p>
+              Somos una plataforma nueva con muchas ganas de mejorar la calidad de
+              la comunicación y la comodidad de las instituciones educativas, en todo
+              el Perú y el mundo. Reunimos matrícula, notas, asistencia, pagos y
+              comunicación con las familias en un solo lugar.
+            </p>
+            <p>
+              Precios muy cómodos para el mercado actual, acompañamiento real y una
+              experiencia moderna para directores, docentes, estudiantes y padres.
+            </p>
+
+            <h3 className="kw-about-title" style={{ fontSize: "clamp(22px, 2.4vw, 32px)", margin: "28px 0 14px" }}>
+              ¿Por qué elegir <em>nuestros sistemas</em>?
+            </h3>
+            <ul className="kw-about-points">
+              <li>Precios accesibles pensados para colegios del Perú y LatAm.</li>
+              <li>Todo integrado: gestión, comunicación y pagos en una sola cuenta.</li>
+              <li>Pagos de pensiones en línea con Culqi, tarjeta o Yape.</li>
+              <li>Implementación acompañada: configuración, capacitación y soporte.</li>
+              <li>Plataforma en constante mejora, pensada para crecer contigo.</li>
+            </ul>
+          </div>
+
+          <div className="kw-about-visual" data-no-translate="true">
+            {CarouselCmp ? <CarouselCmp spin={26} float={22} /> : null}
+          </div>
+        </Reveal>
+      </div>
+    </section>
+  );
+}
+
 /* Assembled page component */
 function ProductsPageFull({ showPlans = false } = {}) {
   return (
@@ -1354,6 +1400,7 @@ function ProductsPageFull({ showPlans = false } = {}) {
         </>
       ) : (
         <>
+          <QueEsKuiSection />
           <RoleShowcaseSection />
           <ImplementationSection />
           <RolesSection />

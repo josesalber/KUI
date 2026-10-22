@@ -8111,3 +8111,146 @@ body.has-custom-cursor button { cursor: none !important; }
   .promo-tag-dot { animation: none; }
   .promo-close:hover { transform: none; }
 }
+
+/* ══ Carousel (Bencho, MIT) ═══════════════════════════════════
+   Tokens de Bencho mapeados a los del proyecto, scoped al
+   componente para que no se filtren globales:
+     --font-ui  → la fuente de cuerpo del sitio (--font-body)
+     --ink-rgb  → el ink del sitio (#0c0a08) en 3 numeros
+     --shadow-rgb → mismo ink, para la sombra de la tarjeta
+     --bg       → ya existe global, se reutiliza en el focus ring
+   --lift y --sway los escribe el componente por tarjeta. */
+.car {
+  --font-ui: var(--font-body);
+  --ink-rgb: 12, 10, 8;
+  --shadow-rgb: 12, 10, 8;
+  position: relative;
+  font-family: var(--font-ui);
+  max-width: 100%;
+}
+/* ── the frame is only a frame ─────────────────────────────
+   No background, no clip, no mask. The cards are on a ring and
+   never reach an edge. */
+.car-track {
+  position: absolute;
+  inset: 0;
+  touch-action: pan-y;
+  cursor: grab;
+}
+.car-track[data-held="true"] { cursor: grabbing; }
+.car-track:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 2px var(--bg), 0 0 0 4px rgba(var(--ink-rgb), 0.4);
+}
+/* the slot holds WHERE on the ring and the card's own resting
+   ANGLE, written per frame — no transition of its own. */
+.car-slot {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform-origin: center;
+}
+/* ── the drift ──────────────────────────────────────────────
+   Keyframes rather than a loop. The perspective lives HERE, not
+   on the track, so each card tilts toward the finger on it. */
+.car-float {
+  width: 100%;
+  height: 100%;
+  perspective: 760px;
+  animation: car-bob 5s ease-in-out infinite;
+}
+.car-card {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  background-size: cover;
+  background-position: center;
+  /* no transition: the tilt is sprung in the component. */
+}
+.car-sheen {
+  position: absolute;
+  inset: 0;
+  display: block;
+  pointer-events: none;
+}
+@media (prefers-reduced-motion: reduce) {
+  .car-float { animation: none; }
+}
+@keyframes car-bob {
+  0%, 100% {
+    transform: translateY(calc(var(--lift, 4px) * -1)) rotate(calc(var(--sway, 1deg) * -1));
+  }
+  50% {
+    transform: translateY(var(--lift, 4px)) rotate(var(--sway, 1deg));
+  }
+}
+
+/* ── Seccion "Que es KUIWEB" (texto + carousel) ── */
+.kw-about { background: #ffffff; }
+.kw-about-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 660px);
+  gap: 56px;
+  align-items: center;
+}
+.kw-about-copy .tag { margin-bottom: 18px; }
+.kw-about-title {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: clamp(30px, 4vw, 54px);
+  line-height: 1.05;
+  letter-spacing: -0.03em;
+  color: var(--ink);
+  margin: 0 0 20px;
+}
+.kw-about-title em { font-style: normal; color: var(--orange); }
+.kw-about-copy p {
+  font-size: 17px;
+  line-height: 1.75;
+  color: var(--ink-2);
+  margin: 0 0 16px;
+  max-width: 560px;
+  text-wrap: pretty;
+}
+.kw-about-points {
+  list-style: none;
+  margin: 18px 0 0;
+  padding: 0;
+  display: grid;
+  gap: 12px;
+}
+.kw-about-points li {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+  font-size: 16px;
+  line-height: 1.5;
+  color: var(--ink-2);
+}
+.kw-about-points li::before {
+  content: "";
+  flex: 0 0 auto;
+  margin-top: 7px;
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: var(--orange);
+  box-shadow: 0 0 0 4px rgba(238, 90, 31, 0.14);
+}
+.kw-about-visual {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+@media (max-width: 900px) {
+  .kw-about-grid { grid-template-columns: 1fr; gap: 32px; }
+  .kw-about-visual { order: -1; width: 100%; overflow: hidden; }
+  /* El .car tiene ancho fijo (STAGE_W=620px); se escala para caber en
+     movil. transform no cambia el box de layout, por eso overflow:hidden
+     en el contenedor evita el scroll horizontal; el margin-block negativo
+     recupera el alto sobrante que deja la escala. STAGE_H=448. */
+  .car { transform: scale(0.82); transform-origin: center; margin-block: -40px; }
+}
+@media (max-width: 560px) {
+  .car { transform: scale(0.56); margin-block: -98px; }
+}
