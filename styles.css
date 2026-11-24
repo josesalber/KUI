@@ -258,6 +258,8 @@ img { display: block; max-width: 100%; }
   transition: all 0.3s ease;
   transform-origin: left center;
 }
+/* Area tactil minima 44x44 para el boton del menu (WCAG 2.5.8) */
+.nav-toggle { min-width: 44px; min-height: 44px; align-items: center; justify-content: center; }
 
 /* Nav claro cuando flota (sin scroll) sobre el hero con foto de fondo oscura */
 body:has(.hero--photo) .nav:not(.scrolled) .brand,
@@ -6414,6 +6416,13 @@ body.has-custom-cursor button { cursor: none !important; }
   cursor: pointer;
   background: rgba(255,249,244,0.4);
   transition: background 0.2s ease, transform 0.2s ease, width 0.3s ease;
+}
+.hc-dot { position: relative; }
+/* Area tactil >=44px sin cambiar el tamano visual del punto (WCAG 2.5.8) */
+.hc-dot::before {
+  content: "";
+  position: absolute;
+  inset: -17px -8px;
 }
 .hc-dot:hover { background: rgba(255,249,244,0.7); }
 .hc-dot.is-active { background: var(--orange); width: 30px; border-radius: 999px; }

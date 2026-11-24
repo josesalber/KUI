@@ -447,6 +447,9 @@ function HeroCarousel() {
       aria-label="Presentación KUI"
       onMouseEnter={() => setPaused(true)}
       onMouseLeave={() => setPaused(false)}
+      /* WCAG 2.2.2: el autoplay se pausa tambien con foco de teclado */
+      onFocus={() => setPaused(true)}
+      onBlur={() => setPaused(false)}
       onPointerDown={onDown}
       onPointerUp={onUp}
       onTouchStart={onDown}
@@ -470,7 +473,11 @@ function HeroCarousel() {
           <div className="hc-overlay" aria-hidden="true" />
           <div className="container hc-inner">
             <div className="hc-content">
-              <h1 className="hc-title">{s.title}</h1>
+              {/* SEO: una sola h1 por pagina. Solo el primer slide es h1;
+                  los demas son h2 con el mismo estilo (.hc-title). */}
+              {i === 0
+                ? <h1 className="hc-title">{s.title}</h1>
+                : <h2 className="hc-title">{s.title}</h2>}
               <p className="hc-text">{s.text}</p>
               <a
                 className="hc-cta"
